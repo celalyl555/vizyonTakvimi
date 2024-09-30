@@ -1297,26 +1297,17 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   <!-- CKEditor Initialize Script -->
   <script>
-  ClassicEditor
+ ClassicEditor
     .create(document.querySelector('#haberIcerik'), {
-        toolbar: [
-            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', '|', 'undo', 'redo', 'imageUpload'
-        ],
+       
         ckfinder: {
-            uploadUrl: 'controller/upload.php',  // PHP dosyasına görselleri yükleyecek
+            uploadUrl: '/upload.php',  // PHP dosyasına görselleri yükleyecek
         }
-    })
-    .then(editor => {
-        editor.plugins.get('FileRepository').on('fileUploadResponse', (evt, data) => {
-            const response = JSON.parse(data.response);
-            if (response.error) {
-                alert(response.error.message); // Hata mesajını göster
-            }
-        });
     })
     .catch(error => {
         console.error(error);
     });
+
 
   </script>
 
