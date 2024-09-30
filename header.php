@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="assets/css/hafta.css">
     <link rel="stylesheet" href="assets/css/footer.css">
 
-    <!-- Library Area -->
+    <!-- Library Area  -->
     <script src="https://kit.fontawesome.com/be694eddd8.js" crossorigin="anonymous"></script>
 </head>
 <body>

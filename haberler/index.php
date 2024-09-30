@@ -2,6 +2,21 @@
 
     <!-- ============================================================================== -->
 
+    <!-- Table Area Start -->
+
+    <section class="haftaSection">
+
+        <div class="haftaMain">
+
+            <h2><i class="fa-regular fa-newspaper"></i> Haberler</h2>
+            <p>Türkiye'de faaliyet gösteren Dağıtımcılar için veriler</p>
+            
+        </div>
+
+    </section>
+
+    <!-- Table Area End -->
+
     <!-- ============================================================================== -->
      
     <!-- News Area End -->
