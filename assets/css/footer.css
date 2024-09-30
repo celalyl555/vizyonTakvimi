@@ -1,0 +1,151 @@
+/* Footer Area Start */
+
+footer {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding: 30px 20px;
+    background-color: var(--black);
+}
+
+.footer {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    gap: 20px;
+    color: var(--white);
+}
+
+.socialArea {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    width: 100%;
+    gap: 20px;
+}
+
+.socialBox {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    flex-basis: 0;
+    width: 100%;
+    min-width: 320px;
+    border-radius: 10px;
+    gap: 20px;  
+    padding: 10px;
+    transition: 0.3s;
+    border: 1px solid var(--border);
+}
+
+.socialBox i {
+    font-size: 35px;
+}
+
+.appBoxImg {
+    width: 70px;
+    min-width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.appBoxImg img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    transition: 0.3s;
+}
+.appBoxImg img:hover {
+    transform: scale(1.1);
+}
+
+.appArea {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+.socialBox h3 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+.socialBox h3 i {
+    font-size: 24px;
+}
+
+.footer ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    height: 100%;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.footer ul li {
+    list-style: none;
+    text-decoration: none;
+    height: 100%;
+    display: flex;
+}
+
+.footer ul li a {
+    transition: 0.3s;
+}
+.footer ul li a:hover {
+    color: var(--main);
+    transform: translateY(-5px);
+}
+
+.linkUl {
+    padding: 20px 0px;
+}
+
+.appBoxImg {
+    width: 70px;
+    min-width: 70px;
+    height: 70px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+.appBoxImg img {
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    object-fit: cover;
+    transition: 0.3s;
+}
+
+/* Footer Area End */
+
+@media (max-width: 768px) {
+    .footer {
+        width: 90%;
+    }
+}
+
+@media (max-width: 475px) {
+    .linkUl, .socialArea {
+        flex-direction: column;
+    }
+    .socialBox {
+        min-width: 0px;
+        width: 100%;
+    }
+}
