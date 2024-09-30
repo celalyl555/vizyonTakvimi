@@ -1270,9 +1270,9 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-
-        <div id="content4" class="content" style="display: none;">DİZİLER</div>
-        <div id="content5" class="content" style="display: none;">
+            
+            <div id="content4" class="content" style="display: none;">DİZİLER</div>
+            <div id="content5" class="content" style="display: none;">
 
         <div class="container d-flex justify-content-center mt-5">
   <div class="col-md-6">
@@ -1321,8 +1321,55 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
         </div>
-        <div id="content6" class="content" style="display: none;">film ayrıntı</div>
-        <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
+
+            <div id="content6" class="content pl-5" style="display: none;">
+                <form>
+                    <div class="form-group">
+                        <label for="filmAdi">Film Adı</label>
+                        <input type="email" class="form-control" id="filmAdi" placeholder="Varsa Film Adı Burda Yazıcak">
+                    </div>
+                    <div class="form-group">
+                        <label for="vizyonTarihi">Vizyon Tarihi</label>
+                        <input type="date" class="form-control" id="vizyonTarihi">
+                    </div>
+                    <!-- Yönetmen -->
+                    <div class="form-group">
+                        <label>Yönetmen</label>
+                        <div class="selected-tags">
+                            <input type="text"  class="tagInput"
+                                placeholder="Seçilen yönetmen" readonly
+                                onclick="toggleDropdown(this)">
+                        </div>
+                        <div class="multiselect">
+                            <div class="checkboxes">
+                                <input type="text" class="searchBox"
+                                    placeholder="Ara..."
+                                    onkeyup="filterFunction(this)">
+                                <?php
+                                   foreach ($veriler as $row) {
+                                       
+                                    $id = htmlspecialchars($row['idoyuncu']);
+                                    $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                    $istediginiz_sayi = 34;
+                                    $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                    if (preg_match($pattern, $row['kategori_idler'])) {
+                                        echo "<label for='yonetmen{$id}'><input type='checkbox' id='yonetmen{$id}' name='yonetmenListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                    } 
+                                   
+                            }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </form>
+            </div>
+
+            <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
+
+        </div>
+        
     </div>
     </div>
 
