@@ -134,7 +134,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Page Content  -->
         <div id="content" class="p-4 p-md-5 pt-5">
-            <div id="content1" class="content">DASHBOARD</div>
+            <div id="content1" class="content pl-5">DASHBOARD</div>
 
 
             <div id="content2" class="content" style="display: none;">
@@ -564,7 +564,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($dagitimListesi as $dagitim) {
@@ -587,7 +587,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($studyoListesi as $studyo) {
@@ -611,7 +611,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($ulkeListesi as $ulke) {
@@ -634,7 +634,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($filmturuListesi as $filmturu) {
@@ -666,7 +666,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                    foreach ($veriler as $row) {
@@ -696,7 +696,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text"   class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
@@ -726,7 +726,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text"   class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                    foreach ($veriler as $row) {
@@ -756,7 +756,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text"  class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
@@ -786,7 +786,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text"  class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
@@ -816,7 +816,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Search..."
+                                                                    placeholder="Ara..."
                                                                     onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
@@ -1269,13 +1269,62 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
             </div>
+
+            
+            <div id="content4" class="content" style="display: none;">DİZİLER</div>
+            <div id="content5" class="content" style="display: none;">HABERLER</div>
+
+            <div id="content6" class="content pl-5" style="display: none;">
+                <form>
+                    <div class="form-group">
+                        <label for="filmAdi">Film Adı</label>
+                        <input type="email" class="form-control" id="filmAdi" placeholder="Varsa Film Adı Burda Yazıcak">
+                    </div>
+                    <div class="form-group">
+                        <label for="vizyonTarihi">Vizyon Tarihi</label>
+                        <input type="date" class="form-control" id="vizyonTarihi">
+                    </div>
+                    <!-- Yönetmen -->
+                    <div class="form-group">
+                        <label>Yönetmen</label>
+                        <div class="selected-tags">
+                            <input type="text"  class="tagInput"
+                                placeholder="Seçilen yönetmen" readonly
+                                onclick="toggleDropdown(this)">
+                        </div>
+                        <div class="multiselect">
+                            <div class="checkboxes">
+                                <input type="text" class="searchBox"
+                                    placeholder="Ara..."
+                                    onkeyup="filterFunction(this)">
+                                <?php
+                                   foreach ($veriler as $row) {
+                                       
+                                    $id = htmlspecialchars($row['idoyuncu']);
+                                    $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                    $istediginiz_sayi = 34;
+                                    $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                    if (preg_match($pattern, $row['kategori_idler'])) {
+                                        echo "<label for='yonetmen{$id}'><input type='checkbox' id='yonetmen{$id}' name='yonetmenListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                    } 
+                                   
+                            }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </form>
+            </div>
+
+            <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
+
         </div>
 
 
-        <div id="content4" class="content" style="display: none;">DİZİLER</div>
-        <div id="content5" class="content" style="display: none;">HABERLER</div>
-        <div id="content6" class="content" style="display: none;">film ayrıntı</div>
-        <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
+        
+        
     </div>
     </div>
     <script src="js/controller.js"></script>
