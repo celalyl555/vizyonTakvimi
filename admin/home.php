@@ -181,9 +181,9 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <?php echo htmlspecialchars($row['adsoyad']); ?>
                                             </td>
                                             <td class="align-middle text-center">
-                                                <?php echo htmlspecialchars($row['dogum']); ?></td>
+                                                <?php echo formatDate($row['dogum']); ?></td>
                                             <td class="align-middle text-center">
-                                                <?php echo !empty($row['olum']) ? htmlspecialchars($row['olum']) : '-'; ?>
+                                                <?php echo !empty($row['olum']) ? formatDate($row['olum']) : '-'; ?>
                                             </td>
 
                                             <td class="align-middle text-center">
@@ -489,7 +489,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     style="width: 50px; height: 50px;"></td>
                                             <td class="align-middle"><?php echo htmlspecialchars($row['film_adi']); ?>
                                             </td>
-                                            <td class="align-middle"><?php echo htmlspecialchars($row['vizyon_tarihi']); ?></td>
+                                            <td class="align-middle"><?php echo formatDate($row['vizyon_tarihi']); ?></td>
                                             <td class="align-middle">
                                                 <?php echo !empty($row['filmturleri']) ? htmlspecialchars($row['filmturleri']) : '-'; ?>
                                             </td>
@@ -1270,63 +1270,87 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-            
-            <div id="content4" class="content" style="display: none;">DİZİLER</div>
-            <div id="content5" class="content" style="display: none;">HABERLER</div>
 
-            <div id="content6" class="content pl-5" style="display: none;">
-                <form>
-                    <div class="form-group">
-                        <label for="filmAdi">Film Adı</label>
-                        <input type="email" class="form-control" id="filmAdi" placeholder="Varsa Film Adı Burda Yazıcak">
-                    </div>
-                    <div class="form-group">
-                        <label for="vizyonTarihi">Vizyon Tarihi</label>
-                        <input type="date" class="form-control" id="vizyonTarihi">
-                    </div>
-                    <!-- Yönetmen -->
-                    <div class="form-group">
-                        <label>Yönetmen</label>
-                        <div class="selected-tags">
-                            <input type="text"  class="tagInput"
-                                placeholder="Seçilen yönetmen" readonly
-                                onclick="toggleDropdown(this)">
-                        </div>
-                        <div class="multiselect">
-                            <div class="checkboxes">
-                                <input type="text" class="searchBox"
-                                    placeholder="Ara..."
-                                    onkeyup="filterFunction(this)">
-                                <?php
-                                   foreach ($veriler as $row) {
-                                       
-                                    $id = htmlspecialchars($row['idoyuncu']);
-                                    $oyuncuad = htmlspecialchars($row['adsoyad']);
-                                    $istediginiz_sayi = 34;
-                                    $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-                                    if (preg_match($pattern, $row['kategori_idler'])) {
-                                        echo "<label for='yonetmen{$id}'><input type='checkbox' id='yonetmen{$id}' name='yonetmenListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+        <div id="content4" class="content" style="display: none;">DİZİLER</div>
+        <div id="content5" class="content" style="display: none;">
 
-                                    } 
-                                   
-                            }
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Kaydet</button>
-                </form>
-            </div>
+        <div class="container d-flex justify-content-center mt-5">
+  <div class="col-md-6">
+    <h2>Haber Ekle</h2>
+    <form>
+      <div class="mb-3">
+        <label for="haberBaslik" class="form-label">Haber Başlığı</label>
+        <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
+      </div>
+      
+      <div class="mb-3">
+        <label for="haberIcerik" class="form-label">Haber İçeriği</label>
+        <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
+    </form>
+  </div>
+</div>
 
-            <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
+
+  <!-- CKEditor Initialize Script -->
+  <script>
+  ClassicEditor
+    .create(document.querySelector('#haberIcerik'), {
+        toolbar: [
+            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', '|', 'undo', 'redo', 'imageUpload'
+        ],
+        ckfinder: {
+            uploadUrl: 'controller/upload.php',  // PHP dosyasına görselleri yükleyecek
+        }
+    })
+    .then(editor => {
+        editor.plugins.get('FileRepository').on('fileUploadResponse', (evt, data) => {
+            const response = JSON.parse(data.response);
+            if (response.error) {
+                alert(response.error.message); // Hata mesajını göster
+            }
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+  </script>
+
 
         </div>
-
-
-        
-        
+        <div id="content6" class="content" style="display: none;">film ayrıntı</div>
+        <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
     </div>
     </div>
+
+    <?php
+function formatDate($dateString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    // Tarih parçalarını ayır
+    $dateParts = explode("-", $dateString);
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    // Formatlanmış tarihi döndür
+    return $day . ' ' . $months[$month] . ' ' . $year;
+}
+
+// Kullanım örneği:
+
+?>
+
+
+
+    
     <script src="js/controller.js"></script>
 
     <script>
