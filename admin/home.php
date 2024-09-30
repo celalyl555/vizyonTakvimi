@@ -1274,50 +1274,43 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div id="content4" class="content" style="display: none;">DİZİLER</div>
             <div id="content5" class="content" style="display: none;">
 
-        <div class="container d-flex justify-content-center mt-5">
-  <div class="col-md-6">
-    <h2>Haber Ekle</h2>
-    <form>
-      <div class="mb-3">
-        <label for="haberBaslik" class="form-label">Haber Başlığı</label>
-        <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
-      </div>
-      
-      <div class="mb-3">
-        <label for="haberIcerik" class="form-label">Haber İçeriği</label>
-        <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
-      </div>
-      
-      <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
-    </form>
-  </div>
-</div>
+            <h2>Haber Ekle</h2>
+            <form>
+              <div class="mb-3">
+                <label for="haberBaslik" class="form-label">Haber Başlığı</label>
+                <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
+              </div>
+
+              <div class="mb-3">
+                <label for="haberIcerik" class="form-label">Haber İçeriği</label>
+                <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
+            </form>
 
 
-  <!-- CKEditor Initialize Script -->
-  <script>
-  ClassicEditor
-    .create(document.querySelector('#haberIcerik'), {
-        toolbar: [
-            'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', '|', 'undo', 'redo', 'imageUpload'
-        ],
-        ckfinder: {
-            uploadUrl: 'controller/upload.php',  // PHP dosyasına görselleri yükleyecek
-        }
-    })
-    .then(editor => {
-        editor.plugins.get('FileRepository').on('fileUploadResponse', (evt, data) => {
-            const response = JSON.parse(data.response);
-            if (response.error) {
-                alert(response.error.message); // Hata mesajını göster
-            }
-        });
-    })
-    .catch(error => {
-        console.error(error);
-    });
-
-  </script>
+            <!-- CKEditor Initialize Script -->
+            <script>
+            ClassicEditor
+              .create(document.querySelector('#haberIcerik'), {
+                  ckfinder: {
+                      uploadUrl: 'controller/upload.php',  // PHP dosyasına görselleri yükleyecek
+                  }
+              })
+              .then(editor => {
+                  editor.plugins.get('FileRepository').on('fileUploadResponse', (evt, data) => {
+                      const response = JSON.parse(data.response);
+                      if (response.error) {
+                          alert(response.error.message); // Hata mesajını göster
+                      }
+                  });
+              })
+              .catch(error => {
+                  console.error(error);
+              });
+          
+            </script>
 
 
         </div>
@@ -1369,7 +1362,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
 
         </div>
-        
+
     </div>
     </div>
 
