@@ -8222,7 +8222,7 @@ h1, h2, h3, h4, h5,
       border: none;
       background: none;
       display: block;
-      color: rgba(255, 255, 255, 0.6);
+      color: #EDEDEE;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
       #sidebar ul li button span.notif {
         position: relative; }
@@ -8239,15 +8239,18 @@ h1, h2, h3, h4, h5,
           font-family: "Poppins", Arial, sans-serif;
           font-size: 8px; }
       #sidebar ul li button:hover {
-        color: #fff;
-        background: #2f89fc;
-        border-bottom: 1px solid #2f89fc; }
+        color: #000;
+        font-weight: bold;
+        background: #E9C00E;
+        border-bottom: 1px solid #FFD700; }
     #sidebar ul li.active > button {
       background: transparent;
-      color: #fff; }
+      font-weight: bold;
+      color: #E9C00E; }
       #sidebar ul li.active > button:hover {
-        background: #2f89fc;
-        border-bottom: 1px solid #2f89fc; }
+        color: #000;
+        background: #E9C00E;
+        border-bottom: 1px solid #FFD700; }
   @media (max-width: 991.98px) {
     #sidebar {
       margin-left: -300px; }
@@ -8271,24 +8274,26 @@ h1, h2, h3, h4, h5,
         -o-transition: none;
         transition: none; } }
     #sidebar .custom-menu .btn.btn-primary {
-      background: #2f89fc;
-      border-color: transparent;
+      background: #E9C00E !important;
+      border-color: transparent !important;
       position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       color: #000;
       width: 30px;
       height: 30px; }
       #sidebar .custom-menu .btn.btn-primary:after, #sidebar .custom-menu .btn.btn-primary:before {
-        position: absolute;
-        top: 2px;
-        left: 0;
-        right: 0;
-        bottom: 0;
         font-family: "FontAwesome";
-        color: #fff; }
+        color: #000; }
       #sidebar .custom-menu .btn.btn-primary:after {
         content: "\f054";
         left: 2px; }
-
+      #sidebar .custom-menu .btn.btn-primary:hover {
+        background-color: #be9e0d !important;
+        border: 1px solid #333 !important;
+        color: #E9C00E !important;
+      }
 .bg-wrap {
   width: 100%;
   position: relative;
@@ -8302,7 +8307,7 @@ h1, h2, h3, h4, h5,
     bottom: 0;
     content: '';
     background: #000;
-    opacity: .3; }
+    opacity: .6; }
   .bg-wrap .user-logo .img {
     width: 100px;
     height: 100px;
@@ -8373,3 +8378,12 @@ a[data-toggle="collapse"] {
 
 .subscribe-form .form-control {
   background: #4897fc; }
+
+  .multiselect label {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+  }
