@@ -2,15 +2,50 @@
     box-sizing: border-box;
     font-family: -apple-system, BlinkMacSystemFont, "segoe ui", roboto, oxygen, ubuntu, cantarell, "fira sans", "droid sans", "helvetica neue", Arial, sans-serif;
     font-size: 16px;
+    margin: 0;
+    padding: 0;
 }
 body {
     background-color: #435165;
+    width: 100%;
+    height: 100%;
 }
+.loginBody {
+    background: url(images/bg_1.jpg) center center;
+    background-size: cover;
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.loginBody::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Bu değer karartma seviyesini belirler */
+    z-index: 1;
+}
+
+.loginBody * {
+    position: relative;
+    z-index: 2; /* İçeriklerin pseudo-element'in altında kalmaması için */
+}
+
+
 .login {
     width: 400px;
     background-color: #ffffff;
     box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.3);
-    margin: 100px auto;
+    margin-top: 150px;
+    border-radius: 10px;
 }
 .login h1 {
     text-align: center;
@@ -31,7 +66,7 @@ body {
     align-items: center;
     width: 50px;
     height: 50px;
-    background-color: #3274d6;
+    background-color: #e9c00e;
     color: #ffffff;
 }
 .login form input[type="password"], .login form input[type="text"] {
@@ -40,20 +75,25 @@ body {
     border: 1px solid #dee0e4;
     margin-bottom: 20px;
     padding: 0 15px;
+    outline: none;
+}
+.login form input:focus {
+    border: 1px solid #e9c00e;
 }
 .login form input[type="submit"] {
     width: 100%;
     padding: 15px;
-   margin-top: 20px;
-    background-color: #3274d6;
+    margin-top: 20px;
+    background-color: #e9c00e;
     border: 0;
     cursor: pointer;
     font-weight: bold;
     color: #ffffff;
     transition: background-color 0.2s;
+    border-radius: 0px 0px 7px 7px;
 }
 .login form input[type="submit"]:hover {
-  background-color: #2868c7;
+  background-color: #e9c00e;
     transition: background-color 0.2s;
 }
 
@@ -198,6 +238,7 @@ table.table th i {
 table.table td:last-child i {
     opacity: 0.9;
     font-size: 22px;
+    line-height: 1.3 !important;
     margin: 0 5px;
 }
 table.table td a {
@@ -431,13 +472,58 @@ table.table .avatar {
     gap: 10px;
   }
 
-  .row:after, .row:before {
+.row:after, .row:before {
     content: none !important;
-    }
+}   
 
-    .card-img-top {
-        object-fit: cover;
-        height: 200px;
-        width: 100%;
-    }
-    
+.card-img-top {
+    object-fit: cover;
+    height: 200px;
+    width: 100%;
+}
+
+.btn-page {
+    border: 2px solid transparent;
+    outline: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px 0px;
+    transition: 0.3s;
+}
+.btn-page:hover {
+    background-color: transparent;
+    color: #007bff;
+    border: 2px solid #007bff;
+}
+
+.btn-delete {
+    border: 2px solid transparent;
+    outline: none;
+    background-color: #F44336;
+    color: #fff !important;
+    border-radius: 100%;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    transition: 0.3s;
+    width: min-content;
+    margin: auto;
+}
+.btn-delete:hover {
+    background-color: transparent;
+    color: #F44336 !important;
+    border: 2px solid #F44336;
+}
+
+.btn-delete i {
+    margin: 0 !important;
+}
+
+.p-03 {
+    padding: 0px 3px !important;
+}

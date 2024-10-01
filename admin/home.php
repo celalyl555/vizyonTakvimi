@@ -196,7 +196,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     onclick="getId1('<?php echo $row['idoyuncu']; ?>');"
                                                     data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
                                                         title="Edit">&#xE254;</i></a>
-                                                <a href="#deleteEmployeeModal text-center" class="delete"
+                                                <a href="#deleteEmployeeModal text-center" class="btn-delete p-03"
                                                     onclick="getId('<?php echo $row['idoyuncu']; ?>');"
                                                     data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
                                                         title="Delete">&#xE872;</i></a>
@@ -499,14 +499,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             </td>
                                             <td class="align-middle">
                                               
-                                                <a href="#deleteEmployeeModalfilmler" class="delete"
+                                                <a href="#deleteEmployeeModalfilmler" class="btn-delete"
                                                     onclick="getId('<?php echo $row['id']; ?>');"
                                                     data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
                                                         title="Delete">&#xE872;</i></a>
 
                                             </td>
                                             <td class="align-middle">
-                                               <button onclick="showContent('content6')" class="btn btn-primary rounded-pill"><i class="material-icons mr-2">chevron_right</i></button>
+                                               <button onclick="showContent('content6')" class="btn-page"><i class="material-icons">chevron_right</i></button>
                                             </td>
                                         </tr>
                                         <?php endforeach; ?>
@@ -555,9 +555,9 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </div>
                                                     <!-- Sinema Dağıtım -->
                                                     <div class="form-group">
-                                                        <label>Sinema Dağıtım</label>
+                                                        <label for="sinemadagitim">Sinema Dağıtım</label>
                                                         <div class="selected-tags">
-                                                            <input type="text"  class="tagInput form-control"
+                                                            <input type="text" id="sinemadagitim" name="sinemadagitim" class="tagInput form-control"
                                                                 placeholder="Seçilen dağıtım şirketleri" readonly
                                                                 onclick="toggleDropdown(this)" >
                                                         </div>
@@ -949,7 +949,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                                         <a href="#deleteEmployeeModalfilmturu" id="kategoridelete"
                                                             onclick="getId('<?php echo $filmturu['idfilm']; ?>');"
-                                                            class="delete" data-toggle="modal">
+                                                            class="btn-delete p-03" data-toggle="modal">
                                                             <i class="material-icons" data-toggle="tooltip"
                                                                 title="Delete">&#xE872;</i>
                                                         </a>
@@ -1065,7 +1065,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                                         <a href="#deleteEmployeeModalstudyo" id="kategoridelete"
                                                             onclick="getId('<?php echo $studyo['id']; ?>');"
-                                                            class="delete" data-toggle="modal">
+                                                            class="btn-delete p-03" data-toggle="modal">
                                                             <i class="material-icons" data-toggle="tooltip"
                                                                 title="Delete">&#xE872;</i>
                                                         </a>
@@ -1185,7 +1185,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                                         <a href="#deleteEmployeeModaldagitim" id="kategoridelete"
                                                             onclick="getId('<?php echo $dagitim['iddagitim']; ?>');"
-                                                            class="delete" data-toggle="modal">
+                                                            class="btn-delete p-03" data-toggle="modal">
                                                             <i class="material-icons" data-toggle="tooltip"
                                                                 title="Delete">&#xE872;</i>
                                                         </a>
@@ -1221,7 +1221,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label>Sinema Dağıtım</label>
+                                                        <label for="dagitim">Sinema Dağıtım</label>
                                                         <input type="text" name="dagitim" id="dagitim"
                                                             class="form-control" required>
                                                     </div>
