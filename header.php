@@ -38,6 +38,7 @@
 
             <div id="navbar-mobile" class="navbar-mobile">
                 <a href="filmler"><i class="fa-solid fa-film"></i> Filmler</a>
+                <a href="diziler"><i class="fa-solid fa-couch"></i> Diziler</a>
                 <a href="haberler"><i class="fa-solid fa-newspaper"></i> Haberler</a>
                 <a href="takvim"><i class="fa-regular fa-calendar"></i> Takvim</a>
                 <a href="vizyon-takvim-tablosu"><i class="fa-solid fa-calendar-days"></i> Vizyon Takvimi Tablosu</a>
@@ -59,7 +60,9 @@
             <ul class="bottomUl">
                 <li>
                     <a class="navA" href="filmler"><i class="fa-solid fa-film"></i> Filmler</a>
-                    
+                </li>
+                <li>
+                    <a class="navA" href="diziler"><i class="fa-solid fa-couch"></i> Diziler</a>
                 </li>
                 <li>
                     <a class="navA" href="haberler"><i class="fa-solid fa-newspaper"></i> Haberler</a>

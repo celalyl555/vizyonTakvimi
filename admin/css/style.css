@@ -8257,7 +8257,6 @@ h1, h2, h3, h4, h5,
       #sidebar.active {
         margin-left: 0; }
       #sidebar .custom-menu {
-        margin-right: -60px !important;
         top: 10px !important; } }
   #sidebar .custom-menu {
     display: inline-block;

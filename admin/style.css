@@ -177,6 +177,8 @@ body.loggedin {
     margin: 30px 0;
     border-radius: 3px;
     box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    overflow: hidden;
+    position: relative;
 }
 .table-title {        
     padding-bottom: 15px;
@@ -511,7 +513,7 @@ table.table .avatar {
     align-items: center;
     padding: 5px;
     transition: 0.3s;
-    width: min-content;
+    width: 33px;
     margin: auto;
 }
 .btn-delete:hover {
@@ -520,11 +522,71 @@ table.table .avatar {
     border: 2px solid #F44336;
 }
 
-.btn-delete i {
+.btn-delete i, .btn-edit i {
     margin: 0 !important;
     font-size: 19px !important;
 }
 
 .p-03 {
     padding: 2.2px 4.5px !important;
+}
+
+.btn-edit {
+    border: 2px solid transparent;
+    outline: none;
+    background-color: #FFC107;
+    color: #fff !important;
+    border-radius: 100%;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+    transition: 0.3s;
+    width: 33px;
+    margin: auto;
+}
+.btn-edit:hover {
+    background-color: transparent;
+    color: #FFC107 !important;
+    border: 2px solid #FFC107;
+}
+
+@media (max-width: 1440px) {
+    .wrap-1440 .col-md-4 {
+        min-width: 300px;
+        max-width: 100%;
+        flex: 0 0 50%;
+    }
+    .wrap-1440 .right-column {
+        min-width: 300px;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+    .wrap-1440 .middle-column {
+        padding-right: 0px;
+    }
+}
+
+@media (max-width: 767px) {
+    .right-column {
+        padding: 0px !important;
+    }
+    .wrap-1440 .col-md-4 {
+        min-width: 0px;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+    .wrap-1440 .right-column {
+        min-width: 0px;
+    }
+    .wrap-1440 .middle-column {
+        padding: 0px;
+    }
+
+    .filmDetayAyar .col-6 {
+        -webkit-box-flex: 0;
+        -ms-flex: 0 0 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
 }

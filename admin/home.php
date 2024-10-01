@@ -62,6 +62,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
     <!-- CSS Dosyaları -->
     <link href="style.css" rel="stylesheet" type="text/css">
@@ -150,6 +151,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div class="row">
                         <div class="col-12 top-section">
                             <div class="table-wrapper">
+
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -165,52 +167,56 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     </div>
                                 </div>
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="align-middle text-center">Fotoğraf</th>
-                                            <th class="align-middle text-center">Ad - Soyad</th>
-                                            <th class="align-middle text-center">Doğum Tarihi</th>
-                                            <th class="align-middle text-center">Ölüm Tarihi</th>
-                                            <th class="align-middle text-center">Roller</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($veriler as $row): ?>
-                                        <tr>
-                                            <td class="align-middle text-center"><img
-                                                    src="../foto/<?php echo htmlspecialchars($row['resimyol']); ?>"
-                                                    class="rounded img-thumbnail" alt="Fotoğraf"
-                                                    style="width: 50px; height: 50px;"></td>
-                                            <td class="align-middle text-center">
-                                                <?php echo htmlspecialchars($row['adsoyad']); ?>
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <?php echo formatDate($row['dogum']); ?></td>
-                                            <td class="align-middle text-center">
-                                                <?php echo !empty($row['olum']) ? formatDate($row['olum']) : '-'; ?>
-                                            </td>
+                                <div class="table-over">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="align-middle text-center">Fotoğraf</th>
+                                                <th class="align-middle text-center">Ad - Soyad</th>
+                                                <th class="align-middle text-center">Doğum Tarihi</th>
+                                                <th class="align-middle text-center">Ölüm Tarihi</th>
+                                                <th class="align-middle text-center">Roller</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($veriler as $row): ?>
+                                            <tr>
+                                                <td class="align-middle text-center"><img
+                                                        src="../foto/<?php echo htmlspecialchars($row['resimyol']); ?>"
+                                                        class="rounded img-thumbnail" alt="Fotoğraf"
+                                                        style="width: 50px; height: 50px;"></td>
+                                                <td class="align-middle text-center">
+                                                    <?php echo htmlspecialchars($row['adsoyad']); ?>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <?php echo formatDate($row['dogum']); ?></td>
+                                                <td class="align-middle text-center">
+                                                    <?php echo !empty($row['olum']) ? formatDate($row['olum']) : '-'; ?>
+                                                </td>
 
-                                            <td class="align-middle text-center">
-                                                <?php echo !empty($row['roller']) ? htmlspecialchars($row['roller']) : '-'; ?>
-                                            </td>
+                                                <td class="align-middle text-center">
+                                                    <?php echo !empty($row['roller']) ? htmlspecialchars($row['roller']) : '-'; ?>
+                                                </td>
 
-                                            </td>
-                                            <td class="align-middle text-center">
-                                                <a href="#editEmployeeModal" class="edit"
-                                                    onclick="getId1('<?php echo $row['idoyuncu']; ?>');"
-                                                    data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
-                                                        title="Edit">&#xE254;</i></a>
-                                                <a href="#deleteEmployeeModal text-center" class="btn-delete p-03"
-                                                    onclick="getId('<?php echo $row['idoyuncu']; ?>');"
-                                                    data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
-                                                        title="Delete">&#xE872;</i></a>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <div class="d-row-ayar">
+                                                        <a href="#editEmployeeModal" class="btn-edit p-03 m-0"
+                                                            onclick="getId1('<?php echo $row['idoyuncu']; ?>');"
+                                                            data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
+                                                                title="Edit">&#xE254;</i></a>
+                                                        <a href="#deleteEmployeeModal text-center" class="btn-delete p-03 m-0"
+                                                            onclick="getId('<?php echo $row['idoyuncu']; ?>');"
+                                                            data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
+                                                                title="Delete">&#xE872;</i></a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="clearfix">
                                     <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                                     <ul class="pagination">
@@ -476,48 +482,50 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                     </div>
                                 </div>
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th class="w-fit">Film Afişi</th>
-                                            <th>Film Adı</th>
-                                            <th>Vizyon Tarihi</th>
-                                            <th>Film Türü</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($filmler as $row): ?>
-                                        <tr>
-                                            <td><img src="../kapakfoto/<?php echo htmlspecialchars($row['kapak_resmi']); ?>"
-                                                    class="rounded img-thumbnail tumbimg" alt="Fotoğraf"></td>
-                                            <td class="align-middle"><?php echo htmlspecialchars($row['film_adi']); ?>
-                                            </td>
-                                            <td class="align-middle"><?php echo formatDate($row['vizyon_tarihi']); ?></td>
-                                            <td class="align-middle">
-                                                <?php echo !empty($row['filmturleri']) ? htmlspecialchars($row['filmturleri']) : '-'; ?>
-                                            </td>
+                                <div class="table-over">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="w-fit">Film Afişi</th>
+                                                <th>Film Adı</th>
+                                                <th>Vizyon Tarihi</th>
+                                                <th>Film Türü</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($filmler as $row): ?>
+                                            <tr>
+                                                <td><img src="../kapakfoto/<?php echo htmlspecialchars($row['kapak_resmi']); ?>"
+                                                        class="rounded img-thumbnail tumbimg" alt="Fotoğraf"></td>
+                                                <td class="align-middle"><?php echo htmlspecialchars($row['film_adi']); ?>
+                                                </td>
+                                                <td class="align-middle"><?php echo formatDate($row['vizyon_tarihi']); ?></td>
+                                                <td class="align-middle">
+                                                    <?php echo !empty($row['filmturleri']) ? htmlspecialchars($row['filmturleri']) : '-'; ?>
+                                                </td>
 
-                                          
+                                            
 
-                                            </td>
-                                            <td class="align-middle">
-                                              
-                                                <a href="#deleteEmployeeModalfilmler" class="btn-delete"
-                                                    onclick="getId('<?php echo $row['id']; ?>');"
-                                                    data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
-                                                        title="Delete">&#xE872;</i></a>
+                                                </td>
+                                                <td class="align-middle">
 
-                                            </td>
-                                            <td class="align-middle">
-                                               <button onclick="showContent('content6')" class="btn-page"><i class="material-icons">chevron_right</i></button>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                        
-                                    </tbody>
-                                </table>
+                                                    <a href="#deleteEmployeeModalfilmler" class="btn-delete"
+                                                        onclick="getId('<?php echo $row['id']; ?>');"
+                                                        data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
+                                                            title="Delete">&#xE872;</i></a>
+
+                                                </td>
+                                                <td class="align-middle">
+                                                   <button onclick="showContent('content6')" class="btn-page"><i class="material-icons">chevron_right</i></button>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
                                 <div class="clearfix">
                                     <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                                     <ul class="pagination">
@@ -915,7 +923,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Film Türü İşlemleri -->
 
                     <div class="col-12 bottom-section">
-                            <div class="row">
+                            <div class="row wrap-1440">
                                 <div class="col-md-4 left-column p-0">
                                     <div class="table-wrapper">
                                         <div class="table-title">
@@ -935,35 +943,37 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                             </div>
                                         </div>
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="2">Film Türü</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <?php 
-                                                   foreach ($filmturuListesi as $filmturu) {
-                                                    echo "<td>" . htmlspecialchars($filmturu['filmturu']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
-                                             
-                                                   
-                                                   ?>
+                                        <div class="table-over">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2">Film Türü</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <?php 
+                                                       foreach ($filmturuListesi as $filmturu) {
+                                                        echo "<td>" . htmlspecialchars($filmturu['filmturu']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
+                                                    
+                                                    
+                                                       ?>
 
-                                                    <td class="text-center">
+                                                        <td class="text-center">
 
-                                                        <a href="#deleteEmployeeModalfilmturu" id="kategoridelete"
-                                                            onclick="getId('<?php echo $filmturu['idfilm']; ?>');"
-                                                            class="btn-delete p-03" data-toggle="modal">
-                                                            <i class="material-icons" data-toggle="tooltip"
-                                                                title="Delete">&#xE872;</i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                            <a href="#deleteEmployeeModalfilmturu" id="kategoridelete"
+                                                                onclick="getId('<?php echo $filmturu['idfilm']; ?>');"
+                                                                class="btn-delete p-03" data-toggle="modal">
+                                                                <i class="material-icons" data-toggle="tooltip"
+                                                                    title="Delete">&#xE872;</i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
 
-                                                <?php     }?>
-                                            </tbody>
-                                        </table>
+                                                    <?php     }?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <div class="clearfix">
                                             <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                                             <ul class="pagination">
@@ -1032,7 +1042,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 right-column">
+                                <div class="col-md-4 middle-column">
                                     <div class="table-wrapper">
                                         <div class="table-title">
                                             <div class="row">
@@ -1051,35 +1061,37 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                             </div>
                                         </div>
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th colspan="2">Stüdyo Adı</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <?php 
-                                                   foreach ($studyoListesi as $studyo) {
-                                                    echo "<td>" . htmlspecialchars($studyo['studyoad']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
-                                             
-                                                   
-                                                   ?>
+                                        <div class="table-over">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th colspan="2">Stüdyo Adı</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <?php 
+                                                       foreach ($studyoListesi as $studyo) {
+                                                        echo "<td>" . htmlspecialchars($studyo['studyoad']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
+                                                    
+                                                    
+                                                       ?>
 
-                                                    <td class="text-center">
+                                                        <td class="text-center">
 
-                                                        <a href="#deleteEmployeeModalstudyo" id="kategoridelete"
-                                                            onclick="getId('<?php echo $studyo['id']; ?>');"
-                                                            class="btn-delete p-03" data-toggle="modal">
-                                                            <i class="material-icons" data-toggle="tooltip"
-                                                                title="Delete">&#xE872;</i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                            <a href="#deleteEmployeeModalstudyo" id="kategoridelete"
+                                                                onclick="getId('<?php echo $studyo['id']; ?>');"
+                                                                class="btn-delete p-03" data-toggle="modal">
+                                                                <i class="material-icons" data-toggle="tooltip"
+                                                                    title="Delete">&#xE872;</i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
 
-                                                <?php     }?>
-                                            </tbody>
-                                        </table>
+                                                    <?php     }?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <div class="clearfix">
                                             <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                                             <ul class="pagination">
@@ -1169,37 +1181,39 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                             </div>
                                         </div>
-                                        <table class="table table-striped table-hover">
-                                            <thead>
-                                                <tr>
+                                        <div class="table-over">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
 
-                                                    <th colspan="2">Sinema Dağıtım</th>
-                                                </tr>
+                                                        <th colspan="2">Sinema Dağıtım</th>
+                                                    </tr>
 
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <?php 
-                                                   foreach ($dagitimListesi as $dagitim) {
-                                                    echo "<td>" . htmlspecialchars($dagitim['dagitimad']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
-                                             
-                                                   
-                                                   ?>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <?php 
+                                                       foreach ($dagitimListesi as $dagitim) {
+                                                        echo "<td>" . htmlspecialchars($dagitim['dagitimad']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
+                                                    
+                                                    
+                                                       ?>
 
-                                                    <td class="text-center">
+                                                        <td class="text-center">
 
-                                                        <a href="#deleteEmployeeModaldagitim" id="kategoridelete"
-                                                            onclick="getId('<?php echo $dagitim['iddagitim']; ?>');"
-                                                            class="btn-delete p-03" data-toggle="modal">
-                                                            <i class="material-icons" data-toggle="tooltip"
-                                                                title="Delete">&#xE872;</i>
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                            <a href="#deleteEmployeeModaldagitim" id="kategoridelete"
+                                                                onclick="getId('<?php echo $dagitim['iddagitim']; ?>');"
+                                                                class="btn-delete p-03" data-toggle="modal">
+                                                                <i class="material-icons" data-toggle="tooltip"
+                                                                    title="Delete">&#xE872;</i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
 
-                                                <?php     }?>
-                                            </tbody>
-                                        </table>
+                                                    <?php     }?>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                         <div class="clearfix">
                                             <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
                                             <ul class="pagination">
@@ -1323,7 +1337,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <div class="col-12 bg-white border rounded p-3">
 
-                    <div class="d-flex justify-content-between align-items-center bgnone pb-3 mb-5">
+                    <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
                         <h2>Box Office Değerleri</h2>
                         <a href="#uploadModal"
                              class="btn btn-success d-flex align-items-center" data-toggle="modal">
@@ -1366,7 +1380,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                 <div class="col-12 bg-white border rounded p-3 mt-5">
 
-                    <div class="d-flex justify-content-between align-items-center bgnone pt-3 pb-3 mb-5">
+                    <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
                         <h2>Film Detayları</h2>
                     </div>
 
@@ -1398,7 +1412,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
 
                     <form>
-                        <div class="row">
+                        <div class="row filmDetayAyar">
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="filmAdi">Film Adı</label>
@@ -1693,7 +1707,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center bgnone pt-3 pb-3 mb-5">
+                        <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
                             <h2>Afiş Resimi</h2>
                         </div>
 
@@ -1716,7 +1730,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                         </div>
 
-                        <div class="d-flex justify-content-between align-items-center bgnone pt-3 pb-3 mb-5">
+                        <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
                             <h2>Galeri Resimleri</h2>
                         </div>
 
