@@ -1294,17 +1294,34 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             <h2>Haber Ekle</h2>
             <form id="formHaberler" method="post">
-              <div class="mb-3">
-                <label for="haberBaslik" class="form-label">Haber Başlığı</label>
-                <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
-              </div>
+                <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
+                    <h2>Afiş Resimi</h2>
+                </div>
 
-              <div class="mb-3">
-                <label for="haberIcerik" class="form-label">Haber İçeriği</label>
-                <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
-              </div>
+                <div class="row">
+                    <div class="col-md-3 mb-4">
+                        <div class="multiple-uploader" id="single-uploader-inside">
+                            <div class="mup-msg">
+                                <span class="mup-main-msg">Kapak Resmi Yüklemek için
+                                    Tıklayınız.</span>
+                                <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
+                                    Fotoğrafı Yükleyiniz.</span>
+                            </div>
+                        </div>
+                    </div>
 
-              <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
+                </div>
+                <div class="mb-3">
+                  <label for="haberBaslik" class="form-label">Haber Başlığı</label>
+                  <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
+                </div>
+
+                <div class="mb-3">
+                  <label for="haberIcerik" class="form-label">Haber İçeriği</label>
+                  <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
             </form>
 
            
