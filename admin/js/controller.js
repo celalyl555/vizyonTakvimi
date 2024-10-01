@@ -393,3 +393,30 @@ $(document).ready(function() {
       });
     });
   });
+// haberler ekleme
+
+
+
+$(document).ready(function() {
+  $('#formHaberler').on('submit', function(event) {
+      event.preventDefault(); // Sayfanın yenilenmesini önler
+alert("burada");
+      var haberBaslik = $('#haberBaslik').val();
+      var haberIcerik = $('#haberIcerik').val();
+
+      $.ajax({
+          url: 'controller/haberAdd.php',
+          type: 'POST',
+          data: {
+              baslik: haberBaslik,
+              icerik: haberIcerik
+          },
+          success: function(response) {
+              alert('Haber başarıyla kaydedildi: ' + response);
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+              alert('Hata: ' + errorThrown);
+          }
+      });
+  });
+});

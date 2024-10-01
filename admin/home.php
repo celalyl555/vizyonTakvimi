@@ -67,6 +67,8 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/style.css"> <!-- Eğer bu stil dosyasına ihtiyacınız yoksa kaldırabilirsiniz. -->
     <link href="css/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="ckeditor5/ckeditor5.css">
+
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
@@ -81,7 +83,10 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
+
+
+
 
 </head>
 
@@ -1274,7 +1279,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div id="content5" class="content" style="display: none;">
 
             <h2>Haber Ekle</h2>
-            <form>
+            <form id="formHaberler" method="post">
               <div class="mb-3">
                 <label for="haberBaslik" class="form-label">Haber Başlığı</label>
                 <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
@@ -1288,28 +1293,28 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
               <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
             </form>
 
+           
+<!-- HTML Element for CKEditor -->
+<script>
+    ClassicEditor
+        .create(document.querySelector('#haberIcerik'), {
+            // Gömme özelliğini etkinleştir
+            mediaEmbed: {
+                previewsInData: true,
+                // Burada özelleştirilmiş kodu tanımlayın
+              
+            },
+            ckfinder: {
+            uploadUrl: 'http://localhost/vizyontakvimi/admin/controller/upload.php',
+        },
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
 
-            <!-- CKEditor Initialize Script -->
-            <script>
-            ClassicEditor
-              .create(document.querySelector('#haberIcerik'), {
-                  ckfinder: {
-                      uploadUrl: 'controller/upload.php',  // PHP dosyasına görselleri yükleyecek
-                  }
-              })
-              .then(editor => {
-                  editor.plugins.get('FileRepository').on('fileUploadResponse', (evt, data) => {
-                      const response = JSON.parse(data.response);
-                      if (response.error) {
-                          alert(response.error.message); // Hata mesajını göster
-                      }
-                  });
-              })
-              .catch(error => {
-                  console.error(error);
-              });
-          
-            </script>
+
+
 
 
         </div>
