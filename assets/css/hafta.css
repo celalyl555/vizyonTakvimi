@@ -493,10 +493,7 @@ td a:hover {
 }
 
 .newsTextArea {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: start;
+    display: grid;
     gap: 20px;
     width: 100%;
 }

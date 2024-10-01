@@ -522,8 +522,9 @@ table.table .avatar {
 
 .btn-delete i {
     margin: 0 !important;
+    font-size: 19px !important;
 }
 
 .p-03 {
-    padding: 0px 3px !important;
+    padding: 2.2px 4.5px !important;
 }
