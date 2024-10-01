@@ -8346,16 +8346,16 @@ a[data-toggle="collapse"] {
   background: #2f89fc;
   border-color: #2f89fc; }
   .btn.btn-primary:hover, .btn.btn-primary:focus {
-    background: #2f89fc !important;
-    border-color: #2f89fc !important; }
+    background: #0069d9 !important;
+    border-color: #0069d9 !important; }
 
 .footer p {
   color: rgba(255, 255, 255, 0.5); }
 
 .form-control {
   height: 40px !important;
-  background: #fff;
-  color: #000;
+  background: #fff !important;
+  color: #000 !important;
   font-size: 13px;
   border-radius: 4px;
   -webkit-box-shadow: none !important;
@@ -8386,4 +8386,8 @@ a[data-toggle="collapse"] {
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
+  }
+
+  .form-control.textarea {
+    height: auto !important;
   }

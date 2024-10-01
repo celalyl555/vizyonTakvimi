@@ -105,17 +105,15 @@ body.loggedin {
 }
 .content h2 {
 	margin: 0;
-	padding: 25px 0;
 	font-size: 22px;
-	border-bottom: 1px solid #e0e0e3;
 	color: #4a536e;
 }
-.content > p, .content > div {
+/* .content > p, .content > div {
 	box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);
 	margin: 25px 0;
 	padding: 25px;
 	background-color: #fff;
-}
+} */
 .content > p table td, .content > div table td {
 	padding: 5px;
 }
@@ -319,6 +317,9 @@ table.table .avatar {
 .modal .modal-dialog {
     max-width: 400px;
 }
+.modal .modal-dialog.modal-xl {
+    max-width: 80%;
+}
 .modal .modal-header, .modal .modal-body, .modal .modal-footer {
     padding: 20px 30px;
 }
@@ -413,3 +414,30 @@ table.table .avatar {
     cursor: pointer;
   }
   
+  .bgnone {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+	border-bottom: 2px solid #555555;
+  }
+
+  .bgnone h2 {
+    color: #555555;
+    font-weight: bold;
+  }
+
+  .gap-5 {
+    gap: 10px;
+  }
+
+  .row:after, .row:before {
+    content: none !important;
+    }
+
+    .card-img-top {
+        object-fit: cover;
+        height: 200px;
+        width: 100%;
+    }
+    
