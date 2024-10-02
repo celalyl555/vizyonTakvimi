@@ -13,6 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
     // Film ile ilgili form verilerini alıyoruz     
     $filmadi = $_POST['filmadi']; 
+    $filmkonu = $_POST['filmKonu']; 
     $vizyonTarihi = $_POST['vizyonTarihi']; 
     $dagitimListesi = $_POST['dagitimListesi']; // Array
     $studyoListesi = $_POST['studyoListesi']; // Array
@@ -69,8 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Film bilgilerini veritabanına ekleme
-    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi, kapak_resmi) VALUES (?,?, ?)");
-    $stmt->execute([$filmadi, $vizyonTarihi, $kapakFotoYollari[0]]);
+    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi, kapak_resmi, film_konu) VALUES (?,?,?,?)");
+    $stmt->execute([$filmadi, $vizyonTarihi, $kapakFotoYollari[0], $filmkonu]);
     $film_id = $con->lastInsertId(); // Eklenen filmin ID'sini alıyoruz
 
     $f=0;

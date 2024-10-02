@@ -268,15 +268,30 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     required>
                                             </div>
 
+                                         
                                             <div class="form-group">
-                                                <select name="kategori[]" id="minimal-multiselect" multiple="multiple">
-                                                    <?php
-                    foreach ($kategoriListesi as $kategori) {
-                        echo '<option value="' . $kategori['idKategori'] . '">' . htmlspecialchars($kategori['kategoriAd']) . '</option>';
-                    }
-                ?>
-                                                </select>
-                                            </div>
+                                                        <label for="sinemadagitim">Sinema Dağıtım</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" id="sinemadagitim" name="sinemadagitim"
+                                                                class="tagInput form-control"
+                                                                placeholder="Seçilen dağıtım şirketleri" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($kategoriListesi as $kategori) {
+                                                                        $id = htmlspecialchars($kategori['idKategori']);
+                                                                        $country_name = htmlspecialchars($kategori['kategoriAd']);
+                                                                        echo "<label for='kategorii{$id}'><input type='checkbox' id='kategorii{$id}' name='kategori[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                         </div>
                                         <div class="modal-footer">
                                             <input type="button" id="addoyuncugeri" class="btn btn-default"
@@ -1860,7 +1875,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-group">
                                     <label for="filmKonu">Filmin Konusu</label>
                                     <textarea class="form-control textarea" rows="6" name="filmKonu"
-                                        id="filmKonu"></textarea>
+                                    id="filmKonu"></textarea>
                                 </div>
                             </div>
                         </div>

@@ -351,6 +351,7 @@ $(document).ready(function() {
                 contentType: false, 
                 processData: false, 
                 success: function(response){
+                  alert(response);
                     if(response.trim()==="" || response.trim===null){
                       localStorage.setItem("uri", 'content3');
                       location.reload();
