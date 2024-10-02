@@ -191,6 +191,43 @@ class OyuncuController {
             echo "Kategori silinirken hata oluştu: " . $e->getMessage();
         }
     }
+
+
+
+    public function haberSil($haberid) {
+        try {
+
+            $stmtSelect = $this->dbConnection->prepare("SELECT haberfoto FROM haberler WHERE idhaber = :haberid");
+            $stmtSelect->bindParam(':haberid', $haberid, PDO::PARAM_INT);
+            $stmtSelect->execute();
+            
+            // Resim yollarını al
+            $resimler = $stmtSelect->fetchAll(PDO::FETCH_COLUMN);
+        
+            // Resim dosyalarını sunucudan sil
+            foreach ($resimler as $resimYolu) {
+               
+                    unlink("../../haberfoto/".$resimYolu); // Dosyayı sil
+                
+
+            }
+
+            $stmt = $this->dbConnection->prepare("DELETE FROM haberler WHERE idhaber = :haberid");
+            $stmt->bindParam(':haberid', $haberid, PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+                if ($stmt->rowCount() > 0) {
+                    echo "Haber başarıyla silindi.";
+                } else {
+                    echo "Silinecek Haber bulunamadı.";
+                }
+            } else {
+                echo "Haber silinirken hata oluştu.";
+            }
+        } catch (PDOException $e) {
+            echo "Haber silinirken hata oluştu: " . $e->getMessage();
+        }
+    }
     
 }
 
@@ -223,6 +260,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Ölüm tarihi güncelleme
         $filmSil = $_POST['filmSil'];
         $oyuncuController->filmSil($filmSil);
+    }
+    elseif (isset($_POST['haberid'])) {
+        // Ölüm tarihi güncelleme
+        $haberid = $_POST['haberid'];
+        $oyuncuController->haberSil($haberid);
     }
 }
 ?>

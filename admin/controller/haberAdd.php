@@ -1,24 +1,42 @@
 <?php
-// PDO bağlantınızı buraya ekleyin
 include('../conn.php'); // PDO bağlantı dosyanız
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Verileri alın
     $baslik = isset($_POST['baslik']) ? $_POST['baslik'] : '';
     $icerik = isset($_POST['icerik']) ? $_POST['icerik'] : '';
+    $fotograf = isset($_FILES['kapakfoto']) ? $_FILES['kapakfoto'] : '';
 
-    // Boş alanları kontrol et
-    if (!empty($baslik) && !empty($icerik)) {
+
+    if (!empty($baslik) && !empty($icerik) && !empty($fotograf)) {
         try {
-            // Güncel tarih ve saati al
-            $tarih = date('Y-m-d H:i:s'); // YYYY-MM-DD HH:MM:SS formatında tarih
+            $tarih = date('Y-m-d H:i:s');
+            $kapakFotoDizin = "../../haberfoto/";
+            $fotografAdi = "";
 
-            // Veritabanına ekle
-            $sql = "INSERT INTO haberler (baslik, icerik, tarih) VALUES (:baslik, :icerik, :tarih)";
+            if (!empty($fotograf['name'])) {
+                $fotoSayisi = count($fotograf['name']);
+                for ($i = 0; $i < $fotoSayisi; $i++) {
+                    $orijinalAd = basename($fotograf['name'][$i]);
+                    $dosyaUzantisi = pathinfo($orijinalAd, PATHINFO_EXTENSION);
+                    $benzersizAd = time() . '_' . uniqid() . '.' . $dosyaUzantisi;
+                    $kapakFotoYolu = $kapakFotoDizin . $benzersizAd;
+
+                    if (move_uploaded_file($fotograf['tmp_name'][$i], $kapakFotoYolu)) {
+                        $fotografAdi = $benzersizAd;
+                    } else {
+                        echo "Fotoğraf yüklenirken hata: " . $fotograf['name'][$i];
+                    }
+                }
+            } else {
+                echo "Fotoğraf seçilmedi.";
+            }
+
+            $sql = "INSERT INTO haberler (baslik, icerik, tarih, haberfoto) VALUES (:baslik, :icerik, :tarih, :haberfoto)";
             $stmt = $con->prepare($sql);
             $stmt->bindParam(':baslik', $baslik);
             $stmt->bindParam(':icerik', $icerik);
             $stmt->bindParam(':tarih', $tarih);
+            $stmt->bindParam(':haberfoto', $fotografAdi);
 
             if ($stmt->execute()) {
                 echo "Haber başarıyla kaydedildi.";
@@ -29,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo "Veritabanı hatası: " . $e->getMessage();
         }
     } else {
-        echo "Lütfen tüm alanları doldurun.";
+        echo "1";
     }
 }
 ?>

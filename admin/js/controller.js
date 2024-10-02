@@ -168,7 +168,7 @@ $(document).ready(function() {
           
             const button = document.getElementById('addfilmturuModal');
               button.click();
-              localStorage.setItem("uri", 'content3');
+              localStorage.setItem("uri", 'conten3');
               location.reload();
           },
           error: function(xhr, status, error) {
@@ -396,27 +396,71 @@ $(document).ready(function() {
 // haberler ekleme
 
 
-
 $(document).ready(function() {
   $('#formHaberler').on('submit', function(event) {
       event.preventDefault(); // Sayfanın yenilenmesini önler
-alert("burada");
+
       var haberBaslik = $('#haberBaslik').val();
       var haberIcerik = $('#haberIcerik').val();
+      var kapakFotoInput = $('input[name="kapakfoto[]"]'); // name ile inputu seç
+     
+      var kapakFoto = kapakFotoInput[0].files; // Dosyaları seç
+
+      // FormData nesnesi oluştur
+      var formData = new FormData();
+      formData.append('baslik', haberBaslik);
+      formData.append('icerik', haberIcerik);
+
+      // Dosyaları FormData'ya ekle
+      for (var i = 0; i < kapakFoto.length; i++) {
+          formData.append('kapakfoto[]', kapakFoto[i]);
+      }
 
       $.ajax({
           url: 'controller/haberAdd.php',
           type: 'POST',
-          data: {
-              baslik: haberBaslik,
-              icerik: haberIcerik
-          },
+          data: formData,
+          processData: false,  
+          contentType: false,  
           success: function(response) {
-              alert('Haber başarıyla kaydedildi: ' + response);
+            if(response==="1"){
+              alert("Tüm Alanları Doldurunuz.")
+            }else{
+              localStorage.setItem("uri", 'content7');
+              location.reload();
+            }
+           
           },
           error: function(jqXHR, textStatus, errorThrown) {
               alert('Hata: ' + errorThrown);
           }
       });
+  });
+});
+
+ // haber Sil
+
+ $(document).ready(function() {
+  $('#haberSil').click(function(e) {
+    e.preventDefault(); // Sayfanın yeniden yüklenmesini engeller
+
+    // Kategori adını al
+    var haberid= $('#kategoriid').val();
+    $.ajax({
+      url: 'controller/filmController.php',
+      type: 'POST',
+      data: { haberid: haberid },
+      success: function(response) {
+   
+        // Başarılı olursa yapılacak işlemler
+        
+          localStorage.setItem("uri", 'content7');
+          location.reload();
+      },
+      error: function(xhr, status, error) {
+        // Hata olursa yapılacak işlemler
+        console.log('Hata: ' + error);
+      }
+    });
   });
 });

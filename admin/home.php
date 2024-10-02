@@ -29,6 +29,10 @@ $stmt = $con->prepare('SELECT * FROM sinemadagitim');
 $stmt->execute();
 $dagitimListesi = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+$stmt = $con->prepare('SELECT * FROM haberler');
+$stmt->execute();
+$haberler = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 $sql = "
     SELECT o.idoyuncu, o.adsoyad, o.dogum, o.olum, o.resimyol, 
     GROUP_CONCAT(k.kategoriAd SEPARATOR ', ') AS roller,
@@ -41,6 +45,8 @@ $sql = "
 
 $stmt = $con->query($sql);
 $veriler = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 // FİLMLER VERİ TABANI
 $sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.kapak_resmi, GROUP_CONCAT(ft.filmturu SEPARATOR ', ') AS filmturleri
 FROM filmler f
@@ -68,7 +74,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <link href="style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/style.css"> <!-- Eğer bu stil dosyasına ihtiyacınız yoksa kaldırabilirsiniz. -->
     <link href="css/main.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="ckeditor5/ckeditor5.css">
+
 
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
@@ -125,7 +131,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <button onclick="showContent('content4')"><span class="fa fa-tv mr-3"></span>DİZİLER</button>
                 </li>
                 <li>
-                    <button onclick="showContent('content5')"><span
+                    <button onclick="showContent('content7')"><span
                             class="fa fa-newspaper mr-3"></span>HABERLER</button>
                 </li>
                 <li>
@@ -203,12 +209,13 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="d-row-ayar">
                                                         <a href="#editEmployeeModal" class="btn-edit p-03 m-0"
                                                             onclick="getId1('<?php echo $row['idoyuncu']; ?>');"
-                                                            data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
-                                                                title="Edit">&#xE254;</i></a>
-                                                        <a href="#deleteEmployeeModal text-center" class="btn-delete p-03 m-0"
+                                                            data-toggle="modal"><i class="material-icons"
+                                                                data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                                                        <a href="#deleteEmployeeModal text-center"
+                                                            class="btn-delete p-03 m-0"
                                                             onclick="getId('<?php echo $row['idoyuncu']; ?>');"
-                                                            data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
-                                                                title="Delete">&#xE872;</i></a>
+                                                            data-toggle="modal"><i class="material-icons"
+                                                                data-toggle="tooltip" title="Delete">&#xE872;</i></a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -244,11 +251,11 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <div class="modal-body">
                                             <div class="form-group">
                                                 <label>Ad - Soyad</label>
-                                                <input type="text" name="adSoyad" class="form-control" >
+                                                <input type="text" name="adSoyad" class="form-control">
                                             </div>
                                             <div class="form-group">
                                                 <label>Doğum Tarihi</label>
-                                                <input type="date" name="dogumTarihi" class="form-control" >
+                                                <input type="date" name="dogumTarihi" class="form-control">
                                             </div>
 
                                             <div class="form-group">
@@ -499,30 +506,33 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             <tr>
                                                 <td><img src="../kapakfoto/<?php echo htmlspecialchars($row['kapak_resmi']); ?>"
                                                         class="rounded img-thumbnail tumbimg" alt="Fotoğraf"></td>
-                                                <td class="align-middle"><?php echo htmlspecialchars($row['film_adi']); ?>
+                                                <td class="align-middle">
+                                                    <?php echo htmlspecialchars($row['film_adi']); ?>
                                                 </td>
-                                                <td class="align-middle"><?php echo formatDate($row['vizyon_tarihi']); ?></td>
+                                                <td class="align-middle">
+                                                    <?php echo formatDate($row['vizyon_tarihi']); ?></td>
                                                 <td class="align-middle">
                                                     <?php echo !empty($row['filmturleri']) ? htmlspecialchars($row['filmturleri']) : '-'; ?>
                                                 </td>
 
-                                            
+
 
                                                 </td>
                                                 <td class="align-middle">
 
                                                     <a href="#deleteEmployeeModalfilmler" class="btn-delete"
                                                         onclick="getId('<?php echo $row['id']; ?>');"
-                                                        data-toggle="modal"><i class="material-icons" data-toggle="tooltip"
-                                                            title="Delete">&#xE872;</i></a>
+                                                        data-toggle="modal"><i class="material-icons"
+                                                            data-toggle="tooltip" title="Delete">&#xE872;</i></a>
 
                                                 </td>
                                                 <td class="align-middle">
-                                                   <button onclick="showContent('content6')" class="btn-page"><i class="material-icons">chevron_right</i></button>
+                                                    <button onclick="showContent('content6')" class="btn-page"><i
+                                                            class="material-icons">chevron_right</i></button>
                                                 </td>
                                             </tr>
                                             <?php endforeach; ?>
-                                            
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -545,7 +555,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="modal-dialog modal-xl">
                                 <!-- Modal genişliğini artırmak için modal-xl kullanıldı -->
                                 <div class="modal-content">
-                                    <form id="filmForm"  method="post" enctype="multipart/form-data">
+                                    <form id="filmForm" method="post" enctype="multipart/form-data">
                                         <div class="modal-header">
                                             <h4 class="modal-title">Film Ekle</h4>
                                             <button type="button" class="close" data-dismiss="modal"
@@ -557,28 +567,26 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <!-- İlk sütun -->
                                                     <div class="form-group">
                                                         <label>Film Adı</label>
-                                                        <input type="text" name="filmadi" class="form-control"
-                                                             >
+                                                        <input type="text" name="filmadi" class="form-control">
                                                     </div>
                                                     <!-- Vizyon Tarihi -->
                                                     <div class="form-group">
                                                         <label>Vizyon Tarihi</label>
-                                                        <input type="date" name="vizyonTarihi" class="form-control"
-                                                             >
+                                                        <input type="date" name="vizyonTarihi" class="form-control">
                                                     </div>
                                                     <!-- Sinema Dağıtım -->
                                                     <div class="form-group">
                                                         <label for="sinemadagitim">Sinema Dağıtım</label>
                                                         <div class="selected-tags">
-                                                            <input type="text" id="sinemadagitim" name="sinemadagitim" class="tagInput form-control"
+                                                            <input type="text" id="sinemadagitim" name="sinemadagitim"
+                                                                class="tagInput form-control"
                                                                 placeholder="Seçilen dağıtım şirketleri" readonly
-                                                                onclick="toggleDropdown(this)" >
+                                                                onclick="toggleDropdown(this)">
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($dagitimListesi as $dagitim) {
                                                                         $id = htmlspecialchars($dagitim['iddagitim']);
@@ -593,15 +601,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="form-group">
                                                         <label>Stüdyo</label>
                                                         <div class="selected-tags">
-                                                            <input type="text"   class="tagInput form-control"
+                                                            <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen stüdyolar" readonly
                                                                 onclick="toggleDropdown(this)">
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($studyoListesi as $studyo) {
                                                                         $id = htmlspecialchars($studyo['id']);
@@ -617,15 +624,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="form-group">
                                                         <label>Ülke</label>
                                                         <div class="selected-tags">
-                                                            <input type="text"  class="tagInput form-control"
+                                                            <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen ülkeler" readonly
                                                                 onclick="toggleDropdown(this)">
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($ulkeListesi as $ulke) {
                                                                         $id = htmlspecialchars($ulke['id']);
@@ -640,15 +646,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="form-group">
                                                         <label>Film Türü</label>
                                                         <div class="selected-tags">
-                                                            <input type="text"  class="tagInput form-control"
+                                                            <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen film türleri" readonly
                                                                 onclick="toggleDropdown(this)">
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($filmturuListesi as $filmturu) {
                                                                         $id = htmlspecialchars($filmturu['idfilm']);
@@ -672,15 +677,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="form-group">
                                                         <label>Yönetmen</label>
                                                         <div class="selected-tags">
-                                                            <input type="text"  class="tagInput form-control"
+                                                            <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen yönetmen" readonly
                                                                 onclick="toggleDropdown(this)">
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                    foreach ($veriler as $row) {
                                                                        
@@ -708,9 +712,8 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
-                                                                <input type="text"   class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
                                                                        
@@ -738,9 +741,8 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
-                                                                <input type="text"   class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                    foreach ($veriler as $row) {
                                                                        
@@ -768,9 +770,8 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
-                                                                <input type="text"  class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
                                                                        
@@ -798,9 +799,8 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
-                                                                <input type="text"  class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
                                                                        
@@ -822,15 +822,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     <div class="form-group">
                                                         <label>Film Oyuncuları</label>
                                                         <div class="selected-tags">
-                                                            <input type="text"  class="tagInput form-control"
-                                                                placeholder="Seçilen film oyuncuları"
-                                                                readonly onclick="toggleDropdown(this)">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen film oyuncuları" readonly
+                                                                onclick="toggleDropdown(this)">
                                                         </div>
                                                         <div class="multiselect">
                                                             <div class="checkboxes">
                                                                 <input type="text" class="searchBox"
-                                                                    placeholder="Ara..."
-                                                                    onkeyup="filterFunction(this)">
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
                                                                 <?php
                                                                     foreach ($veriler as $row) {
                                                                        
@@ -850,12 +849,13 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </div>
 
 
-                                                </div> 
+                                                </div>
                                                 <!-- Film Aciklamasi -->
                                                 <div class="col-12">
                                                     <div class="form-group">
                                                         <label for="filmKonu">Filmin Konusu</label>
-                                                        <textarea class="form-control textarea" rows="6" name="filmKonu" id="filmKonu"></textarea>
+                                                        <textarea class="form-control textarea" rows="6" name="filmKonu"
+                                                            id="filmKonu"></textarea>
                                                     </div>
                                                 </div>
                                                 <!-- sağ sol sütun bitiş -->
@@ -881,7 +881,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 </div>
 
 
-                                                
+
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -894,7 +894,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </div>
                         </div>
 
-                        
+
                         <!-- Delete Modal HTML -->
                         <div id="deleteEmployeeModalfilmler" class="modal fade">
                             <div class="modal-dialog">
@@ -923,432 +923,534 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <!-- Film Türü İşlemleri -->
 
                     <div class="col-12 bottom-section">
-                            <div class="row wrap-1440">
-                                <div class="col-md-4 left-column p-0">
-                                    <div class="table-wrapper">
-                                        <div class="table-title">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <h5>FİLM TÜRLERİ</h5>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <a href="#addEmployeeModalfilmturu"
-                                                        class="btn btn-success d-flex align-items-center"
-                                                        data-toggle="modal">
-                                                        <i class="material-icons mr-2">&#xE147;</i> <span>Film Türü
-                                                            Ekle</span>
-                                                    </a>
-
-                                                </div>
+                        <div class="row wrap-1440">
+                            <div class="col-md-4 left-column p-0">
+                                <div class="table-wrapper">
+                                    <div class="table-title">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5>FİLM TÜRLERİ</h5>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <a href="#addEmployeeModalfilmturu"
+                                                    class="btn btn-success d-flex align-items-center"
+                                                    data-toggle="modal">
+                                                    <i class="material-icons mr-2">&#xE147;</i> <span>Film Türü
+                                                        Ekle</span>
+                                                </a>
 
                                             </div>
+
                                         </div>
-                                        <div class="table-over">
-                                            <table class="table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="2">Film Türü</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <?php 
+                                    </div>
+                                    <div class="table-over">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Film Türü</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <?php 
                                                        foreach ($filmturuListesi as $filmturu) {
                                                         echo "<td>" . htmlspecialchars($filmturu['filmturu']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
                                                     
                                                     
                                                        ?>
 
-                                                        <td class="text-center">
+                                                    <td class="text-center">
 
-                                                            <a href="#deleteEmployeeModalfilmturu" id="kategoridelete"
-                                                                onclick="getId('<?php echo $filmturu['idfilm']; ?>');"
-                                                                class="btn-delete p-03" data-toggle="modal">
-                                                                <i class="material-icons" data-toggle="tooltip"
-                                                                    title="Delete">&#xE872;</i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
+                                                        <a href="#deleteEmployeeModalfilmturu" id="kategoridelete"
+                                                            onclick="getId('<?php echo $filmturu['idfilm']; ?>');"
+                                                            class="btn-delete p-03" data-toggle="modal">
+                                                            <i class="material-icons" data-toggle="tooltip"
+                                                                title="Delete">&#xE872;</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
 
-                                                    <?php     }?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="clearfix">
-                                            <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                                            <ul class="pagination">
-                                                <li class="page-item disabled"><a href="#">Previous</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                                <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">4</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">5</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                                            </ul>
-                                        </div>
+                                                <?php     }?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                                        <ul class="pagination">
+                                            <li class="page-item disabled"><a href="#">Previous</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <!-- Add Modal HTML -->
-                                <div id="addEmployeeModalfilmturu" class="modal fade">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form id="kategoriEkleForm">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Ekle</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">&times;</button>
+                            </div>
+                            <!-- Add Modal HTML -->
+                            <div id="addEmployeeModalfilmturu" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form id="kategoriEkleForm">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Ekle</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label>Film Türü</label>
+                                                    <input type="text" name="film_turu" id="film_turu"
+                                                        class="form-control" required>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label>Film Türü</label>
-                                                        <input type="text" name="film_turu" id="film_turu"
-                                                            class="form-control" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="button" id="addfilmturuModal" class="btn btn-default"
-                                                        data-dismiss="modal" value="Geri">
-                                                    <input type="button" class="btn btn-info" value="Kaydet"
-                                                        id="submitBtnfilmturu">
-                                                </div>
-                                            </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="addfilmturuModal" class="btn btn-default"
+                                                    data-dismiss="modal" value="Geri">
+                                                <input type="button" class="btn btn-info" value="Kaydet"
+                                                    id="submitBtnfilmturu">
+                                            </div>
+                                        </form>
 
-                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Delete Modal HTML -->
-                                <div id="deleteEmployeeModalfilmturu" class="modal fade">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form>
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Sil</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">&times;</button>
-                                                </div>
-                                                <div class="modal-body">
+                            <!-- Delete Modal HTML -->
+                            <div id="deleteEmployeeModalfilmturu" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Sil</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
 
-                                                    <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
-                                                    <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="button" id="deleteEmployeeModalfilmturugeri"
-                                                        class="btn btn-default" data-dismiss="modal" value="Geri">
-                                                    <input type="submit" id="filmturuSil" class="btn btn-danger"
-                                                        value="Sil">
-                                                </div>
-                                            </form>
-                                        </div>
+                                                <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
+                                                <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="deleteEmployeeModalfilmturugeri"
+                                                    class="btn btn-default" data-dismiss="modal" value="Geri">
+                                                <input type="submit" id="filmturuSil" class="btn btn-danger"
+                                                    value="Sil">
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
-                                <div class="col-md-4 middle-column">
-                                    <div class="table-wrapper">
-                                        <div class="table-title">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <h5>STÜDYO</h5>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <a href="#addEmployeeModalstudyo"
-                                                        class="btn btn-success d-flex align-items-center"
-                                                        data-toggle="modal">
-                                                        <i class="material-icons mr-2">&#xE147;</i> <span>Stüdyo
-                                                            Ekle</span>
-                                                    </a>
-
-                                                </div>
+                            </div>
+                            <div class="col-md-4 middle-column">
+                                <div class="table-wrapper">
+                                    <div class="table-title">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5>STÜDYO</h5>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <a href="#addEmployeeModalstudyo"
+                                                    class="btn btn-success d-flex align-items-center"
+                                                    data-toggle="modal">
+                                                    <i class="material-icons mr-2">&#xE147;</i> <span>Stüdyo
+                                                        Ekle</span>
+                                                </a>
 
                                             </div>
+
                                         </div>
-                                        <div class="table-over">
-                                            <table class="table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th colspan="2">Stüdyo Adı</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <?php 
+                                    </div>
+                                    <div class="table-over">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Stüdyo Adı</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <?php 
                                                        foreach ($studyoListesi as $studyo) {
                                                         echo "<td>" . htmlspecialchars($studyo['studyoad']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
                                                     
                                                     
                                                        ?>
 
-                                                        <td class="text-center">
+                                                    <td class="text-center">
 
-                                                            <a href="#deleteEmployeeModalstudyo" id="kategoridelete"
-                                                                onclick="getId('<?php echo $studyo['id']; ?>');"
-                                                                class="btn-delete p-03" data-toggle="modal">
-                                                                <i class="material-icons" data-toggle="tooltip"
-                                                                    title="Delete">&#xE872;</i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
+                                                        <a href="#deleteEmployeeModalstudyo" id="kategoridelete"
+                                                            onclick="getId('<?php echo $studyo['id']; ?>');"
+                                                            class="btn-delete p-03" data-toggle="modal">
+                                                            <i class="material-icons" data-toggle="tooltip"
+                                                                title="Delete">&#xE872;</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
 
-                                                    <?php     }?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="clearfix">
-                                            <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                                            <ul class="pagination">
-                                                <li class="page-item disabled"><a href="#">Previous</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                                <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">4</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">5</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                                            </ul>
-                                        </div>
+                                                <?php     }?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                                        <ul class="pagination">
+                                            <li class="page-item disabled"><a href="#">Previous</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                                        </ul>
                                     </div>
                                 </div>
-                                <!-- Add Modal HTML -->
-                                <div id="addEmployeeModalstudyo" class="modal fade">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form id="studyoEkleForm">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Stüdyo Ekle</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">&times;</button>
+                            </div>
+                            <!-- Add Modal HTML -->
+                            <div id="addEmployeeModalstudyo" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form id="studyoEkleForm">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Stüdyo Ekle</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label>Stüdyo Adı</label>
+                                                    <input type="text" name="studyo" id="studyo" class="form-control"
+                                                        required>
                                                 </div>
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label>Stüdyo Adı</label>
-                                                        <input type="text" name="studyo" id="studyo"
-                                                            class="form-control" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="button" id="addstudyoModal" class="btn btn-default"
-                                                        data-dismiss="modal" value="Geri">
-                                                    <input type="button" class="btn btn-info" value="Kaydet"
-                                                        id="submitBtnstudyo">
-                                                </div>
-                                            </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="addstudyoModal" class="btn btn-default"
+                                                    data-dismiss="modal" value="Geri">
+                                                <input type="button" class="btn btn-info" value="Kaydet"
+                                                    id="submitBtnstudyo">
+                                            </div>
+                                        </form>
 
-                                        </div>
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Delete Modal HTML -->
-                                <div id="deleteEmployeeModalstudyo" class="modal fade">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form>
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Sil</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">&times;</button>
-                                                </div>
-                                                <div class="modal-body">
+                            <!-- Delete Modal HTML -->
+                            <div id="deleteEmployeeModalstudyo" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Sil</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
 
-                                                    <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
-                                                    <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="button" id="deleteEmployeeModalstudyogeri"
-                                                        class="btn btn-default" data-dismiss="modal" value="Geri">
-                                                    <input type="submit" id="studyoSil" class="btn btn-danger"
-                                                        value="Sil">
-                                                </div>
-                                            </form>
-                                        </div>
+                                                <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
+                                                <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="deleteEmployeeModalstudyogeri"
+                                                    class="btn btn-default" data-dismiss="modal" value="Geri">
+                                                <input type="submit" id="studyoSil" class="btn btn-danger" value="Sil">
+                                            </div>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
 
 
-                                <div class="col-md-4 p-0 right-column">
-                                    <div class="table-wrapper">
-                                        <div class="table-title">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <h5>SİNEMA DAĞITIM</h5>
-                                                </div>
-                                                <div class="col-sm-6">
-                                                    <a href="#addEmployeeModaldagitim"
-                                                        class="btn btn-success d-flex align-items-center"
-                                                        data-toggle="modal">
-                                                        <i class="material-icons mr-2">&#xE147;</i> <span>Sinema Dağıtım
-                                                            Ekle</span>
-                                                    </a>
-
-                                                </div>
+                            <div class="col-md-4 p-0 right-column">
+                                <div class="table-wrapper">
+                                    <div class="table-title">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5>SİNEMA DAĞITIM</h5>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <a href="#addEmployeeModaldagitim"
+                                                    class="btn btn-success d-flex align-items-center"
+                                                    data-toggle="modal">
+                                                    <i class="material-icons mr-2">&#xE147;</i> <span>Sinema Dağıtım
+                                                        Ekle</span>
+                                                </a>
 
                                             </div>
+
                                         </div>
-                                        <div class="table-over">
-                                            <table class="table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
+                                    </div>
+                                    <div class="table-over">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
 
-                                                        <th colspan="2">Sinema Dağıtım</th>
-                                                    </tr>
+                                                    <th colspan="2">Sinema Dağıtım</th>
+                                                </tr>
 
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <?php 
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <?php 
                                                        foreach ($dagitimListesi as $dagitim) {
                                                         echo "<td>" . htmlspecialchars($dagitim['dagitimad']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
                                                     
                                                     
                                                        ?>
 
-                                                        <td class="text-center">
+                                                    <td class="text-center">
 
-                                                            <a href="#deleteEmployeeModaldagitim" id="kategoridelete"
-                                                                onclick="getId('<?php echo $dagitim['iddagitim']; ?>');"
-                                                                class="btn-delete p-03" data-toggle="modal">
-                                                                <i class="material-icons" data-toggle="tooltip"
-                                                                    title="Delete">&#xE872;</i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
+                                                        <a href="#deleteEmployeeModaldagitim" id="kategoridelete"
+                                                            onclick="getId('<?php echo $dagitim['iddagitim']; ?>');"
+                                                            class="btn-delete p-03" data-toggle="modal">
+                                                            <i class="material-icons" data-toggle="tooltip"
+                                                                title="Delete">&#xE872;</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
 
-                                                    <?php     }?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="clearfix">
-                                            <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                                            <ul class="pagination">
-                                                <li class="page-item disabled"><a href="#">Previous</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                                <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">4</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">5</a></li>
-                                                <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                                            </ul>
-                                        </div>
+                                                <?php     }?>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
-                                <!-- Add Modal HTML -->
-                                <div id="addEmployeeModaldagitim" class="modal fade">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form id="dagitimEkleForm">
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Sinema Dağıtım Ekle</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">&times;</button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="form-group">
-                                                        <label for="dagitim">Sinema Dağıtım</label>
-                                                        <input type="text" name="dagitim" id="dagitim"
-                                                            class="form-control" required>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="button" id="addModaldagitim" class="btn btn-default"
-                                                        data-dismiss="modal" value="Geri">
-                                                    <input type="button" class="btn btn-info" value="Kaydet"
-                                                        id="submitBtndagitim">
-                                                </div>
-                                            </form>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Delete Modal HTML -->
-                                <div id="deleteEmployeeModaldagitim" class="modal fade">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form>
-                                                <div class="modal-header">
-                                                    <h4 class="modal-title">Sil</h4>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-hidden="true">&times;</button>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
-                                                    <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <input type="button" id="deleteEmployeeModaldagitimgeri"
-                                                        class="btn btn-default" data-dismiss="modal" value="Geri">
-                                                    <input type="submit" id="dagitimSil" class="btn btn-danger"
-                                                        value="Sil">
-                                                </div>
-                                            </form>
-                                        </div>
+                                    <div class="clearfix">
+                                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                                        <ul class="pagination">
+                                            <li class="page-item disabled"><a href="#">Previous</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
+                            <!-- Add Modal HTML -->
+                            <div id="addEmployeeModaldagitim" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form id="dagitimEkleForm">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Sinema Dağıtım Ekle</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label for="dagitim">Sinema Dağıtım</label>
+                                                    <input type="text" name="dagitim" id="dagitim" class="form-control"
+                                                        required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="addModaldagitim" class="btn btn-default"
+                                                    data-dismiss="modal" value="Geri">
+                                                <input type="button" class="btn btn-info" value="Kaydet"
+                                                    id="submitBtndagitim">
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete Modal HTML -->
+                            <div id="deleteEmployeeModaldagitim" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Sil</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
+                                                <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="deleteEmployeeModaldagitimgeri"
+                                                    class="btn btn-default" data-dismiss="modal" value="Geri">
+                                                <input type="submit" id="dagitimSil" class="btn btn-danger" value="Sil">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
             </div>
 
-            
+
             <div id="content4" class="content" style="display: none;">DİZİLER</div>
-            <div id="content5" class="content" style="display: none;">
 
-            <h2>Haber Ekle</h2>
-            <form id="formHaberler" method="post">
-                <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
-                    <h2>Afiş Resimi</h2>
-                </div>
+            <div id="content7" class="content" style="display: none;">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 top-section">
+                            <div class="table-wrapper">
+                                <div class="table-title">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <h5>HABERLER</h5>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <a href="#" class="btn btn-success d-flex align-items-center"
+                                                onclick="showContent('content5'); return false;">
+                                                <i class="material-icons mr-2">&#xE147;</i> <span>Haber Ekle</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-over">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th class="align-middle text-center">Fotoğraf</th>
+                                                <th class="align-middle text-center">Haber Başlığı</th>
+                                                <th class="align-middle text-center">Yayın Tarihi</th>
+                                                <th class="align-middle text-center"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($haberler as $row): ?>
+                                            <tr>
+                                                <td class="align-middle text-center">
+                                                    <img src="../haberfoto/<?php echo htmlspecialchars($row['haberfoto']); ?>"
+                                                        class="rounded img-thumbnail" alt="Fotoğraf"
+                                                        style="width: 50px; height: 50px;">
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <?php echo htmlspecialchars($row['baslik']); ?>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <?php echo formatDateTime($row['tarih']); ?>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <div class="d-row-ayar">
+                                                        <a href="#deleteEmployeeModalhaber" class="btn-delete p-03 m-0"
+                                                            onclick="getId('<?php echo $row['idhaber']; ?>'); return false;"
+                                                            data-toggle="modal"><i class="material-icons"
+                                                                data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <button onclick="showContent('content8')" class="btn-page"><i
+                                                            class="material-icons">chevron_right</i></button>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="clearfix">
+                                    <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                                    <ul class="pagination">
+                                        <li class="page-item disabled"><a href="#">Previous</a></li>
+                                        <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                        <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                        <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                                        <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                        <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                        <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
 
-                <div class="row">
-                    <div class="col-md-3 mb-4">
-                        <div class="multiple-uploader" id="single-uploader-inside">
-                            <div class="mup-msg">
-                                <span class="mup-main-msg">Kapak Resmi Yüklemek için
-                                    Tıklayınız.</span>
-                                <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
-                                    Fotoğrafı Yükleyiniz.</span>
+                        <!-- Silme Modalı -->
+                        <div id="deleteEmployeeModalhaber" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="post" action="your_delete_action.php">
+                                        <!-- Silme işlemi için form eylemi -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Sil</h4>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
+                                            <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
+                                            <input type="hidden" name="idhaber" id="idhaber" value="">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="button" id="deleteEmployeeModalhabergeri"
+                                                class="btn btn-default" data-dismiss="modal" value="Geri">
+                                            <input type="submit" id="haberSil" class="btn btn-danger" value="Sil">
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
-                <div class="mb-3">
-                  <label for="haberBaslik" class="form-label">Haber Başlığı</label>
-                  <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
-                </div>
+            </div>
 
-                <div class="mb-3">
-                  <label for="haberIcerik" class="form-label">Haber İçeriği</label>
-                  <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
-                </div>
+            <div id="content8" class="content" style="display: none;">burası haberler detay</div>
+            <div id="content5" class="content" style="display: none;">
 
-                <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
-            </form>
-
-           
-<!-- HTML Element for CKEditor -->
-<script>
-    ClassicEditor
-        .create(document.querySelector('#haberIcerik'), {
-            // Gömme özelliğini etkinleştir
-            mediaEmbed: {
-                previewsInData: true,
-                // Burada özelleştirilmiş kodu tanımlayın
-              
-            },
-            ckfinder: {
-            uploadUrl: 'http://localhost/vizyontakvimi/admin/controller/upload.php',
-        },
-        })
-        .catch(error => {
-            console.error(error);
-        });
-</script>
+                <h2>Haber Ekle</h2>
+                <form id="formHaberler" method="post" enctype="multipart/form-data">
 
 
 
+                    <div class="mb-3">
+                        <label for="haberBaslik" class="form-label">Haber Başlığı</label>
+                        <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="haberIcerik" class="form-label">Haber İçeriği</label>
+                        <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
+                    </div>
+                    <label for="haberBaslik" class="form-label">Haber Görseli</label>
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="multiple-uploader" id="single-uploader-haber">
+                                <div class="mup-msg">
+                                    <span class="mup-main-msg">Kapak Resmi Yüklemek için
+                                        Tıklayınız.</span>
+                                    <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
+                                        Fotoğrafı Yükleyiniz.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
+                </form>
 
 
-        </div>
+                <!-- HTML Element for CKEditor -->
+                <script>
+                ClassicEditor
+                    .create(document.querySelector('#haberIcerik'), {
+                        // Gömme özelliğini etkinleştir
+                        mediaEmbed: {
+                            previewsInData: true,
+                            // Burada özelleştirilmiş kodu tanımlayın
+
+                        },
+                        ckfinder: {
+                            uploadUrl: 'http://localhost/vizyontakvimi/admin/controller/upload.php',
+                        },
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+                </script>
+
+
+
+
+
+            </div>
 
             <div id="content6" class="content pl-5" style="display: none;">
 
@@ -1356,10 +1458,9 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
                         <h2>Box Office Değerleri</h2>
-                        <a href="#uploadModal"
-                             class="btn btn-success d-flex align-items-center" data-toggle="modal">
-                             <i class="material-icons mr-2">&#xE147;</i> <span>Excel Dosyası Yükle</span>
-                         </a>
+                        <a href="#uploadModal" class="btn btn-success d-flex align-items-center" data-toggle="modal">
+                            <i class="material-icons mr-2">&#xE147;</i> <span>Excel Dosyası Yükle</span>
+                        </a>
                     </div>
 
                     <table class="table table-striped">
@@ -1392,7 +1493,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             </tr>
                         </tbody>
                     </table>
-                
+
                 </div>
 
                 <div class="col-12 bg-white border rounded p-3 mt-5">
@@ -1404,7 +1505,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <div id="uploadModal" class="modal fade">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
-                                <form id=""  method="post" enctype="">
+                                <form id="" method="post" enctype="">
                                     <div class="modal-header">
                                         <h4 class="modal-title">Film Ekle</h4>
                                         <button type="button" class="close" data-dismiss="modal"
@@ -1414,13 +1515,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <form id="uploadForm">
                                             <div class="mb-3">
                                                 <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
-                                                <input class="form-control" type="file" id="formFile" accept=".xlsx, .xls">
+                                                <input class="form-control" type="file" id="formFile"
+                                                    accept=".xlsx, .xls">
                                             </div>
                                         </form>
                                     </div>
                                     <div class="modal-footer">
-                                        <input type="button" id="" class="btn btn-default"
-                                            data-dismiss="modal" value="Geri">
+                                        <input type="button" id="" class="btn btn-default" data-dismiss="modal"
+                                            value="Geri">
                                         <input type="submit" class="btn btn-info" value="Kaydet">
                                     </div>
                                 </form>
@@ -1433,7 +1535,8 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="col-6">
                                 <div class="form-group">
                                     <label for="filmAdi">Film Adı</label>
-                                    <input type="email" class="form-control" id="filmAdi" placeholder="Varsa Film Adı Burda Yazıcak">
+                                    <input type="email" class="form-control" id="filmAdi"
+                                        placeholder="Varsa Film Adı Burda Yazıcak">
                                 </div>
                                 <div class="form-group">
                                     <label for="vizyonTarihi">Vizyon Tarihi</label>
@@ -1443,14 +1546,13 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-group">
                                     <label>Sinema Dağıtım</label>
                                     <div class="selected-tags">
-                                        <input type="text"  class="tagInput form-control"
+                                        <input type="text" class="tagInput form-control"
                                             placeholder="Seçilen dağıtım şirketleri" readonly
-                                            onclick="toggleDropdown(this)" >
+                                            onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text" class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($dagitimListesi as $dagitim) {
@@ -1466,14 +1568,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-group">
                                     <label>Stüdyo</label>
                                     <div class="selected-tags">
-                                        <input type="text"   class="tagInput form-control"
-                                            placeholder="Seçilen stüdyolar" readonly
-                                            onclick="toggleDropdown(this)">
+                                        <input type="text" class="tagInput form-control" placeholder="Seçilen stüdyolar"
+                                            readonly onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text" class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($studyoListesi as $studyo) {
@@ -1489,14 +1589,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-group">
                                     <label>Ülke</label>
                                     <div class="selected-tags">
-                                        <input type="text"  class="tagInput form-control"
-                                            placeholder="Seçilen ülkeler" readonly
-                                            onclick="toggleDropdown(this)">
+                                        <input type="text" class="tagInput form-control" placeholder="Seçilen ülkeler"
+                                            readonly onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text" class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($ulkeListesi as $ulke) {
@@ -1512,14 +1610,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-group">
                                     <label>Film Türü</label>
                                     <div class="selected-tags">
-                                        <input type="text"  class="tagInput form-control"
-                                            placeholder="Seçilen film türleri" readonly
-                                            onclick="toggleDropdown(this)">
+                                        <input type="text" class="tagInput form-control"
+                                            placeholder="Seçilen film türleri" readonly onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text" class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($filmturuListesi as $filmturu) {
@@ -1537,14 +1633,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-group">
                                     <label>Yönetmen</label>
                                     <div class="selected-tags">
-                                        <input type="text"  class="tagInput form-control"
-                                            placeholder="Seçilen yönetmen" readonly
-                                            onclick="toggleDropdown(this)">
+                                        <input type="text" class="tagInput form-control" placeholder="Seçilen yönetmen"
+                                            readonly onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text" class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                foreach ($veriler as $row) {
@@ -1573,8 +1667,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text"   class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($veriler as $row) {
@@ -1603,8 +1696,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text"   class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                foreach ($veriler as $row) {
@@ -1628,13 +1720,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <label>Kurgu</label>
                                     <div class="selected-tags">
                                         <input type="text" class="tagInput form-control"
-                                            placeholder="Seçilen film türleri burada görünecek..."
-                                            readonly onclick="toggleDropdown(this)">
+                                            placeholder="Seçilen film türleri burada görünecek..." readonly
+                                            onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text"  class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($veriler as $row) {
@@ -1658,13 +1749,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <label>Müzik</label>
                                     <div class="selected-tags">
                                         <input type="text" class="tagInput form-control"
-                                            placeholder="Seçilen film türleri burada görünecek..."
-                                            readonly onclick="toggleDropdown(this)">
+                                            placeholder="Seçilen film türleri burada görünecek..." readonly
+                                            onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text"  class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($veriler as $row) {
@@ -1687,14 +1777,13 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <div class="form-group">
                                     <label>Film Oyuncuları</label>
                                     <div class="selected-tags">
-                                        <input type="text"  class="tagInput form-control"
-                                            placeholder="Seçilen film oyuncuları"
-                                            readonly onclick="toggleDropdown(this)">
+                                        <input type="text" class="tagInput form-control"
+                                            placeholder="Seçilen film oyuncuları" readonly
+                                            onclick="toggleDropdown(this)">
                                     </div>
                                     <div class="multiselect">
                                         <div class="checkboxes">
-                                            <input type="text" class="searchBox"
-                                                placeholder="Ara..."
+                                            <input type="text" class="searchBox" placeholder="Ara..."
                                                 onkeyup="filterFunction(this)">
                                             <?php
                                                 foreach ($veriler as $row) {
@@ -1712,14 +1801,15 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                             ?>
                                         </div>
                                     </div>
-                                </div>                                
+                                </div>
                             </div>
 
                             <!-- Film Aciklamasi -->
                             <div class="col-12">
                                 <div class="form-group">
                                     <label for="filmKonu">Filmin Konusu</label>
-                                    <textarea class="form-control textarea" rows="6" name="filmKonu" id="filmKonu"></textarea>
+                                    <textarea class="form-control textarea" rows="6" name="filmKonu"
+                                        id="filmKonu"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -1790,7 +1880,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             </div>
 
-            <div id="content7" class="content" style="display: none;">Sign Out content here.</div>
+
 
         </div>
 
@@ -1814,6 +1904,28 @@ function formatDate($dateString) {
     // Formatlanmış tarihi döndür
     return $day . ' ' . $months[$month] . ' ' . $year;
 }
+function formatDateTime($dateTimeString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    // Tarih ve saati ayır
+    $dateTimeParts = explode(" ", $dateTimeString);
+    $dateParts = explode("-", $dateTimeParts[0]);
+    $timeParts = explode(":", $dateTimeParts[1]);
+
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    $hour = (int)$timeParts[0];
+    $minute = (int)$timeParts[1];
+
+    // Formatlanmış tarihi ve saati döndür
+    return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+}
 
 // Kullanım örneği:
 
@@ -1821,12 +1933,12 @@ function formatDate($dateString) {
 
 
 
-    
+
     <script src="js/controller.js"></script>
 
     <script>
- let kapakTotalFiles = 0;
- let galeriTotalFiles = 0;
+    let kapakTotalFiles = 0;
+    let galeriTotalFiles = 0;
 
 
     function validateForm(event) {
@@ -1837,7 +1949,7 @@ function formatDate($dateString) {
         const studyoListesi = document.querySelectorAll('input[name="studyoListesi[]"]:checked');
         const ulkeListesi = document.querySelectorAll('input[name="ulkeListesi[]"]:checked');
         const filmturuListesi = document.querySelectorAll('input[name="filmturuListesi[]"]:checked');
-        
+
         // Yeni alanlar için doğrulamalar
         const yonetmenListesi = document.querySelectorAll('input[name="yonetmenListesi[]"]:checked');
         const senaryoListesi = document.querySelectorAll('input[name="senaryoListesi[]"]:checked');
@@ -1847,8 +1959,8 @@ function formatDate($dateString) {
         const oyuncuListesi = document.querySelectorAll('input[name="oyuncuListesi[]"]:checked');
         const kapakfoto = document.querySelectorAll('input[name="kapakfotograf[]"]');
         const galeri = document.querySelectorAll('input[name="galerifotograf[]"]');
-   
-   
+
+
 
         // Boş alanları kontrol et
         if (!filmadi.value.trim()) {
@@ -1926,16 +2038,16 @@ function formatDate($dateString) {
             return false;
         }
         if (kapakTotalFiles === 0) { // length değil, doğrudan sayıyı kontrol edin
-    alert('En az bir kapak fotoğrafı seçilmelidir!');
-    event.preventDefault();
-    return false;
-}
+            alert('En az bir kapak fotoğrafı seçilmelidir!');
+            event.preventDefault();
+            return false;
+        }
 
-if (galeriTotalFiles < 3) { // 3'ten az olduğunda uyarı verilir
-    alert('En az 3 adet film galeri fotoğrafı seçilmelidir!');
-    event.preventDefault();
-    return false;
-}
+        if (galeriTotalFiles < 3) { // 3'ten az olduğunda uyarı verilir
+            alert('En az 3 adet film galeri fotoğrafı seçilmelidir!');
+            event.preventDefault();
+            return false;
+        }
 
 
         // Eğer tüm doğrulamalar geçerse, formun gönderilmesine izin ver
@@ -1944,7 +2056,7 @@ if (galeriTotalFiles < 3) { // 3'ten az olduğunda uyarı verilir
 
     // Formun submit olayına validateForm fonksiyonunu bağla
     document.getElementById('filmForm').addEventListener('submit', validateForm);
-</script>
+    </script>
 
     <script src="js/jquery.min.js"></script>
     <script src="js/popper.js"></script>
@@ -1969,6 +2081,15 @@ if (galeriTotalFiles < 3) { // 3'ten az olduğunda uyarı verilir
         maxSize: 2, // in size in mb
         filesInpName: 'kapakfotograf', // input name sent to backend
         formSelector: '#filmForm', // form selector
+    });
+
+
+
+    let multipleUploader3 = new MultipleUploader('#single-uploader-haber').init({
+        maxUpload: 1, // maximum number of uploaded images
+        maxSize: 2, // in size in mb
+        filesInpName: 'kapakfoto', // input name sent to backend
+        formSelector: '#formHaberler', // form selector
     });
     </script>
 
@@ -2088,40 +2209,37 @@ if (galeriTotalFiles < 3) { // 3'ten az olduğunda uyarı verilir
 
 
 
-     
+
     const kapakfotoInputs = document.querySelectorAll('input[name="kapakfotograf[]"]');
-const galeriInputs = document.querySelectorAll('input[name="galerifotograf[]"]');
+    const galeriInputs = document.querySelectorAll('input[name="galerifotograf[]"]');
 
 
-// Kapak fotoğrafı inputları için değişim olayı dinleyici
-kapakfotoInputs.forEach(input => {
-    input.addEventListener('change', () => {
-       
-        // Her kapak fotoğrafı inputundan yüklenen dosya sayısını topla
-        kapakfotoInputs.forEach(input => {
-            kapakTotalFiles += input.files.length;
+    // Kapak fotoğrafı inputları için değişim olayı dinleyici
+    kapakfotoInputs.forEach(input => {
+        input.addEventListener('change', () => {
+
+            // Her kapak fotoğrafı inputundan yüklenen dosya sayısını topla
+            kapakfotoInputs.forEach(input => {
+                kapakTotalFiles += input.files.length;
+            });
+
+            console.log(`Kapak Fotoğrafı Yüklenen Dosya Sayısı: ${kapakTotalFiles}`); // Konsola yazdır
         });
-
-        console.log(`Kapak Fotoğrafı Yüklenen Dosya Sayısı: ${kapakTotalFiles}`); // Konsola yazdır
     });
-});
 
-// Galeri inputları için değişim olayı dinleyici
-galeriInputs.forEach(input => {
-    input.addEventListener('change', () => {
-      
+    // Galeri inputları için değişim olayı dinleyici
+    galeriInputs.forEach(input => {
+        input.addEventListener('change', () => {
 
-        // Her galeri inputundan yüklenen dosya sayısını topla
-        galeriInputs.forEach(input => {
-            galeriTotalFiles += input.files.length;
+
+            // Her galeri inputundan yüklenen dosya sayısını topla
+            galeriInputs.forEach(input => {
+                galeriTotalFiles += input.files.length;
+            });
+
+            console.log(`Galeri Yüklenen Dosya Sayısı: ${galeriTotalFiles}`); // Konsola yazdır
         });
-
-        console.log(`Galeri Yüklenen Dosya Sayısı: ${galeriTotalFiles}`); // Konsola yazdır
     });
-});
-
-
-
     </script>
 
 
