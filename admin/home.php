@@ -1431,13 +1431,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
             <div id="content5" class="content" style="display: none;">
             
-                <div class="col-12 bg-white border rounded mt-3 p-3">
 
-                    <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
+                    <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
                         <h2>Haber Ekle</h2>
                     </div>
 
-                    <form id="formHaberler" method="post" enctype="multipart/form-data">
+                    <form id="formHaberler" class="bg-white border mt-0 rounded p-3" method="post" enctype="multipart/form-data">
 
                         <div class="mb-3">
                             <label for="haberBaslik" class="form-label">Haber Başlığı</label>
@@ -1464,7 +1463,6 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         </div>
                         <button type="submit" class="btn btn-primary btn-lg">Haberi Kaydet</button>
                     </form>
-                </div>
 
 
                 <!-- HTML Element for CKEditor -->
