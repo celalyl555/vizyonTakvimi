@@ -1315,6 +1315,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 <th class="align-middle text-center">Haber Başlığı</th>
                                                 <th class="align-middle text-center">Yayın Tarihi</th>
                                                 <th class="align-middle text-center"></th>
+                                                <th class="align-middle text-center"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -1333,7 +1334,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <div class="d-row-ayar">
-                                                        <a href="#deleteEmployeeModalhaber" class="btn-delete p-03 m-0"
+                                                        <a href="#deleteEmployeeModalhaber" class="btn-delete m-0"
                                                             onclick="getId('<?php echo $row['idhaber']; ?>'); return false;"
                                                             data-toggle="modal"><i class="material-icons"
                                                                 data-toggle="tooltip" title="Delete">&#xE872;</i></a>
@@ -1392,39 +1393,78 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
 
-            <div id="content8" class="content" style="display: none;">burası haberler detay</div>
-            <div id="content5" class="content" style="display: none;">
-
-                <h2>Haber Ekle</h2>
-                <form id="formHaberler" method="post" enctype="multipart/form-data">
-
-
-
-                    <div class="mb-3">
-                        <label for="haberBaslik" class="form-label">Haber Başlığı</label>
-                        <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
+            <div id="content8" class="content" style="display: none;">
+                <div class="col-12 bg-white border rounded p-3">
+                    
+                    <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
+                        <h2>Haber Görseli</h2>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="haberIcerik" class="form-label">Haber İçeriği</label>
-                        <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
-                    </div>
-                    <label for="haberBaslik" class="form-label">Haber Görseli</label>
                     <div class="row">
-                        <div class="col-md-3 mb-4">
-                            <div class="multiple-uploader" id="single-uploader-haber">
-                                <div class="mup-msg">
-                                    <span class="mup-main-msg">Kapak Resmi Yüklemek için
-                                        Tıklayınız.</span>
-                                    <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
-                                        Fotoğrafı Yükleyiniz.</span>
-                                </div>
-                            </div>
+                        <div class="col-md-12">
+                            <img class="card-img-top-1" src="images/bg_1.jpg" alt="">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-12 bg-white border rounded mt-3 p-3">
+                    
+                    <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
+                        <h2>Haber İçeriği</h2>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 icerik-haber">
+                            <!-- burası haber içerik echo -->
+                            <h2>adsadssadsasa</h2>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Repellat tempore nam sequi molestiae tempora, saepe natus sit accusamus unde magnam aperiam! Quasi dicta praesentium iusto dolor ea quae dignissimos inventore.</p>
+                            <img src="images/bg_1.jpg" alt="">
+                            <p>asdsaddasasdads</p>
+                            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quis nemo modi reprehenderit suscipit blanditiis? Non deleniti placeat facilis, nam asperiores repudiandae totam neque pariatur quasi excepturi voluptatum corporis. Expedita doloribus eos corporis repudiandae sint blanditiis facere cum at vel tempore deserunt error ullam quasi tenetur consectetur officiis, delectus temporibus? Saepe eaque aperiam quae aliquid numquam ut, tenetur id autem velit nemo iusto temporibus magni? Ipsum obcaecati minima ex cupiditate illo iusto nobis ad, iure quos rerum harum sunt dolores sed nisi neque esse placeat vitae quo. Laboriosam nesciunt excepturi asperiores expedita quisquam praesentium dolore sapiente, fuga dicta esse quae culpa libero nulla voluptas deserunt! Dolor, autem facere beatae omnis ratione ipsam quasi repudiandae exercitationem unde laboriosam laborum vitae maxime aperiam rem nisi doloremque culpa, in vero nemo eveniet. Unde dolores provident, recusandae ipsam quae corporis consequatur vero, temporibus nemo voluptatibus nulla quas rerum, consequuntur maxime. Inventore, reprehenderit cumque ea eaque architecto a necessitatibus labore numquam fugiat qui molestias, enim minima corrupti eos officiis at ex sapiente error hic consequuntur eveniet sed distinctio officia? Reprehenderit officia deserunt sunt! Ipsum, animi consequatur, doloribus expedita praesentium laborum accusantium aliquid temporibus molestias esse ullam? Facilis laudantium nemo explicabo doloribus dolorum autem ullam magni delectus veniam similique! Odio repellat inventore delectus aliquam magni excepturi error doloribus accusamus libero, illum quidem ut neque aspernatur ad nisi porro autem dicta dignissimos ea similique assumenda ab minus! Rerum aliquid nostrum temporibus necessitatibus illum sunt voluptates, ullam dolore velit id? Iusto ex distinctio cupiditate. Necessitatibus iusto adipisci libero asperiores perspiciatis eaque dolores accusantium enim eius dicta ab eos, dolor impedit nemo, non ipsum maiores cupiditate id sequi amet incidunt odio voluptatum. Voluptates aliquid facilis quos doloremque alias nam quisquam eaque quas quidem eum laboriosam harum accusamus sunt, ut tempora est, error deserunt voluptatibus debitis maxime optio dolor reiciendis nesciunt in. Culpa ut nam quidem, asperiores dolores porro et laudantium alias, aliquid nostrum neque tempora voluptates vel atque ipsam ullam, nesciunt quae accusantium illum. Asperiores praesentium, repellat amet facilis accusantium totam inventore! Doloremque qui neque similique suscipit sit, culpa maxime nihil hic facilis amet quam quis nesciunt ipsam. Ducimus tempora blanditiis quidem doloribus qui atque cupiditate eveniet odit placeat velit, maiores assumenda libero fugiat animi ipsum laudantium at! Velit cupiditate quas maiores recusandae, expedita iure dolores! Illo explicabo reprehenderit molestiae hic impedit dolore nulla corrupti, aut distinctio vitae earum consequatur delectus eos cumque. Eum sequi odit necessitatibus molestias perspiciatis facilis nesciunt, unde quibusdam eveniet vero, repudiandae distinctio magni, error numquam. Exercitationem aspernatur id in amet maiores suscipit incidunt rem, beatae ducimus aut impedit quia officiis perspiciatis ipsam commodi provident culpa ab facilis voluptates ipsa labore adipisci. Consequuntur alias eum eos explicabo molestias. Eius quo quas enim autem perferendis mollitia soluta nesciunt similique in consequuntur dolorum dolores deserunt cupiditate accusamus perspiciatis sequi debitis, libero, amet ratione ipsa nostrum consequatur optio aliquam. Voluptate iste odio velit provident non aliquam porro consequuntur eligendi impedit, illo pariatur veniam hic molestiae laudantium, vitae repudiandae iure accusamus soluta aut ratione amet perferendis! Optio minus quo dolorem provident ratione vitae vero. Natus, assumenda saepe minus nulla possimus eos deserunt consequuntur nam, adipisci iure maxime facilis animi ut rerum nihil non consectetur nobis at vel commodi, omnis aspernatur. Aspernatur doloremque molestiae suscipit eos iste accusamus asperiores eum praesentium nihil dolores quos quidem labore, laudantium et quia minus beatae aperiam mollitia sequi commodi cupiditate obcaecati? Laudantium, iste ipsam asperiores tempore vel natus illo similique consequuntur recusandae eligendi, ullam, rem tenetur! Voluptatem amet laudantium corporis ab vero! Ut, cupiditate vero alias itaque odio iure officiis sit perferendis ratione eligendi saepe voluptatem numquam facilis, dolorem odit consectetur eos hic ab repudiandae repellat fugit. Beatae fugiat ipsum quod reprehenderit necessitatibus quas non sequi, quia assumenda delectus amet, harum ratione magnam. Laboriosam quod deserunt, accusamus, ad dignissimos perspiciatis reprehenderit amet labore, odit ratione nostrum at impedit debitis alias consequatur atque. Iure ad reprehenderit animi optio totam tenetur maxime natus, sed nihil aperiam perferendis nobis excepturi dignissimos libero vel, nostrum distinctio! Suscipit fugiat alias nam nemo autem porro a eum iste officia dolore? Earum, sed accusantium ipsum nemo nulla sit, quas, ipsa commodi ducimus hic error doloribus porro recusandae in dignissimos? Esse repudiandae odit unde sint, quia sequi ipsam dolores cum, quidem alias eaque fuga minus accusamus quaerat voluptates reprehenderit, vel id earum natus quos. Natus voluptatibus eius esse rem facere iure aperiam atque aut? Vero ratione saepe aliquid est enim, consequatur non fugit veritatis numquam, tempore accusantium laboriosam possimus porro quo sit itaque eveniet, reiciendis quod magni officiis facilis asperiores similique. Quis accusantium harum omnis beatae et autem? Assumenda officia repellat at debitis eum, commodi sint quis doloremque, corporis rem sed? Repellat modi voluptatem distinctio suscipit voluptates corporis quae qui asperiores. Assumenda sunt ex beatae facere autem asperiores blanditiis, a reprehenderit velit dignissimos, maiores provident corporis dicta laudantium cum natus fuga placeat impedit, architecto quis nobis odit et? Officiis ad amet illo necessitatibus qui consequatur, numquam ducimus commodi velit! Magnam voluptatibus laborum, accusantium quis asperiores rem? Tempora omnis magnam vel, quas corporis quod doloremque aliquam reprehenderit deleniti, voluptates veritatis quidem nihil. At mollitia qui cupiditate excepturi neque ab deleniti, dicta dolores, nisi inventore sequi totam, officiis consectetur ullam laborum ratione rem veniam velit ipsa enim incidunt! Impedit corporis excepturi architecto, dolores quos veniam, voluptates unde neque, optio accusamus laboriosam sunt voluptas officiis animi obcaecati error rem quaerat alias. Totam esse commodi officia culpa quisquam consectetur aut voluptatum, illo, necessitatibus sint quaerat saepe similique sunt maiores obcaecati impedit magni quas. Explicabo nobis exercitationem similique sint excepturi neque? Eum libero in sit velit fuga consequuntur dolorum quia natus totam dignissimos quo repellendus consectetur fugit, aliquam officia neque voluptate placeat animi mollitia inventore. Vitae vero sint, pariatur placeat voluptas earum architecto. Libero perferendis obcaecati, modi vitae provident magnam iure architecto maxime iusto eius fugit illo quia quos illum in, ut beatae porro quod tempora repellendus. Cupiditate doloribus ab totam ipsa iure aliquam reprehenderit repudiandae veritatis quo odit, cumque repellat architecto, quas laborum sapiente cum adipisci dignissimos esse, asperiores est suscipit? Commodi, voluptates laboriosam aliquid architecto aut ullam praesentium nemo iste facere doloremque. Voluptates magni reprehenderit aspernatur sit error! Sunt illo, accusamus eius voluptates neque debitis aut assumenda ratione velit minima laboriosam asperiores quis quaerat nisi cum quam maxime corporis voluptatem reprehenderit vel? Nostrum nemo, natus commodi dolores vero, quod ipsam quae numquam nisi odio officia corrupti esse dignissimos possimus optio at deleniti quis hic eveniet. Exercitationem in iure nostrum qui ipsa ratione ab laboriosam ipsam quod similique soluta et reprehenderit sint libero dolore eius est aperiam, adipisci, minus corrupti earum illo quia? Omnis, consequuntur. Illo, tenetur velit obcaecati nesciunt consectetur dolorem omnis soluta perferendis error aspernatur ab quibusdam reiciendis sed facere, eum rem harum non asperiores blanditiis consequuntur voluptatum itaque quis laudantium! Rem, minima? Veniam ducimus voluptatibus dicta enim aliquam aperiam ipsam rerum necessitatibus ratione unde, recusandae fuga facere quisquam nihil iste laudantium, suscipit tempore consequatur quibusdam eum voluptates explicabo iusto ea quas. Necessitatibus eius, assumenda incidunt provident maiores eveniet, repellendus ad voluptatibus quisquam praesentium pariatur. Similique culpa temporibus delectus asperiores voluptate repudiandae corrupti dolorum? Nemo culpa placeat officia rem nostrum nulla consequuntur omnis consectetur asperiores, tempore eligendi, sapiente exercitationem commodi ut at accusamus quaerat sunt. Vero corporis aut reiciendis? Quae corrupti soluta eum? Aut, esse nam ullam aliquid mollitia ex aperiam facere eum, molestiae, numquam vel dolore! Molestiae sint facilis voluptatem modi ratione praesentium consequatur libero pariatur quia distinctio. Dolorum quos illo, obcaecati sequi error vero! Commodi blanditiis ratione quod placeat dolorem hic. Voluptatem nemo repudiandae totam ex ducimus in dolorem temporibus, eos suscipit modi quae id laborum velit cum tempore adipisci aspernatur consequatur vero ratione error ipsum. Id in vitae autem nobis illum. Distinctio ea rem eius deleniti culpa, quasi, necessitatibus eaque esse autem accusamus eveniet natus? Iure aliquam ratione adipisci quam ab voluptatem nihil aperiam. Nihil corrupti nam fugiat quae blanditiis delectus dolorem deserunt harum fugit. Cum delectus, recusandae quasi, unde ad neque minima quaerat veniam, aliquam rem ut dolorum autem inventore assumenda? Quas architecto ea quasi, numquam exercitationem mollitia repellat in obcaecati tempore! Quaerat vel ad unde repudiandae dicta, possimus impedit ut incidunt quia sequi minima delectus animi illo, odio aliquid temporibus est doloribus ducimus aut culpa vero, consectetur numquam? Quibusdam id repudiandae inventore omnis sint rem suscipit esse. Nemo earum dolorum neque eos voluptatibus commodi! Asperiores mollitia in ipsum blanditiis vitae. Ipsam minus recusandae odit ex voluptas dolorem! Totam beatae, laborum quod accusantium ut voluptas consectetur quae expedita! Ratione saepe mollitia accusantium dolore beatae odio ipsa, totam quae architecto sunt tempore ab perferendis nihil culpa harum fuga, commodi placeat? Corrupti qui doloribus ab impedit ea facilis esse itaque quod, consequuntur, animi sequi? Quas ea minima cumque assumenda at, deleniti, sit tempora consequuntur, ipsam doloremque blanditiis eligendi laborum! Accusamus ab adipisci autem nobis perspiciatis illum sit molestias neque ducimus provident atque, deserunt, similique repudiandae eligendi esse est hic deleniti quae, illo numquam blanditiis accusantium dicta delectus quas. Aliquid sed, quidem vitae odit itaque repellat esse possimus. Repellendus eveniet eligendi quis corporis! Magni qui eum dolores quibusdam provident magnam similique aliquam voluptas tempora expedita maiores deserunt voluptate dolore aut accusamus quae odio, incidunt dolorum odit rem! Totam, ipsam amet quasi esse delectus rem accusamus perferendis. Consequatur perspiciatis expedita nam maxime illo. Veritatis, pariatur. Rem ipsa iure eveniet aliquid. Placeat modi ullam dicta consequuntur, tempore molestias quam minus reiciendis fugiat porro voluptatibus quibusdam vel pariatur veniam ipsam autem nemo cum eius inventore laborum dignissimos. Pariatur, molestiae quaerat quibusdam natus eligendi nesciunt ullam doloribus cum, in delectus id? Sunt, illo optio suscipit ratione cum ipsam officiis autem cumque ex veniam ipsa expedita, aspernatur dolorem impedit adipisci aperiam, asperiores reiciendis eos ducimus dolore soluta illum ea debitis? Officia labore sint praesentium eveniet incidunt autem itaque, eos aperiam similique ut in et explicabo deserunt at, nisi suscipit repudiandae quod sunt. Recusandae explicabo fugiat delectus voluptatum repellendus. Ducimus obcaecati et quo voluptatibus, ab corrupti quis alias quia, expedita sequi quam sint. Pariatur praesentium eveniet ad, vel deserunt itaque labore vero corrupti tempora beatae repellendus dicta impedit. Excepturi nam eveniet quos reprehenderit repellat veniam quas architecto repellendus consequatur et deleniti a aliquid, ex veritatis qui aliquam unde ipsum commodi dolorum dicta error sed. Molestias quas nisi minima. Ab explicabo molestias accusamus ratione officia error quisquam quibusdam odio harum? Illum, vel? Inventore est, eius doloribus ab quidem enim magnam asperiores? Voluptatem, velit. Distinctio tempore libero et explicabo nobis nemo, nulla perspiciatis maxime blanditiis consequatur magnam quaerat. Maxime culpa molestiae fugit rem aut quidem qui accusantium ducimus officia, molestias tempore sit, voluptatibus, repellendus debitis repudiandae odio minus! Numquam maxime veniam laudantium nesciunt ut? Repellat non incidunt at voluptatibus optio, impedit veniam obcaecati fugiat facilis ullam, consectetur dolores quibusdam, maxime vel rem error assumenda nostrum unde sequi nesciunt provident facere harum. Repudiandae illum repellendus sequi nisi dignissimos beatae debitis, praesentium alias eos non natus placeat ipsa quidem accusantium ipsum suscipit nesciunt magni, doloribus porro ratione illo a rerum. Accusantium sunt sit, dolorem ex omnis reprehenderit aliquam animi error quo amet, eveniet laboriosam at mollitia voluptatem cupiditate assumenda similique? Nisi officiis ullam velit doloremque voluptas dolore quam minus nobis porro earum numquam necessitatibus libero commodi laborum harum, culpa quod modi. Dignissimos eaque ratione laboriosam consequatur recusandae ipsa veniam atque aliquid non perspiciatis laudantium illo iusto a facilis delectus voluptate est quidem eligendi quo laborum natus velit, nostrum quasi. Animi est repellat fuga tenetur? Veritatis, maxime nesciunt corporis odit ea iusto? Rem repudiandae nam enim fuga porro veritatis temporibus possimus ducimus laboriosam modi doloribus, exercitationem cupiditate nesciunt maiores illo eos incidunt ipsum velit quas sint voluptatibus placeat. Fuga voluptatem optio numquam a dolore reiciendis perferendis eius adipisci, porro mollitia exercitationem eaque totam ullam non, illo tempore harum voluptates soluta assumenda, repudiandae labore. Quasi eius obcaecati tempore omnis maxime nobis, commodi voluptas minima officiis dolore iste non hic voluptatum vitae nostrum itaque aliquam rerum debitis dignissimos numquam earum mollitia excepturi? Repellat aut ea in voluptates deserunt! Cumque provident reiciendis possimus, laboriosam ullam beatae doloremque sint excepturi dolore. Animi, aliquam non! Ratione eaque optio dolorum, facere consectetur repellendus dolor dolores illum, soluta quidem minus veniam expedita molestiae deserunt voluptates magni ducimus eligendi modi rem officia, illo odit nobis fugiat. Quo iure fuga aliquid cumque repellendus, veritatis sapiente sit necessitatibus vel numquam ducimus veniam facere mollitia expedita excepturi quae animi quam quis fugit dolore inventore temporibus? Ipsum iure quas natus animi, itaque ipsa corrupti. Vel expedita asperiores et hic voluptate voluptatum laboriosam, ea rerum consequatur tempora necessitatibus quo nobis repellendus blanditiis dolores. Accusantium saepe incidunt sequi molestias temporibus est eum qui enim nulla quaerat deserunt debitis, nostrum fugit ipsam! Amet minus animi earum? Commodi ad distinctio rerum itaque blanditiis quod ut minima ipsa tenetur exercitationem! Labore corrupti sint temporibus nihil inventore porro aliquam molestiae quae doloremque debitis consequuntur necessitatibus facere eligendi, at beatae voluptate eaque quo dicta quas? Fugit, sed esse? Perferendis vero et unde obcaecati rerum eos vitae voluptates, saepe, impedit ipsam provident deserunt reprehenderit a officiis. Molestiae optio suscipit facere delectus? Repudiandae qui assumenda distinctio accusantium aspernatur atque quaerat ipsa! Ratione, tempora magnam? Blanditiis voluptate, nam, ipsum quis, necessitatibus at corrupti quibusdam eveniet quas odit doloribus ut dolore ex omnis magnam nemo. Aut vero iusto ea minus id dolor expedita optio, harum nam cumque inventore aliquid, vel enim soluta sunt laboriosam ducimus accusamus rem mollitia impedit ipsum, possimus voluptatibus? Atque nostrum deleniti inventore in. Quam, debitis sapiente. Nemo distinctio error minima in excepturi deleniti, unde iusto reiciendis! Alias, deserunt. Dicta, totam magnam culpa eum beatae voluptatem non, nam dolorum sit voluptate rem a fuga et id numquam qui dolorem quae laboriosam. Necessitatibus, delectus illum cum vitae quaerat corporis, dignissimos ratione a magnam voluptatem consequatur autem inventore error. Similique excepturi eos quia inventore aliquam adipisci explicabo odio quaerat, voluptatibus officia. Atque, harum quo. Molestiae ab explicabo dicta quod reiciendis atque incidunt at neque officiis fugit corrupti repellat sit deleniti ipsum nemo minima tenetur id, temporibus aspernatur consequatur veniam! Corrupti dicta pariatur quia consectetur excepturi unde minima vero repellat error! Deserunt ex voluptates, officia aliquam omnis similique exercitationem aspernatur numquam esse blanditiis labore alias molestiae voluptas reiciendis. Magnam molestiae laudantium animi saepe error iusto ab aliquam quas inventore temporibus quibusdam eos voluptatem, optio nam necessitatibus quae amet tempore eum hic, similique minus praesentium aliquid provident. Sint amet dolorum est autem repudiandae animi quia soluta libero nulla nisi tempore possimus officiis corporis, rem, in necessitatibus fuga quis repellendus aspernatur explicabo totam. Blanditiis quaerat cumque nulla ea saepe ex, architecto et omnis facilis vero a illum necessitatibus expedita autem sint eaque consectetur vitae ducimus magni nesciunt cum inventore? Repudiandae est incidunt numquam officia et corporis aspernatur assumenda, eaque ad, ut delectus! Ipsam, officia. Rem necessitatibus reprehenderit, dolore eaque libero laboriosam. Blanditiis ea praesentium debitis eius dicta rem vel exercitationem minima ducimus provident modi possimus nemo tenetur quibusdam dolor eum ex porro, repellendus doloremque! A qui itaque necessitatibus atque totam, hic quae incidunt. Libero nihil quae eligendi pariatur quaerat, eveniet culpa sed? Omnis animi vero nihil sequi deserunt rem? Fuga voluptatem maiores accusantium. Aspernatur ducimus tempora, nam blanditiis quae suscipit vitae eum qui voluptates harum pariatur molestias enim nostrum quia aliquam, sunt a velit itaque tempore, inventore neque. Sit sunt nostrum fugit, natus facilis ipsa vel rem rerum veniam magni. Accusantium totam earum deleniti ab vero deserunt nostrum distinctio animi fugit, reprehenderit at delectus nemo dolor fugiat quia sequi eius eaque? Id ipsum, hic at amet ratione porro, inventore dignissimos, nihil officia et maxime tempora.</p>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis tenetur natus debitis! At quam delectus totam doloremque dolorem repudiandae sunt, blanditiis suscipit officia! Odit id eius libero placeat iusto. Ut.</p>
+                            <!-- burası haber içerik echo -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div id="content5" class="content" style="display: none;">
+            
+                <div class="col-12 bg-white border rounded mt-3 p-3">
+
+                    <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
+                        <h2>Haber Ekle</h2>
+                    </div>
+
+                    <form id="formHaberler" method="post" enctype="multipart/form-data">
+
+                        <div class="mb-3">
+                            <label for="haberBaslik" class="form-label">Haber Başlığı</label>
+                            <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
                         </div>
 
-                    </div>
-                    <button type="submit" class="btn btn-primary">Haberi Kaydet</button>
-                </form>
+                        <div class="mb-3 mt-5">
+                            <label for="haberIcerik" class="form-label">Haber İçeriği</label>
+                            <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
+                        </div>
+                        <label for="haberBaslik" class="form-label mt-5">Haber Görseli</label>
+                        <div class="row">
+                            <div class="col-md-3 mb-4">
+                                <div class="multiple-uploader" id="single-uploader-haber">
+                                    <div class="mup-msg">
+                                        <span class="mup-main-msg">Kapak Resmi Yüklemek için
+                                            Tıklayınız.</span>
+                                        <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
+                                            Fotoğrafı Yükleyiniz.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg">Haberi Kaydet</button>
+                    </form>
+                </div>
 
 
                 <!-- HTML Element for CKEditor -->
@@ -1455,44 +1495,57 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <div id="content6" class="content pl-5" style="display: none;">
 
                 <div class="col-12 bg-white border rounded p-3">
+                    <div class="table-wrapper px-0 mt-0">
+                        <div class="table-title">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <H2 class="custombg1h2 pl-2">Box Office Değerleri</H2>
+                                </div>
+                                <div class="col-sm-6">
+                                    <a href="#uploadModal" class="btn btn-success d-flex align-items-center mr-2" data-toggle="modal">
+                                        <i class="material-icons mr-2">&#xE147;</i> <span>Excel Dosyası Yükle</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-over">
+                            <table class="table table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="w-fit">Film Afişi</th>
+                                        <th>Film Adı</th>
+                                        <th>Vizyon Tarihi</th>
+                                        <th>Film Türü</th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>asffasafafs</td>
+                                        <td class="align-middle">asd</td>
+                                        <td class="align-middle">asd</td>
+                                        <td class="align-middle">rbht</td>
+                                        <td class="align-middle">ehrtrthy</td>
+                                        <td class="align-middle">wefwef</td>
+                                    </tr>
 
-                    <div class="d-flex justify-content-between align-items-center custombg1 mb-5">
-                        <h2>Box Office Değerleri</h2>
-                        <a href="#uploadModal" class="btn btn-success d-flex align-items-center" data-toggle="modal">
-                            <i class="material-icons mr-2">&#xE147;</i> <span>Excel Dosyası Yükle</span>
-                        </a>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix">
+                            <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                            <ul class="pagination">
+                                <li class="page-item disabled"><a href="#">Previous</a></li>
+                                <li class="page-item"><a href="#" class="page-link">1</a></li>
+                                <li class="page-item"><a href="#" class="page-link">2</a></li>
+                                <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                                <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                <li class="page-item"><a href="#" class="page-link">5</a></li>
+                                <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                            </ul>
+                        </div>
                     </div>
-
-                    <table class="table table-striped">
-                        <thead class="thead-light">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">First</th>
-                                <th scope="col">Last</th>
-                                <th scope="col">Handle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>@fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>@twitter</td>
-                            </tr>
-                        </tbody>
-                    </table>
 
                 </div>
 

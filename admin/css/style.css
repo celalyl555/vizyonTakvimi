@@ -8266,7 +8266,9 @@ h1, h2, h3, h4, h5,
     margin-right: -35px;
     -webkit-transition: 0.3s;
     -o-transition: 0.3s;
-    transition: 0.3s; }
+    transition: 0.3s;
+    z-index: 999;
+  }
     @media (prefers-reduced-motion: reduce) {
       #sidebar .custom-menu {
         -webkit-transition: none;

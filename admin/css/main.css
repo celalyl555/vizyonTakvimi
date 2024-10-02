@@ -109,7 +109,7 @@
 
 .tumbimg {
     height: 60px !important;
-    max-width: 75px;
+    max-width: 75px !important;
     object-fit: cover !important;
     padding: 2px !important;
 }
@@ -123,8 +123,9 @@
     margin-bottom: 10px !important;
 }
 
-.custombg1 h2 {
-    color: #fff;
+.custombg1 h2,
+.custombg1h2 {
+    color: #fff !important;
 }
 
 .d-row-ayar {
