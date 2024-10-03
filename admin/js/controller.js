@@ -362,11 +362,48 @@ $(document).ready(function() {
                     alert("Bir hata oluştu: " + textStatus + " " + errorThrown);
                 }
                });
-
-
           }); 
       });  
       
+
+
+   // Film Güncelleme
+
+   $(document).ready(function () {
+    $('#filmdetay').on('submit', function (e) {
+        e.preventDefault(); // Formun varsayılan submit işlemini durdurur.
+
+        // Form verilerini toplama
+        var formData = new FormData(this);
+        // Multi-select alanlarındaki seçilen değerleri toplama
+        $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
+            formData.append($(this).attr('id'), $(this).val());
+        });
+
+        $.ajax({
+          url: "controller/filmEdit.php", // PHP dosyasının yolu
+          type: "POST",
+          data: formData,
+          contentType: false, 
+          processData: false, 
+          success: function(response){
+            alert(response);
+          
+            localStorage.setItem("uri", 'content3');
+            location.reload();
+            
+          },
+          error: function(jqXHR, textStatus, errorThrown){
+              alert("Bir hata oluştu: " + textStatus + " " + errorThrown);
+          }
+         });
+
+
+    }); 
+});  
+
+
+
        // Film Sil
 
   $(document).ready(function() {
@@ -380,7 +417,7 @@ $(document).ready(function() {
         type: 'POST',
         data: { filmSil: filmSil },
         success: function(response) {
-          alert(response);
+          
           // Başarılı olursa yapılacak işlemler
           const button = document.getElementById('deletefilmgeri');
             button.click();
