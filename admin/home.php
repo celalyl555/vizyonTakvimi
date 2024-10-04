@@ -33,10 +33,14 @@ $stmt = $con->prepare('SELECT * FROM haberler');
 $stmt->execute();
 $haberler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$idd=52;
-$stmt = $con->prepare('SELECT * FROM haberler WHERE idhaber ='.$idd);
-$stmt->execute();
-$haber2 = $stmt->fetch(PDO::FETCH_ASSOC);
+if (isset($_GET['haberid'])) {
+    $idd = $_GET['haberid'];
+    $stmt = $con->prepare('SELECT * FROM haberler WHERE idhaber ='.$idd);
+    $stmt->execute();
+    $haber2 = $stmt->fetch(PDO::FETCH_ASSOC);
+
+}
+
 
 
 $sql = "
@@ -63,8 +67,87 @@ GROUP BY f.id";
 $stmt = $con->query($sql);
 $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+if (isset($_GET['filmid'])) {
+    $film_id  = $_GET['filmid'];
+    try {
+        
 
+        $sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.film_konu, f.kapak_resmi, 
+                        GROUP_CONCAT(DISTINCT ft.filmturu SEPARATOR ', ') AS filmturleri, 
+                        GROUP_CONCAT(DISTINCT s.studyoad SEPARATOR ', ') AS studyolar,
+                        GROUP_CONCAT(DISTINCT sd.dagitimad SEPARATOR ', ') AS dagitim,
+                        GROUP_CONCAT(DISTINCT u.country_name SEPARATOR ', ') AS ulkeler,
+                        GROUP_CONCAT(DISTINCT g.resim_yolu SEPARATOR ', ') AS resimler,
+                        GROUP_CONCAT(DISTINCT CONCAT(o.adsoyad, ' (', k.kategoriAd, ')') SEPARATOR ', ') AS oyuncular
+                FROM filmler f
+                JOIN film_filmturu fft ON f.id = fft.film_id
+                JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
+                JOIN film_dagitim fd ON f.id = fd.film_id
+                JOIN sinemadagitim sd ON fd.dagitim_id = sd.iddagitim
+                JOIN film_studyolar fs ON f.id = fs.film_id
+                JOIN stüdyo s ON fs.studyo_id = s.id
+                JOIN film_ulkeler fu ON f.id = fu.film_id
+                JOIN ulke u ON fu.ulke_id = u.id
+                JOIN film_galeri g ON f.id = g.film_id
+                JOIN oyuncuiliski ol ON f.id = ol.film_id
+                JOIN oyuncular o ON ol.oyuncu_id = o.idoyuncu
+                JOIN kategori k ON ol.kategori_id = k.idKategori
+                WHERE f.id = :film_id
+                GROUP BY f.id";
 
+        $stmt = $con->prepare($sql);
+        $stmt->execute(['film_id' => $film_id]);
+        $filmler2 = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+        // Sonuçları ekrana yazdır
+    
+
+    } catch (PDOException $e) {
+        // Hata mesajını yakala ve ekrana yazdır
+        echo "Hata: " . $e->getMessage();
+    }
+}
+
+// Veriyi kontrol et
+$oyuncuString = $filmler2['oyuncular'];
+
+// Eğer $oyuncuString bir string ise, explode ile diziye dönüştür
+if (is_string($oyuncuString)) {
+    $oyuncular = explode(', ', $oyuncuString);
+} else {
+    $oyuncular = $oyuncuString; // Eğer dizi ise, zaten işlem yapmaya gerek yok
+}
+
+// Kategorilere göre oyuncuları ayırmak için bir dizi oluştur
+$kategoriOyuncular = [
+    'Yönetmen' => [],
+    'Senaryo' => [],
+    'Görüntü Yönetmeni' => [],
+    'Müzik' => [],
+    'Kurgu' => [],
+    'Oyuncu' => []
+];
+
+// Oyuncuları kategorilere göre ayır
+foreach ($oyuncular as $oyuncuKategori) {
+   
+    preg_match('/^(.*?)\s*\((.*?)\)$/', $oyuncuKategori, $matches);
+    
+    if (count($matches) === 3) {
+        $oyuncuAd = trim($matches[1]);
+        $kategori = trim($matches[2]);
+        // Kategori dizisine oyuncuyu ekliyoruz
+        if (isset($kategoriOyuncular[$kategori])) {
+            $kategoriOyuncular[$kategori][] = $oyuncuAd;
+        }
+    }
+}
+$yonetmenler = $kategoriOyuncular['Yönetmen'];
+$senaryolar =$kategoriOyuncular['Senaryo'];
+$GörüntüYönetmeni =$kategoriOyuncular['Görüntü Yönetmeni'];
+$Müzik =$kategoriOyuncular['Müzik'];
+$Kurgu =$kategoriOyuncular['Kurgu'];
+$Oyuncu =$kategoriOyuncular['Oyuncu'];
 
 ?>
 
@@ -217,9 +300,12 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                             onclick="getId1('<?php echo $row['idoyuncu']; ?>');"
                                                             data-toggle="modal"><i class="material-icons"
                                                                 data-toggle="tooltip" title="Edit">&#xE254;</i></a>
-                                                       <a href="#deleteEmployeeModal" class="btn-delete p-03 m-0" onclick="getId('<?php echo $row['idoyuncu']; ?>');" data-toggle="modal">
-    <i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i>
-</a>
+                                                        <a href="#deleteEmployeeModal" class="btn-delete p-03 m-0"
+                                                            onclick="getId('<?php echo $row['idoyuncu']; ?>');"
+                                                            data-toggle="modal">
+                                                            <i class="material-icons" data-toggle="tooltip"
+                                                                title="Delete">&#xE872;</i>
+                                                        </a>
 
                                                     </div>
                                                 </td>
@@ -273,29 +359,29 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     required>
                                             </div>
 
-                                         
+
                                             <div class="form-group">
-                                                        <label for="sinemadagitim">Sinema Dağıtım</label>
-                                                        <div class="selected-tags">
-                                                            <input type="text" id="sinemadagitim" name="sinemadagitim"
-                                                                class="tagInput form-control"
-                                                                placeholder="Seçilen dağıtım şirketleri" readonly
-                                                                onclick="toggleDropdown(this)">
-                                                        </div>
-                                                        <div class="multiselect">
-                                                            <div class="checkboxes">
-                                                                <input type="text" class="searchBox"
-                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
-                                                                <?php
+                                                <label for="sinemadagitim">Sinema Dağıtım</label>
+                                                <div class="selected-tags">
+                                                    <input type="text" id="sinemadagitim" name="sinemadagitim"
+                                                        class="tagInput form-control"
+                                                        placeholder="Seçilen dağıtım şirketleri" readonly
+                                                        onclick="toggleDropdown(this)">
+                                                </div>
+                                                <div class="multiselect">
+                                                    <div class="checkboxes">
+                                                        <input type="text" class="searchBox" placeholder="Ara..."
+                                                            onkeyup="filterFunction(this)">
+                                                        <?php
                                                                     foreach ($kategoriListesi as $kategori) {
                                                                         $id = htmlspecialchars($kategori['idKategori']);
                                                                         $country_name = htmlspecialchars($kategori['kategoriAd']);
                                                                         echo "<label for='kategorii{$id}'><input type='checkbox' id='kategorii{$id}' name='kategori[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
                                                                     }
                                                                 ?>
-                                                            </div>
-                                                        </div>
                                                     </div>
+                                                </div>
+                                            </div>
 
                                         </div>
                                         <div class="modal-footer">
@@ -547,7 +633,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                                                 </td>
                                                 <td class="align-middle">
-                                                    <button onclick="showContent('content6')" class="btn-page"><i
+                                                    <button onclick="showContent('content6','<?php echo $row['id']; ?>','film')" class="btn-page"><i
                                                             class="material-icons">chevron_right</i></button>
                                                 </td>
                                             </tr>
@@ -1361,7 +1447,9 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                                     </div>
                                                 </td>
                                                 <td class="align-middle">
-                                                    <button onclick="showContent('content8')" class="btn-page"><i
+                                                    <button
+                                                        onclick="showContent('content8','<?php echo $row['idhaber']; ?>','haber')"
+                                                        class="btn-page"><i
                                                             class="material-icons">chevron_right</i></button>
                                                 </td>
                                             </tr>
@@ -1414,7 +1502,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <div id="content8" class="content" style="display: none;">
-                    
+
                 <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
                     <h2>Haber Görseli</h2>
                 </div>
@@ -1422,12 +1510,13 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <div class="bg-white border p-2 bt-0 rounded">
                     <div class="row">
                         <div class="col-md-12">
-                            <img class="card-img-top-1 rounded" src="../haberfoto/<?php echo $haber2['haberfoto']?>" alt="">
-                        </div>                 
+                            <img class="card-img-top-1 rounded" src="../haberfoto/<?php echo $haber2['haberfoto']?>"
+                                alt="">
+                        </div>
                     </div>
                 </div>
 
-                    
+
                 <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
                     <h2><?php echo $haber2['baslik']?></h2>
                 </div>
@@ -1443,39 +1532,40 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             </div>
             <div id="content5" class="content" style="display: none;">
-            
 
-                    <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
-                        <h2>Haber Ekle</h2>
+
+                <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
+                    <h2>Haber Ekle</h2>
+                </div>
+
+                <form id="formHaberler" class="bg-white border bt-0 mt-0 p-3" method="post"
+                    enctype="multipart/form-data">
+
+                    <div class="mb-3">
+                        <label for="haberBaslik" class="form-label">Haber Başlığı</label>
+                        <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
                     </div>
 
-                    <form id="formHaberler" class="bg-white border bt-0 mt-0 p-3" method="post" enctype="multipart/form-data">
-
-                        <div class="mb-3">
-                            <label for="haberBaslik" class="form-label">Haber Başlığı</label>
-                            <input type="text" class="form-control" id="haberBaslik" placeholder="Başlık girin">
-                        </div>
-
-                        <div class="mb-3 mt-5">
-                            <label for="haberIcerik" class="form-label">Haber İçeriği</label>
-                            <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
-                        </div>
-                        <label for="haberBaslik" class="form-label mt-5">Haber Görseli</label>
-                        <div class="row">
-                            <div class="col-md-3 mb-4">
-                                <div class="multiple-uploader" id="single-uploader-haber">
-                                    <div class="mup-msg">
-                                        <span class="mup-main-msg">Kapak Resmi Yüklemek için
-                                            Tıklayınız.</span>
-                                        <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
-                                            Fotoğrafı Yükleyiniz.</span>
-                                    </div>
+                    <div class="mb-3 mt-5">
+                        <label for="haberIcerik" class="form-label">Haber İçeriği</label>
+                        <textarea name="content" id="haberIcerik" rows="10" class="form-control"></textarea>
+                    </div>
+                    <label for="haberBaslik" class="form-label mt-5">Haber Görseli</label>
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="multiple-uploader" id="single-uploader-haber">
+                                <div class="mup-msg">
+                                    <span class="mup-main-msg">Kapak Resmi Yüklemek için
+                                        Tıklayınız.</span>
+                                    <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
+                                        Fotoğrafı Yükleyiniz.</span>
                                 </div>
                             </div>
-
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg">Haberi Kaydet</button>
-                    </form>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-lg">Haberi Kaydet</button>
+                </form>
 
 
                 <!-- HTML Element for CKEditor -->
@@ -1512,7 +1602,8 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <H2 class="custombg1h2">Box Office Değerleri</H2>
                             </div>
                             <div class="col-sm-6">
-                                <a href="#uploadModal" class="btn btn-success d-flex align-items-center mr-2" data-toggle="modal">
+                                <a href="#uploadModal" class="btn btn-success d-flex align-items-center mr-2"
+                                    data-toggle="modal">
                                     <i class="material-icons">&#xE147;</i> <span>Excel Dosyası Yükle</span>
                                 </a>
                             </div>
@@ -1558,7 +1649,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 </div>
 
 
-                
+
 
                 <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
                     <h2>Film Detayları</h2>
@@ -1577,8 +1668,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                     <form id="uploadForm">
                                         <div class="mb-3">
                                             <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
-                                            <input class="form-control" type="file" id="formFile"
-                                                accept=".xlsx, .xls">
+                                            <input class="form-control" type="file" id="formFile" accept=".xlsx, .xls">
                                         </div>
                                     </form>
                                 </div>
@@ -1592,23 +1682,28 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     </div>
                 </div>
 
-                <form id="" method="post" enctype="multipart/form-data">
+                <form id="filmdetay" method="post" enctype="multipart/form-data">
+                <input type="hidden"  value="<?php echo $filmler2['id'] ?>"  name="film_id">
+                                      
                     <div class="row filmDetayAyar bg-white border bt-0 p-3 m-0">
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="filmAdi">Film Adı</label>
-                                <input type="email" class="form-control" id="filmAdi"
+                                <input type="text" class="form-control" id="filmAdi" name="filmadedit"
+                                    value="<?php echo $filmler2['film_adi']  ?>"
                                     placeholder="Varsa Film Adı Burda Yazıcak">
                             </div>
                             <div class="form-group">
                                 <label for="vizyonTarihi">Vizyon Tarihi</label>
-                                <input type="date" class="form-control" id="vizyonTarihi">
+                                <input type="date" class="form-control" name="vizyontaredit"
+                                    value="<?php echo $filmler2['vizyon_tarihi']  ?>" id="vizyonTarihi"> 
                             </div>
                             <!-- Sinema Dağıtım -->
                             <div class="form-group">
                                 <label>Sinema Dağıtım</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control"
+                                        value="<?php echo $filmler2['dagitim']  ?>"
                                         placeholder="Seçilen dağıtım şirketleri" readonly
                                         onclick="toggleDropdown(this)">
                                 </div>
@@ -1617,12 +1712,14 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($dagitimListesi as $dagitim) {
-                                                $id = htmlspecialchars($dagitim['iddagitim']);
-                                                $country_name = htmlspecialchars($dagitim['dagitimad']);
-                                                echo "<label for='dagitim{$id}'><input type='checkbox' id='dagitim{$id}' name='dagitimListesi[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
-                                            }
-                                        ?>
+                            $dagitimlar = explode(", ", $filmler2['dagitim']); // Seçili dağıtımları al
+                            foreach ($dagitimListesi as $dagitim) {
+                                $id = htmlspecialchars($dagitim['iddagitim']);
+                                $country_name = htmlspecialchars($dagitim['dagitimad']);
+                                $checked = in_array($country_name, $dagitimlar) ? 'checked' : ''; // Seçili ise 'checked' ekle
+                                echo "<label for='dagitim1{$id}'><input type='checkbox' id='dagitim1{$id}' name='dagitimListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />{$country_name}</label>";
+                            }
+                        ?>
                                     </div>
                                 </div>
                             </div>
@@ -1631,40 +1728,53 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <label>Stüdyo</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control" placeholder="Seçilen stüdyolar"
-                                        readonly onclick="toggleDropdown(this)">
+                                        value="<?php echo $filmler2['studyolar'] ?>" readonly
+                                        onclick="toggleDropdown(this)">
                                 </div>
                                 <div class="multiselect">
                                     <div class="checkboxes">
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($studyoListesi as $studyo) {
-                                                $id = htmlspecialchars($studyo['id']);
-                                                $country_name = htmlspecialchars($studyo['studyoad']);
-                                                echo "<label for='studyo{$id}'><input type='checkbox' id='studyo{$id}' name='studyoListesi[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
-                                            }
-                                        ?>
+                                              $studyolar = explode(", ", $filmler2['studyolar']); // Seçili stüdyoları al
+                                              foreach ($studyoListesi as $studyo) {
+                                                  $id = htmlspecialchars($studyo['id']);
+                                                  $country_name = htmlspecialchars($studyo['studyoad']);
+                                                  $checked = in_array($country_name, $studyolar) ? 'checked' : ''; // Seçili ise 'checked' ekle
+                                                  echo "<label for='studyo1{$id}'>
+                                                          <input type='checkbox' id='studyo1{$id}' name='studyoListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />
+                                                          {$country_name}
+                                                        </label>";
+                                              }
+                                              ?>
                                     </div>
                                 </div>
                             </div>
+
                             <!-- ülke -->
                             <div class="form-group">
                                 <label>Ülke</label>
                                 <div class="selected-tags">
-                                    <input type="text" class="tagInput form-control" placeholder="Seçilen ülkeler"
-                                        readonly onclick="toggleDropdown(this)">
+                                    <input type="text" class="tagInput form-control" placeholder="Seçilen stüdyolar"
+                                        value="<?php echo $filmler2['ulkeler'] ?>" readonly
+                                        onclick="toggleDropdown(this)">
                                 </div>
                                 <div class="multiselect">
                                     <div class="checkboxes">
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($ulkeListesi as $ulke) {
-                                                $id = htmlspecialchars($ulke['id']);
-                                                $country_name = htmlspecialchars($ulke['country_name']);
-                                                echo "<label for='ulkeler{$id}'><input type='checkbox' id='ulkeler{$id}' name='ulkeListesi[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
-                                            }
-                                        ?>
+                                              $ulkeler = explode(", ", $filmler2['ulkeler']); // Seçili stüdyoları al
+                                              foreach ($ulkeListesi as $ulke) {
+                                                  $id = htmlspecialchars($ulke['id']);
+                                                  $country_name = htmlspecialchars($ulke['country_name']);
+                                                  $checked = in_array($country_name, $ulkeler) ? 'checked' : ''; // Seçili ise 'checked' ekle
+                                                  echo "<label for='ulke1{$id}'>
+                                                          <input type='checkbox' id='ulke1{$id}' name='ulkeListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />
+                                                          {$country_name}
+                                                        </label>";
+                                              }
+                                              ?>
                                     </div>
                                 </div>
                             </div>
@@ -1672,20 +1782,26 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                             <div class="form-group">
                                 <label>Film Türü</label>
                                 <div class="selected-tags">
-                                    <input type="text" class="tagInput form-control"
-                                        placeholder="Seçilen film türleri" readonly onclick="toggleDropdown(this)">
+                                    <input type="text" class="tagInput form-control" placeholder="Seçilen film türleri"
+                                        value="<?php echo $filmler2['filmturleri'] ?>" readonly
+                                        onclick="toggleDropdown(this)">
                                 </div>
                                 <div class="multiselect">
                                     <div class="checkboxes">
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($filmturuListesi as $filmturu) {
-                                                $id = htmlspecialchars($filmturu['idfilm']);
-                                                $film_turu = htmlspecialchars($filmturu['filmturu']);
-                                                echo "<label for='filmturu{$id}'><input type='checkbox' id='filmturu{$id}' name='filmturuListesi[]' value='{$id}' onclick='updateTags(this)' />{$film_turu}</label>";
-                                            }
-                                        ?>
+                                              $filmturleri = explode(", ", $filmler2['filmturleri']); // Seçili stüdyoları al
+                                              foreach ($filmturuListesi as $filmturuu) {
+                                                  $id = htmlspecialchars($filmturuu['idfilm']);
+                                                  $country_name = htmlspecialchars($filmturuu['filmturu']);
+                                                  $checked = in_array($country_name, $filmturleri) ? 'checked' : ''; // Seçili ise 'checked' ekle
+                                                  echo "<label for='filmturu1{$id}'>
+                                                          <input type='checkbox' id='filmturu1{$id}' name='filmturuListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />
+                                                          {$country_name}
+                                                        </label>";
+                                              }
+                                              ?>
                                     </div>
                                 </div>
                             </div>
@@ -1696,35 +1812,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <label>Yönetmen</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control" placeholder="Seçilen yönetmen"
-                                        readonly onclick="toggleDropdown(this)">
-                                </div>
-                                <div class="multiselect">
-                                    <div class="checkboxes">
-                                        <input type="text" class="searchBox" placeholder="Ara..."
-                                            onkeyup="filterFunction(this)">
-                                        <?php
-                                           foreach ($veriler as $row) {
-
-                                            $id = htmlspecialchars($row['idoyuncu']);
-                                            $oyuncuad = htmlspecialchars($row['adsoyad']);
-                                            $istediginiz_sayi = 34;
-                                            $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-                                            if (preg_match($pattern, $row['kategori_idler'])) {
-                                                echo "<label for='yonetmen{$id}'><input type='checkbox' id='yonetmen{$id}' name='yonetmenListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
-
-                                            } 
-                                        
-                                    }
-                                        ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Senaryo -->
-                            <div class="form-group">
-                                <label>Senaryo</label>
-                                <div class="selected-tags">
-                                    <input type="text" class="tagInput form-control"
-                                        placeholder="Seçilen senaryo yazarı" readonly
+                                        value="<?php echo htmlspecialchars(implode(', ', $yonetmenler)); ?>" readonly
                                         onclick="toggleDropdown(this)">
                                 </div>
                                 <div class="multiselect">
@@ -1732,19 +1820,61 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($veriler as $row) {
-                                            
-                                                $id = htmlspecialchars($row['idoyuncu']);
-                                                $oyuncuad = htmlspecialchars($row['adsoyad']);
-                                                $istediginiz_sayi = 38;
-                                                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-                                                if (preg_match($pattern, $row['kategori_idler'])) {
-                                                    echo "<label for='senaryo{$id}'><input type='checkbox' id='senaryo{$id}' name='senaryoListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+            // Yönetmenler dizisini kontrol ediyoruz
 
-                                                } 
-                                            
-                                        }
-                                        ?>
+            // Veritabanından gelen oyuncuların üzerinden geçiyoruz
+            foreach ($veriler as $row) {
+                $id = htmlspecialchars($row['idoyuncu']);
+                $oyuncuad = htmlspecialchars($row['adsoyad']);
+                $istediginiz_sayi = 34; // Örnek bir değer, gerçek uygulamanızda güncelleyin
+                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+
+                // Oyuncunun kategorisini kontrol et
+                if (preg_match($pattern, $row['kategori_idler'])) {
+                    // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
+                    $checked = in_array($oyuncuad, $yonetmenler) ? 'checked' : '';
+                    
+                    // Checkbox'ı oluştur
+                    echo "<label for='yonetmen1{$id}'><input type='checkbox' id='yonetmen1{$id}' name='yonetmenListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                }
+            }
+            ?>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Senaryo -->
+                            <div class="form-group">
+                                <label>Senaryo</label>
+                                <div class="selected-tags">
+                                    <input type="text" class="tagInput form-control" placeholder="Seçilen yönetmen"
+                                        value="<?php echo htmlspecialchars(implode(', ', $senaryolar)); ?>" readonly
+                                        onclick="toggleDropdown(this)">
+                                </div>
+                                <div class="multiselect">
+                                    <div class="checkboxes">
+                                        <input type="text" class="searchBox" placeholder="Ara..."
+                                            onkeyup="filterFunction(this)">
+                                        <?php
+            // Yönetmenler dizisini kontrol ediyoruz
+
+            // Veritabanından gelen oyuncuların üzerinden geçiyoruz
+            foreach ($veriler as $row) {
+                $id = htmlspecialchars($row['idoyuncu']);
+                $oyuncuad = htmlspecialchars($row['adsoyad']);
+                $istediginiz_sayi = 38; // Örnek bir değer, gerçek uygulamanızda güncelleyin
+                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+
+                // Oyuncunun kategorisini kontrol et
+                if (preg_match($pattern, $row['kategori_idler'])) {
+                    // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
+                    $checked = in_array($oyuncuad, $senaryolar) ? 'checked' : '';
+                    
+                    // Checkbox'ı oluştur
+                    echo "<label for='senaryo1{$id}'><input type='checkbox' id='senaryo1{$id}' name='senaryoListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                }
+            }
+            ?>
                                     </div>
                                 </div>
                             </div>
@@ -1753,27 +1883,33 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <label>Görüntü Yönetmeni</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control"
-                                        placeholder="Seçilen görüntü yönetmeni" readonly
-                                        onclick="toggleDropdown(this)">
+                                        value="<?php echo htmlspecialchars(implode(', ', $GörüntüYönetmeni)); ?>"
+                                        placeholder="Seçilen görüntü yönetmeni" readonly onclick="toggleDropdown(this)">
                                 </div>
                                 <div class="multiselect">
                                     <div class="checkboxes">
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                           foreach ($veriler as $row) {
+            // Yönetmenler dizisini kontrol ediyoruz
 
-                                            $id = htmlspecialchars($row['idoyuncu']);
-                                            $oyuncuad = htmlspecialchars($row['adsoyad']);
-                                            $istediginiz_sayi = 35;
-                                            $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-                                            if (preg_match($pattern, $row['kategori_idler'])) {
-                                                echo "<label for='gyonetmen{$id}'><input type='checkbox' id='gyonetmen{$id}' name='gyonetmeniListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+            // Veritabanından gelen oyuncuların üzerinden geçiyoruz
+            foreach ($veriler as $row) {
+                $id = htmlspecialchars($row['idoyuncu']);
+                $oyuncuad = htmlspecialchars($row['adsoyad']);
+                $istediginiz_sayi = 35; // Örnek bir değer, gerçek uygulamanızda güncelleyin
+                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
 
-                                            } 
-                                        
-                                    }
-                                        ?>
+                // Oyuncunun kategorisini kontrol et
+                if (preg_match($pattern, $row['kategori_idler'])) {
+                    // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
+                    $checked = in_array($oyuncuad, $GörüntüYönetmeni) ? 'checked' : '';
+                    
+                    // Checkbox'ı oluştur
+                    echo "<label for='goryonetmen{$id}'><input type='checkbox' id='goryonetmen{$id}' name='goryonetmenListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                }
+            }
+            ?>
                                     </div>
                                 </div>
                             </div>
@@ -1782,6 +1918,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <label>Kurgu</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control"
+                                        value="<?php echo htmlspecialchars(implode(', ', $Kurgu)); ?>"
                                         placeholder="Seçilen film türleri burada görünecek..." readonly
                                         onclick="toggleDropdown(this)">
                                 </div>
@@ -1790,19 +1927,25 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($veriler as $row) {
-                                            
-                                                $id = htmlspecialchars($row['idoyuncu']);
-                                                $oyuncuad = htmlspecialchars($row['adsoyad']);
-                                                $istediginiz_sayi = 37;
-                                                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-                                                if (preg_match($pattern, $row['kategori_idler'])) {
-                                                    echo "<label for='kurgu{$id}'><input type='checkbox' id='kurgu{$id}' name='kurguListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+            // Yönetmenler dizisini kontrol ediyoruz
 
-                                                } 
-                                            
-                                        }
-                                        ?>
+            // Veritabanından gelen oyuncuların üzerinden geçiyoruz
+            foreach ($veriler as $row) {
+                $id = htmlspecialchars($row['idoyuncu']);
+                $oyuncuad = htmlspecialchars($row['adsoyad']);
+                $istediginiz_sayi = 37; // Örnek bir değer, gerçek uygulamanızda güncelleyin
+                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+
+                // Oyuncunun kategorisini kontrol et
+                if (preg_match($pattern, $row['kategori_idler'])) {
+                    // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
+                    $checked = in_array($oyuncuad, $Kurgu) ? 'checked' : '';
+                    
+                    // Checkbox'ı oluştur
+                    echo "<label for='kurgu1{$id}'><input type='checkbox' id='kurgu1{$id}' name='kurguListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                }
+            }
+            ?>
                                     </div>
                                 </div>
                             </div>
@@ -1811,6 +1954,7 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <label>Müzik</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control"
+                                        value="<?php echo htmlspecialchars(implode(', ', $Müzik)); ?>"
                                         placeholder="Seçilen film türleri burada görünecek..." readonly
                                         onclick="toggleDropdown(this)">
                                 </div>
@@ -1819,19 +1963,25 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($veriler as $row) {
-                                            
-                                                $id = htmlspecialchars($row['idoyuncu']);
-                                                $oyuncuad = htmlspecialchars($row['adsoyad']);
-                                                $istediginiz_sayi = 36;
-                                                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-                                                if (preg_match($pattern, $row['kategori_idler'])) {
-                                                    echo "<label for='muzik{$id}'><input type='checkbox' id='muzik{$id}' name='müzikListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+            // Yönetmenler dizisini kontrol ediyoruz
 
-                                                } 
-                                            
-                                        }
-                                        ?>
+            // Veritabanından gelen oyuncuların üzerinden geçiyoruz
+            foreach ($veriler as $row) {
+                $id = htmlspecialchars($row['idoyuncu']);
+                $oyuncuad = htmlspecialchars($row['adsoyad']);
+                $istediginiz_sayi = 36; // Örnek bir değer, gerçek uygulamanızda güncelleyin
+                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+
+                // Oyuncunun kategorisini kontrol et
+                if (preg_match($pattern, $row['kategori_idler'])) {
+                    // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
+                    $checked = in_array($oyuncuad, $Müzik) ? 'checked' : '';
+                    
+                    // Checkbox'ı oluştur
+                    echo "<label for='muzik1{$id}'><input type='checkbox' id='muzik1{$id}' name='muzikListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                }
+            }
+            ?>
                                     </div>
                                 </div>
                             </div>
@@ -1840,110 +1990,117 @@ $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                 <label>Film Oyuncuları</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control"
-                                        placeholder="Seçilen film oyuncuları" readonly
-                                        onclick="toggleDropdown(this)">
+                                        value="<?php echo htmlspecialchars(implode(', ', $Oyuncu)); ?>"
+                                        placeholder="Seçilen film oyuncuları" readonly onclick="toggleDropdown(this)">
                                 </div>
                                 <div class="multiselect">
                                     <div class="checkboxes">
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-                                            foreach ($veriler as $row) {
-                                            
-                                                    $id = htmlspecialchars($row['idoyuncu']);
-                                                    $oyuncuad = htmlspecialchars($row['adsoyad']);
-                                                    $istediginiz_sayi = 29;
-                                                    $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-                                                    if (preg_match($pattern, $row['kategori_idler'])) {
-                                                        echo "<label for='filmoyuncu{$id}'><input type='checkbox' id='filmoyuncu{$id}' name='oyuncuListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+            // Yönetmenler dizisini kontrol ediyoruz
 
-                                                    } 
-                                                
-                                            }
-                                        ?>
+            // Veritabanından gelen oyuncuların üzerinden geçiyoruz
+            foreach ($veriler as $row) {
+                $id = htmlspecialchars($row['idoyuncu']);
+                $oyuncuad = htmlspecialchars($row['adsoyad']);
+                $istediginiz_sayi = 29; // Örnek bir değer, gerçek uygulamanızda güncelleyin
+                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+
+                // Oyuncunun kategorisini kontrol et
+                if (preg_match($pattern, $row['kategori_idler'])) {
+                    // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
+                    $checked = in_array($oyuncuad, $Oyuncu) ? 'checked' : '';
+                    
+                    // Checkbox'ı oluştur
+                    echo "<label for='oyuncu1{$id}'><input type='checkbox' id='oyuncu1{$id}' name='oyuncuListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                }
+            }
+            ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                            <!-- Film Aciklamasi -->
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for="filmKonu">Filmin Konusu</label>
-                                    <textarea class="form-control textarea" rows="6" name="filmKonu"
-                                        id="filmKonu"></textarea>
-                                </div>
-                            </div>
-                        </div>
-
-                    <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
-                        <h2>Afiş Resimi</h2>
                     </div>
 
-                    <div class="row bg-white border bt-0 p-3 m-0">
-                        <div class="col-md-3 mb-4">
-                            <div class="card">
-                                <img class="card-img-top" src="images/bg_1.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <div class="multiple-uploader" id="single-uploader-inside">
-                                <div class="mup-msg">
-                                    <span class="mup-main-msg">Kapak Resmi Yüklemek için
-                                        Tıklayınız.</span>
-                                    <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
-                                        Fotoğrafı Yükleyiniz.</span>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
-                        <h2>Galeri Resimleri</h2>
-                    </div>
-
-                    <div class="row bg-white border bt-0 p-3 m-0">
-                        <div class="col-md-3 mb-4">
-                            <div class="card">
-                                <img class="card-img-top" src="images/bg_1.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <div class="card">
-                                <img class="card-img-top" src="images/bg_1.jpg" alt="">
-                            </div>
-                        </div>
-                        <div class="col-md-3 mb-4">
-                            <div class="card">
-                                <img class="card-img-top" src="images/bg_1.jpg" alt="">
-                            </div>
-                        </div>
-
-                        <div class="col-md-3 mb-4">
-                            <div class="multiple-uploader" id="multiple-uploader-inside">
-                                <div class="mup-msg">
-                                    <span class="mup-main-msg">Film Galerisine Fotoğraf Eklemek için
-                                        Tıklayınız.</span>
-                                    <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
-                                        Yükleyiniz.</span>
-                                </div>
-                            </div>
+                    <!-- Film Aciklamasi -->
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label for="filmKonu">Filmin Konusu</label>
+                            <textarea class="form-control textarea" rows="6" name="filmkonu"
+                                id="filmKonu"><?php echo $filmler2['film_konu']  ?></textarea>
                         </div>
                     </div>
+            </div>
 
-                    <div class="row pt-3">
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-lg">Kaydet</button>
+            <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
+                <h2>Afiş Resimi</h2>
+            </div>
+
+            <div class="row bg-white border bt-0 p-3 m-0">
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <img class="card-img-top" src="../kapakfoto/<?php echo $filmler2['kapak_resmi']  ?>" alt="">
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="multiple-uploader" id="single-uploader-film-edit">
+                        <div class="mup-msg">
+                            <span class="mup-main-msg">Kapak Resmi Yüklemek için
+                                Tıklayınız.</span>
+                            <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
+                                Fotoğrafı Yükleyiniz.</span>
                         </div>
                     </div>
-                </form>
+                </div>
 
             </div>
 
+            <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
+                <h2>Galeri Resimleri</h2>
+            </div>
 
+            <div class="row bg-white border bt-0 p-3 m-0">
+                <?php
+// $filmler2['resimler'] dizisindeki resimleri ayırın
+$resimler = explode(', ', $filmler2['resimler']); // Resimler virgülle ayrılmış olabilir
+
+// Her bir resmi HTML'deki yapıya yerleştirmek için döngü kullanın
+foreach ($resimler as $resim) {
+    ?>
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>" alt="">
+                    </div>
+                </div>
+                <?php
+}
+?>
+
+                <div class="col-md-3 mb-4">
+                    <div class="multiple-uploader" id="multiple-uploader-galerifilm">
+                        <div class="mup-msg">
+                            <span class="mup-main-msg">Film Galerisine Fotoğraf Eklemek için
+                                Tıklayınız.</span>
+                            <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
+                                Yükleyiniz.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row pt-3">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary btn-lg">Kaydet</button>
+                </div>
+            </div>
+            </form>
 
         </div>
+
+
+
+    </div>
 
     </div>
     </div>
@@ -2152,6 +2309,30 @@ function formatDateTime($dateTimeString) {
         filesInpName: 'kapakfoto', // input name sent to backend
         formSelector: '#formHaberler', // form selector
     });
+
+
+    let multipleUploader4 = new MultipleUploader('#single-uploader-film-edit').init({
+        maxUpload: 1, // maximum number of uploaded images
+        maxSize: 2, // in size in mb
+        filesInpName: 'filmkapakedit', // input name sent to backend
+        formSelector: '#filmdetay', // form selector
+    });
+    
+    let multipleUploader5 = new MultipleUploader('#multiple-uploader-galerifilm').init({
+        maxUpload: 20, // maximum number of uploaded images
+        maxSize: 2, // in size in mb
+        filesInpName: 'filmgaleriedit', // input name sent to backend
+        formSelector: '#filmdetay', // form selector
+    });
+
+
+
+
+
+
+
+
+
     </script>
 
 
@@ -2161,23 +2342,35 @@ function formatDateTime($dateTimeString) {
     });
     </script>
     <script>
-    function showContent(contentId) {
-        localStorage.setItem("uri", contentId);
-        // Hide all content divs
-        var contents = document.querySelectorAll('.content');
-        contents.forEach(function(content) {
-            content.style.display = 'none';
-        });
+    function showContent(contentId, id,statu) {
 
-        // Remove active class from all list items
-        var tabs = document.querySelectorAll('ul li');
-        tabs.forEach(function(tab) {
-            tab.classList.remove('active');
-        });
+        if (typeof id === 'undefined') {
+            localStorage.setItem("uri", contentId);
 
-        // Show the selected content div
-        document.getElementById(contentId).style.display = 'block';
+            var contents = document.querySelectorAll('.content');
+            contents.forEach(function(content) {
+                content.style.display = 'none';
+            });
 
+            // Remove active class from all list items
+            var tabs = document.querySelectorAll('ul li');
+            tabs.forEach(function(tab) {
+                tab.classList.remove('active');
+            });
+
+            // Show the selected content div
+            document.getElementById(contentId).style.display = 'block';
+        } else {
+            localStorage.setItem("uri", contentId);
+
+            const url = new URL(window.location.href);
+            url.searchParams.set(statu+'id', id);
+            window.history.pushState({}, '', url);
+            location.reload();
+
+
+
+        }
 
     }
 
