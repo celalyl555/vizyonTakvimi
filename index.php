@@ -18,9 +18,10 @@ include('admin/conn.php');
     $stmtFilmlerYakin = $con->query($sqlFilmlerYakin);
     $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC);
 
-    $sqlHaberler = "SELECT * FROM haberler";
+    $sqlHaberler = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
     $stmtHaberler = $con->query($sqlHaberler);
     $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
+
     ?>
 <!-- sql query final -->
     <main>
@@ -436,15 +437,17 @@ include('admin/conn.php');
 
                 <div class="newsLeft">
                     <!-- foreach 4 tane olacak en güncel 4 taneyi göster  -->
-                    <a href="#333" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> </p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
+                    <?php foreach ($haberler as $haber) { ?>
+                        <a href="#<?= $haber['idhaber']; ?>" class="newsBox">
+                            <div class="newsBoxImg">
+                                <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="haberfoto/<?php echo $film['haberfoto']; ?>" >
+                            </div>
+                            <div>
+                                <p><i class="fa-solid fa-hourglass-half"></i> <?= htmlspecialchars($haber['tarih']); ?></p>
+                                <h3><?php echo $haber['baslik']; ?></h3>
+                            </div>
+                        </a>
+                    <?php } ?>
                     <!-- kapanış -->
                     <a href="" class="tumuBtn">Tüm Haberler <i class="fa-solid fa-right-long"></i></a>
                     
