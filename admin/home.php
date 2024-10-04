@@ -2274,6 +2274,7 @@ function formatDate($dateString) {
     // Formatlanmış tarihi döndür
     return $day . ' ' . $months[$month] . ' ' . $year;
 }
+
 function formatDateTime($dateTimeString) {
     // Ay isimlerini tanımla
     $months = [
