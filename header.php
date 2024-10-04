@@ -24,7 +24,7 @@
     <header>
 
         <div class="top-header">
-            <a class="logoImg" href="/">
+            <a class="logoImg" href="index">
                 <img src="assets/img/logo/logo.png" alt="Logo">
             </a>
             <div class="headerInfo">
