@@ -13,7 +13,7 @@
                     <img src="assets/img/news/04.jpg" class="hero">
                     <div class="overlay">
                         <span class="category">CYF Tech</span>
-                        <p>CYF Tech ABD: Beterböcek'ten 110 milyon dolar</p>
+                        <p>CYF Tech ABD: asdasasdas'ten 110 milyon dolar</p>
                     </div>
                 </a>
         
