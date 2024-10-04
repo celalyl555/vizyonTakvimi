@@ -1304,13 +1304,23 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                                     <i class="material-icons mr-2">&#xE147;</i> <span>Sinema Dağıtım
                                                         Ekle</span>
                                                 </a>
-
+                                               
                                             </div>
-
+                                            <div class="row mt-3">
+                                                    <div class="col-sm-12">
+                                                        <label for="rowsPerPageSelect0">Satır Sayısı: </label>
+                                                        <select id="rowsPerPageSelect0" class="rows-per-page-select">
+                                                            <option value="5">5</option>
+                                                            <option value="10">10</option>
+                                                            <option value="20">20</option>
+                                                            <option value="50">50</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
                                         </div>
                                     </div>
                                     <div class="table-over">
-                                        <table class="table table-striped table-hover">
+                                        <table class="table table-striped table-hover paginated-table">
                                             <thead>
                                                 <tr>
 
@@ -1343,17 +1353,12 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                         </table>
                                     </div>
                                     <div class="clearfix">
-                                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                                        <ul class="pagination">
-                                            <li class="page-item disabled"><a href="#">Previous</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">4</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">5</a></li>
-                                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                                        </ul>
-                                    </div>
+                                    <div class="hint-text">Showing <b id="currentPageEntries0">1</b> out of <b
+                                            id="totalEntries0"></b> entries</div>
+                                    <ul class="pagination" id="pagination0">
+                                        <!-- Dinamik sayfalama burada olacak -->
+                                    </ul>
+                                </div>
                                 </div>
                             </div>
                             <!-- Add Modal HTML -->
@@ -1422,7 +1427,7 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-12 top-section">
-                            <div class="table-wrapper">
+                            <div class="table-wrapper mt-0">
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
@@ -1435,9 +1440,20 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                             </a>
                                         </div>
                                     </div>
+                                    <div class="row mt-3">
+                                        <div class="col-sm-12">
+                                            <label for="rowsPerPageSelect0">Satır Sayısı: </label>
+                                            <select id="rowsPerPageSelect0" class="rows-per-page-select">
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="table-over">
-                                    <table class="table table-striped table-hover ">
+                                    <table class="table table-striped table-hover paginated-table" id="haberlerTable">
                                         <thead>
                                             <tr>
                                                 <th class="align-middle text-center">Fotoğraf</th>
@@ -1481,18 +1497,14 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                     </table>
                                 </div>
                                 <div class="clearfix">
-                                    <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                                    <ul class="pagination">
-                                        <li class="page-item disabled"><a href="#">Previous</a></li>
-                                        <li class="page-item"><a href="#" class="page-link">1</a></li>
-                                        <li class="page-item"><a href="#" class="page-link">2</a></li>
-                                        <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                                        <li class="page-item"><a href="#" class="page-link">4</a></li>
-                                        <li class="page-item"><a href="#" class="page-link">5</a></li>
-                                        <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                                    <div class="hint-text">Showing <b id="currentPageEntries1">1</b> out of <b
+                                            id="totalEntries1"></b> entries</div>
+                                    <ul class="pagination" id="pagination1">
+                                        <!-- Dinamik sayfalama burada olacak -->
                                     </ul>
                                 </div>
                             </div>
+
                         </div>
 
                         <!-- Silme Modalı -->
@@ -1674,9 +1686,9 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                         </table>
                     </div>
                     <div class="clearfix">
-                        <div class="hint-text">Showing <b id="currentPageEntries1">1</b> out of <b
-                                id="totalEntries1"></b> entries</div>
-                        <ul class="pagination" id="pagination1">
+                        <div class="hint-text">Showing <b id="currentPageEntries2">1</b> out of <b
+                                id="totalEntries2"></b> entries</div>
+                        <ul class="pagination" id="pagination2">
                             <!-- Dinamik sayfalama burada olacak -->
                         </ul>
                     </div>
@@ -1697,17 +1709,17 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                     <i class="material-icons">&#xE147;</i> <span>Excel Dosyası Yükle</span>
                                 </a>
                             </div>
-                            
-                                <div class="col-sm-12">
-                                    <label for="rowsPerPageSelect2">Satır Sayısı: </label>
-                                    <select id="rowsPerPageSelect2" class="rows-per-page-select">
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="20">20</option>
-                                        <option value="50">50</option>
-                                    </select>
-                                </div>
-                           
+
+                            <div class="col-sm-12">
+                                <label for="rowsPerPageSelect2">Satır Sayısı: </label>
+                                <select id="rowsPerPageSelect2" class="rows-per-page-select">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+
                         </div>
                     </div>
 
@@ -1753,11 +1765,12 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
 
                     </div>
                     <div class="clearfix">
-        <div class="hint-text">Showing <b id="currentPageEntries2">1</b> out of <b id="totalEntries2"></b> entries</div>
-        <ul class="pagination" id="pagination2">
-            <!-- Dinamik sayfalama burada olacak -->
-        </ul>
-    </div>
+                        <div class="hint-text">Showing <b id="currentPageEntries3">1</b> out of <b
+                                id="totalEntries3"></b> entries</div>
+                        <ul class="pagination" id="pagination3">
+                            <!-- Dinamik sayfalama burada olacak -->
+                        </ul>
+                    </div>
                 </div>
 
 

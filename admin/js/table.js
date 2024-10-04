@@ -31,10 +31,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const rows = Array.from(tbody.querySelectorAll('tr'));
         const totalEntries = rows.length;
 
-        const select = document.getElementById(`rowsPerPageSelect${index + 1}`);
-        const pagination = document.getElementById(`pagination${index + 1}`);
-        const currentPageEntries = document.getElementById(`currentPageEntries${index + 1}`);
-        const totalEntriesText = document.getElementById(`totalEntries${index + 1}`);
+        const select = document.getElementById(`rowsPerPageSelect${index}`);
+        const pagination = document.getElementById(`pagination${index}`);
+        const currentPageEntries = document.getElementById(`currentPageEntries${index}`);
+        const totalEntriesText = document.getElementById(`totalEntries${index}`);
+
+        if (!totalEntriesText || !currentPageEntries || !pagination) {
+            console.error(`ID'leri bulunamadı: currentPageEntries${index}, totalEntries${index}, pagination${index}`);
+            return; // Eğer öğeler mevcut değilse, işlemi durdur
+        }
+
         totalEntriesText.innerText = totalEntries;
 
         let currentPage = 1;
