@@ -168,7 +168,7 @@ $(document).ready(function() {
           
             const button = document.getElementById('addfilmturuModal');
               button.click();
-              localStorage.setItem("uri", 'conten3');
+              localStorage.setItem("uri", 'content3');
               location.reload();
           },
           error: function(xhr, status, error) {
@@ -617,3 +617,5 @@ $(document).ready(function() {
       }
   });
 });
+
+

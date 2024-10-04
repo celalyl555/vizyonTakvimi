@@ -2,7 +2,7 @@
 include('../admin/conn.php');
 include('../header.php');
 
-$haberId = 18;
+$haberId = 5;
 
 try {
     // Veritabanından haber bilgilerini al

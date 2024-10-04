@@ -33,6 +33,14 @@ $stmt = $con->prepare('SELECT * FROM haberler');
 $stmt->execute();
 $haberler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+
+
+
+
+
+
+
+
 if (isset($_GET['haberid'])) {
     $idd = $_GET['haberid'];
     $stmt = $con->prepare('SELECT * FROM haberler WHERE idhaber ='.$idd);
@@ -102,7 +110,13 @@ if (isset($_GET['filmid'])) {
         $filmler2 = $stmt->fetch(PDO::FETCH_ASSOC);
     
         // Sonuçları ekrana yazdır
-  
+        $stmt = $con->prepare('SELECT * FROM filmveriler WHERE film_id='. $film_id  );
+        $stmt->execute();
+        $veriler2= $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt = $con->prepare('SELECT * FROM filmsalon WHERE film_id='. $film_id);
+$stmt->execute();
+$salonlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
         // Hata mesajını yakala ve ekrana yazdır
@@ -192,10 +206,11 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
 
 
 <body class="loggedin">
-<!-- Progress Bar -->
-<div id="progress-container" style="display: none; width: 100%; background: #f3f3f3; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
-    <div id="progress-bar" style="width: 0%; height: 20px; background: #4caf50; border-radius: 5px;"></div>
-</div>
+    <!-- Progress Bar -->
+    <div id="progress-container"
+        style="display: none; width: 100%; background: #f3f3f3; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
+        <div id="progress-bar" style="width: 0%; height: 20px; background: #4caf50; border-radius: 5px;"></div>
+    </div>
 
 
     <div class="wrapper d-flex align-items-stretch">
@@ -328,7 +343,7 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                         <li class="page-item"><a href="#" class="page-link">1</a></li>
                                         <li class="page-item"><a href="#" class="page-link">2</a></li>
                                         <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                                        <li class="page-item"><a href="#" class="page-link">4</a></li>
+                                        <li class="page-item"><a href="#" class="page-link">4</a></li>rih
                                         <li class="page-item"><a href="#" class="page-link">5</a></li>
                                         <li class="page-item"><a href="#" class="page-link">Next</a></li>
                                     </ul>
@@ -1422,7 +1437,7 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                     </div>
                                 </div>
                                 <div class="table-over">
-                                    <table class="table table-striped table-hover">
+                                    <table class="table table-striped table-hover ">
                                         <thead>
                                             <tr>
                                                 <th class="align-middle text-center">Fotoğraf</th>
@@ -1616,45 +1631,59 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                 </a>
                             </div>
                         </div>
+                        <!-- Seçilen satır sayısını belirleyen select -->
+                        <div class="row mt-3">
+                            <div class="col-sm-12">
+                                <label for="rowsPerPageSelect1">Satır Sayısı: </label>
+                                <select id="rowsPerPageSelect1" class="rows-per-page-select">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                     <div class="table-over">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover paginated-table" id="boxOfficeTable1">
                             <thead>
                                 <tr>
-                                    <th class="w-fit">Film Afişi</th>
-                                    <th>Film Adı</th>
-                                    <th>Vizyon Tarihi</th>
-                                    <th>Film Türü</th>
-                                    <th></th>
-                                    <th></th>
+                                    <th>Tarih</th>
+                                    <th>Sinema</th>
+                                    <th>Perde</th>
+                                    <th>Kişi</th>
+                                    <th>Hasılat</th>
+                                    <th>Toplam Kişi</th>
+                                    <th>Toplam Hasılat</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                <!-- PHP ile dinamik satırlar buraya gelir -->
+                                <?php foreach ($veriler2 as $veri): ?>
                                 <tr>
-                                    <td>asffasafafs</td>
-                                    <td class="align-middle">asd</td>
-                                    <td class="align-middle">asd</td>
-                                    <td class="align-middle">rbht</td>
-                                    <td class="align-middle">ehrtrthy</td>
-                                    <td class="align-middle">wefwef</td>
+                                    <td class="align-middle"><?= formatDate(htmlspecialchars($veri['tarih'])); ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($veri['sinema']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($veri['perde']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($veri['kisi']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($veri['hasilat']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($veri['toplamkisi']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($veri['toplamhasilat']) ?></td>
                                 </tr>
-
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
                     <div class="clearfix">
-                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a href="#">Previous</a></li>
-                            <li class="page-item"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                            <li class="page-item"><a href="#" class="page-link">4</a></li>
-                            <li class="page-item"><a href="#" class="page-link">5</a></li>
-                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                        <div class="hint-text">Showing <b id="currentPageEntries1">1</b> out of <b
+                                id="totalEntries1"></b> entries</div>
+                        <ul class="pagination" id="pagination1">
+                            <!-- Dinamik sayfalama burada olacak -->
                         </ul>
                     </div>
                 </div>
+
+
+
 
                 <div class="table-wrapper mt-0">
                     <div class="table-title">
@@ -1668,10 +1697,22 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                     <i class="material-icons">&#xE147;</i> <span>Excel Dosyası Yükle</span>
                                 </a>
                             </div>
+                            
+                                <div class="col-sm-12">
+                                    <label for="rowsPerPageSelect2">Satır Sayısı: </label>
+                                    <select id="rowsPerPageSelect2" class="rows-per-page-select">
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                    </select>
+                                </div>
+                           
                         </div>
                     </div>
+
                     <div class="table-over">
-                        <table class="table table-striped table-hover">
+                        <table class="table table-striped table-hover  paginated-table">
                             <thead>
                                 <tr>
                                     <th>Şehir</th>
@@ -1687,46 +1728,36 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php foreach ($salonlar as $salon): ?>
                                 <tr>
-                               
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-asd</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-asd</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-ehrtrthy</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-wefwef</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-asd</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-asd</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-rbht</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-ehrtrthy</td>
-                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
-wefwef</td>
-                                </tr>Nevşehir Cinema Pink (Forum Kapadokya)
-
-
+                                    <td class="align-middle"><?= htmlspecialchars($salon['sehir']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($salon['sinema']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($salon['format']) ?></td>
+                                    <td class="align-middle"><?= htmlspecialchars($salon['dil']) ?></td>
+                                    <td class="align-middle">
+                                        <?= !empty($salon['seans1']) ? htmlspecialchars($salon['seans1']) : '-' ?></td>
+                                    <td class="align-middle">
+                                        <?= !empty($salon['seans2']) ? htmlspecialchars($salon['seans2']) : '-' ?></td>
+                                    <td class="align-middle">
+                                        <?= !empty($salon['seans3']) ? htmlspecialchars($salon['seans3']) : '-' ?></td>
+                                    <td class="align-middle">
+                                        <?= !empty($salon['seans4']) ? htmlspecialchars($salon['seans4']) : '-' ?></td>
+                                    <td class="align-middle">
+                                        <?= !empty($salon['seans5']) ? htmlspecialchars($salon['seans5']) : '-' ?></td>
+                                    <td class="align-middle">
+                                        <?= !empty($salon['seans6']) ? htmlspecialchars($salon['seans6']) : '-' ?></td>
+                                </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
+
                     </div>
                     <div class="clearfix">
-                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-                        <ul class="pagination">
-                            <li class="page-item disabled"><a href="#">Previous</a></li>
-                            <li class="page-item"><a href="#" class="page-link">1</a></li>
-                            <li class="page-item"><a href="#" class="page-link">2</a></li>
-                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
-                            <li class="page-item"><a href="#" class="page-link">4</a></li>
-                            <li class="page-item"><a href="#" class="page-link">5</a></li>
-                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
-                        </ul>
-                    </div>
+        <div class="hint-text">Showing <b id="currentPageEntries2">1</b> out of <b id="totalEntries2"></b> entries</div>
+        <ul class="pagination" id="pagination2">
+            <!-- Dinamik sayfalama burada olacak -->
+        </ul>
+    </div>
                 </div>
 
 
@@ -2148,70 +2179,74 @@ wefwef</td>
                             </div>
                         </div>
                     </div>
-            </div>
 
-            <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
-                <h2>Afiş Resimi</h2>
-            </div>
-
-            <div class="row bg-white border bt-0 p-3 m-0">
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <img class="card-img-top" src="../kapakfoto/<?php echo $filmler2['kapak_resmi']  ?>" alt="">
+                    <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
+                        <h2>Afiş Resimi</h2>
                     </div>
-                </div>
-                <div class="col-md-3 mb-4">
-                    <div class="multiple-uploader" id="single-uploader-film-edit">
-                        <div class="mup-msg">
-                            <span class="mup-main-msg">Kapak Resmi Yüklemek için
-                                Tıklayınız.</span>
-                            <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
-                                Fotoğrafı Yükleyiniz.</span>
+
+                    <div class="row bg-white border bt-0 p-3 m-0">
+                        <div class="col-md-3 mb-4">
+                            <div class="card">
+                                <img class="card-img-top" src="../kapakfoto/<?php echo $filmler2['kapak_resmi']  ?>"
+                                    alt="">
+                            </div>
                         </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="multiple-uploader" id="single-uploader-film-edit">
+                                <div class="mup-msg">
+                                    <span class="mup-main-msg">Kapak Resmi Yüklemek için
+                                        Tıklayınız.</span>
+                                    <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
+                                        Fotoğrafı Yükleyiniz.</span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-                </div>
 
-            </div>
+                    <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
+                        <h2>Galeri Resimleri</h2>
+                    </div>
 
-            <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
-                <h2>Galeri Resimleri</h2>
-            </div>
-
-            <div class="row bg-white border bt-0 p-3 m-0">
-                <?php
+                    <div class="row bg-white border bt-0 p-3 m-0">
+                        <?php
 // $filmler2['resimler'] dizisindeki resimleri ayırın
 $resimler = explode(', ', $filmler2['resimler']); // Resimler virgülle ayrılmış olabilir
 
 // Her bir resmi HTML'deki yapıya yerleştirmek için döngü kullanın
 foreach ($resimler as $resim) {
     ?>
-                <div class="col-md-3 mb-4">
-                    <div class="card">
-                        <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>" alt="">
-                    </div>
-                </div>
-                <?php
+                        <div class="col-md-3 mb-4">
+                            <div class="card">
+                                <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>"
+                                    alt="">
+                            </div>
+                        </div>
+                        <?php
 }
 ?>
 
-                <div class="col-md-3 mb-4">
-                    <div class="multiple-uploader" id="multiple-uploader-galerifilm">
-                        <div class="mup-msg">
-                            <span class="mup-main-msg">Film Galerisine Fotoğraf Eklemek için
-                                Tıklayınız.</span>
-                            <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
-                                Yükleyiniz.</span>
+                        <div class="col-md-3 mb-4">
+                            <div class="multiple-uploader" id="multiple-uploader-galerifilm">
+                                <div class="mup-msg">
+                                    <span class="mup-main-msg">Film Galerisine Fotoğraf Eklemek için
+                                        Tıklayınız.</span>
+                                    <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
+                                        Yükleyiniz.</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                    <div class="row pt-3">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-lg">Kaydet</button>
+                        </div>
+                    </div>
+                </form>
             </div>
 
-            <div class="row pt-3">
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary btn-lg">Kaydet</button>
-                </div>
-            </div>
-            </form>
+
 
         </div>
 
@@ -2397,6 +2432,7 @@ function formatDateTime($dateTimeString) {
     <script src="js/popper.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/table.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap-multiselect@0.9.13/dist/js/bootstrap-multiselect.js"></script>
