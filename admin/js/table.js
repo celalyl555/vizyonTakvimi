@@ -21,9 +21,7 @@ $(document).ready(function(){
 		}
 	});
 });
-
 document.addEventListener('DOMContentLoaded', function () {
-    // Tabloları ve ilgili öğeleri bul
     const tables = document.querySelectorAll('.paginated-table');
 
     tables.forEach((table, index) => {
@@ -32,6 +30,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const totalEntries = rows.length;
 
         const select = document.getElementById(`rowsPerPageSelect${index}`);
+        if (!select) {
+            console.error(`Seçim elemanı bulunamadı: rowsPerPageSelect${index}`);
+            return; // Eğer seçim elemanı mevcut değilse, işlemi durdur
+        }
+
         const pagination = document.getElementById(`pagination${index}`);
         const currentPageEntries = document.getElementById(`currentPageEntries${index}`);
         const totalEntriesText = document.getElementById(`totalEntries${index}`);
@@ -47,17 +50,11 @@ document.addEventListener('DOMContentLoaded', function () {
         let rowsPerPage = parseInt(select.value);
 
         function updateTable() {
-            // Tabloda hangi satırların görünmesi gerektiğini belirle
             let start = (currentPage - 1) * rowsPerPage;
             let end = start + rowsPerPage;
             rows.forEach((row, index) => {
-                if (index >= start && index < end) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                row.style.display = (index >= start && index < end) ? '' : 'none';
             });
-            // Sayfa ve giriş metnini güncelle
             currentPageEntries.innerText = `${start + 1}-${Math.min(end, totalEntries)}`;
         }
 
@@ -86,11 +83,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
-        // Sayfa yüklenince tabloyu güncelle ve sayfalama oluştur
         updateTable();
         createPagination();
 
-        // Satır sayısı değiştiğinde tabloyu yeniden yükle
         select.addEventListener('change', function () {
             rowsPerPage = parseInt(this.value);
             currentPage = 1; // Sayfa başa döner
@@ -99,4 +94,3 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
-
