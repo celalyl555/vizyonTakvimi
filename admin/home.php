@@ -73,34 +73,36 @@ if (isset($_GET['filmid'])) {
         
 
         $sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.film_konu, f.kapak_resmi, 
-                        GROUP_CONCAT(DISTINCT ft.filmturu SEPARATOR ', ') AS filmturleri, 
-                        GROUP_CONCAT(DISTINCT s.studyoad SEPARATOR ', ') AS studyolar,
-                        GROUP_CONCAT(DISTINCT sd.dagitimad SEPARATOR ', ') AS dagitim,
-                        GROUP_CONCAT(DISTINCT u.country_name SEPARATOR ', ') AS ulkeler,
-                        GROUP_CONCAT(DISTINCT g.resim_yolu SEPARATOR ', ') AS resimler,
-                        GROUP_CONCAT(DISTINCT CONCAT(o.adsoyad, ' (', k.kategoriAd, ')') SEPARATOR ', ') AS oyuncular
-                FROM filmler f
-                JOIN film_filmturu fft ON f.id = fft.film_id
-                JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
-                JOIN film_dagitim fd ON f.id = fd.film_id
-                JOIN sinemadagitim sd ON fd.dagitim_id = sd.iddagitim
-                JOIN film_studyolar fs ON f.id = fs.film_id
-                JOIN stüdyo s ON fs.studyo_id = s.id
-                JOIN film_ulkeler fu ON f.id = fu.film_id
-                JOIN ulke u ON fu.ulke_id = u.id
-                JOIN film_galeri g ON f.id = g.film_id
-                JOIN oyuncuiliski ol ON f.id = ol.film_id
-                JOIN oyuncular o ON ol.oyuncu_id = o.idoyuncu
-                JOIN kategori k ON ol.kategori_id = k.idKategori
-                WHERE f.id = :film_id
-                GROUP BY f.id";
+                GROUP_CONCAT(DISTINCT ft.filmturu SEPARATOR ', ') AS filmturleri, 
+                GROUP_CONCAT(DISTINCT s.studyoad SEPARATOR ', ') AS studyolar,
+                GROUP_CONCAT(DISTINCT sd.dagitimad SEPARATOR ', ') AS dagitim,
+                sd.iddagitim AS dagitim_id, -- dagitim_id alanını seçtik
+                GROUP_CONCAT(DISTINCT u.country_name SEPARATOR ', ') AS ulkeler,
+                GROUP_CONCAT(DISTINCT g.resim_yolu SEPARATOR ', ') AS resimler,
+                GROUP_CONCAT(DISTINCT CONCAT(o.adsoyad, ' (', k.kategoriAd, ')') SEPARATOR ', ') AS oyuncular
+        FROM filmler f
+        JOIN film_filmturu fft ON f.id = fft.film_id
+        JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
+        JOIN film_dagitim fd ON f.id = fd.film_id
+        JOIN sinemadagitim sd ON fd.dagitim_id = sd.iddagitim
+        JOIN film_studyolar fs ON f.id = fs.film_id
+        JOIN stüdyo s ON fs.studyo_id = s.id
+        JOIN film_ulkeler fu ON f.id = fu.film_id
+        JOIN ulke u ON fu.ulke_id = u.id
+        JOIN film_galeri g ON f.id = g.film_id
+        JOIN oyuncuiliski ol ON f.id = ol.film_id
+        JOIN oyuncular o ON ol.oyuncu_id = o.idoyuncu
+        JOIN kategori k ON ol.kategori_id = k.idKategori
+        WHERE f.id = :film_id
+        GROUP BY f.id, sd.iddagitim";  
+
 
         $stmt = $con->prepare($sql);
         $stmt->execute(['film_id' => $film_id]);
         $filmler2 = $stmt->fetch(PDO::FETCH_ASSOC);
     
         // Sonuçları ekrana yazdır
-    
+  
 
     } catch (PDOException $e) {
         // Hata mesajını yakala ve ekrana yazdır
@@ -190,6 +192,10 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
 
 
 <body class="loggedin">
+<!-- Progress Bar -->
+<div id="progress-container" style="display: none; width: 100%; background: #f3f3f3; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
+    <div id="progress-bar" style="width: 0%; height: 20px; background: #4caf50; border-radius: 5px;"></div>
+</div>
 
 
     <div class="wrapper d-flex align-items-stretch">
@@ -633,7 +639,9 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
 
                                                 </td>
                                                 <td class="align-middle">
-                                                    <button onclick="showContent('content6','<?php echo $row['id']; ?>','film')" class="btn-page"><i
+                                                    <button
+                                                        onclick="showContent('content6','<?php echo $row['id']; ?>','film')"
+                                                        class="btn-page"><i
                                                             class="material-icons">chevron_right</i></button>
                                                 </td>
                                             </tr>
@@ -1648,7 +1656,78 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                     </div>
                 </div>
 
+                <div class="table-wrapper mt-0">
+                    <div class="table-title">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <H2 class="custombg1h2">Sinema Salonları</H2>
+                            </div>
+                            <div class="col-sm-6">
+                                <a href="#uploadModalsinema" class="btn btn-success d-flex align-items-center mr-2"
+                                    data-toggle="modal">
+                                    <i class="material-icons">&#xE147;</i> <span>Excel Dosyası Yükle</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-over">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Şehir</th>
+                                    <th>Sinema</th>
+                                    <th>Format</th>
+                                    <th>Dil</th>
+                                    <th>1.Seans</th>
+                                    <th>2.Seans</th>
+                                    <th>3.Seans</th>
+                                    <th>4.Seans</th>
+                                    <th>5.Seans</th>
+                                    <th>6.Seans</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                               
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+asd</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+asd</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+ehrtrthy</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+wefwef</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+asd</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+asd</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+rbht</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+ehrtrthy</td>
+                                    <td class="align-middle">Nevşehir Cinema Pink (Forum Kapadokya)
+wefwef</td>
+                                </tr>Nevşehir Cinema Pink (Forum Kapadokya)
 
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix">
+                        <div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
+                        <ul class="pagination">
+                            <li class="page-item disabled"><a href="#">Previous</a></li>
+                            <li class="page-item"><a href="#" class="page-link">1</a></li>
+                            <li class="page-item"><a href="#" class="page-link">2</a></li>
+                            <li class="page-item active"><a href="#" class="page-link">3</a></li>
+                            <li class="page-item"><a href="#" class="page-link">4</a></li>
+                            <li class="page-item"><a href="#" class="page-link">5</a></li>
+                            <li class="page-item"><a href="#" class="page-link">Next</a></li>
+                        </ul>
+                    </div>
+                </div>
 
 
                 <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
@@ -1658,33 +1737,72 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                 <div id="uploadModal" class="modal fade">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
-                            <form id="" method="post" enctype="">
+                            <form id="uploadForm" method="post" enctype="multipart/form-data">
+                                <input type="hidden" value="<?php echo $filmler2['id'] ?>" name="filmid">
+                                <input type="hidden" value="<?php echo $filmler2['dagitim_id'] ?>" name="dagitimid">
+
                                 <div class="modal-header">
-                                    <h4 class="modal-title">Film Ekle</h4>
+                                    <h4 class="modal-title">Film Verileri Ekle</h4>
                                     <button type="button" class="close" data-dismiss="modal"
                                         aria-hidden="true">&times;</button>
                                 </div>
                                 <div class="modal-body">
-                                    <form id="uploadForm">
-                                        <div class="mb-3">
-                                            <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
-                                            <input class="form-control" type="file" id="formFile" accept=".xlsx, .xls">
-                                        </div>
-                                    </form>
+                                    <div class="mb-3">
+                                        <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
+                                        <input class="form-control" type="file" id="formFile" name="excelFile"
+                                            accept=".xlsx, .xls">
+                                    </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <input type="button" id="" class="btn btn-default" data-dismiss="modal"
-                                        value="Geri">
-                                    <input type="submit" class="btn btn-info" value="Kaydet">
+                                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Geri">
+                                    <input type="button" class="btn btn-info" id="submitForm" value="Kaydet">
                                 </div>
                             </form>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="uploadModalsinema" class="modal fade">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <form id="uploadFormsinema" method="post" enctype="multipart/form-data">
+                                <input type="hidden" value="<?php echo $filmler2['id'] ?>" name="filmidd">
+                                <input type="hidden" value="<?php echo $filmler2['dagitim_id'] ?>" name="dagitimidd">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Film Sinema Salonları Ekle</h4>
+                                    <button type="button" class="close" data-dismiss="modal"
+                                        aria-hidden="true">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
+                                        <input class="form-control" type="file" id="formFile2" name="excelFile"
+                                            accept=".xlsx, .xls">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="basdate" class="form-label">Başlangıç tarihi :</label>
+                                        <input class="form-control" type="date" id="basdate" name="basdate">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="bitisdate" class="form-label">Bitiş Tarihi :</label>
+                                        <input class="form-control" type="date" id="bitisdate" name="bitisdate">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <input type="button" class="btn btn-default" data-dismiss="modal" value="Geri">
+                                    <input type="button" class="btn btn-info" id="submitForm2" value="Kaydet">
+                                </div>
+                            </form>
+
                         </div>
                     </div>
                 </div>
 
                 <form id="filmdetay" method="post" enctype="multipart/form-data">
-                <input type="hidden"  value="<?php echo $filmler2['id'] ?>"  name="film_id">
-                                      
+                    <input type="hidden" value="<?php echo $filmler2['id'] ?>" name="film_id">
+
                     <div class="row filmDetayAyar bg-white border bt-0 p-3 m-0">
                         <div class="col-6">
                             <div class="form-group">
@@ -1696,7 +1814,7 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                             <div class="form-group">
                                 <label for="vizyonTarihi">Vizyon Tarihi</label>
                                 <input type="date" class="form-control" name="vizyontaredit"
-                                    value="<?php echo $filmler2['vizyon_tarihi']  ?>" id="vizyonTarihi"> 
+                                    value="<?php echo $filmler2['vizyon_tarihi']  ?>" id="vizyonTarihi">
                             </div>
                             <!-- Sinema Dağıtım -->
                             <div class="form-group">
@@ -1998,37 +2116,36 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                         <input type="text" class="searchBox" placeholder="Ara..."
                                             onkeyup="filterFunction(this)">
                                         <?php
-            // Yönetmenler dizisini kontrol ediyoruz
-
-            // Veritabanından gelen oyuncuların üzerinden geçiyoruz
-            foreach ($veriler as $row) {
-                $id = htmlspecialchars($row['idoyuncu']);
-                $oyuncuad = htmlspecialchars($row['adsoyad']);
-                $istediginiz_sayi = 29; // Örnek bir değer, gerçek uygulamanızda güncelleyin
-                $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
-
-                // Oyuncunun kategorisini kontrol et
-                if (preg_match($pattern, $row['kategori_idler'])) {
-                    // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
-                    $checked = in_array($oyuncuad, $Oyuncu) ? 'checked' : '';
-                    
-                    // Checkbox'ı oluştur
-                    echo "<label for='oyuncu1{$id}'><input type='checkbox' id='oyuncu1{$id}' name='oyuncuListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
-                }
-            }
-            ?>
+                                        // Yönetmenler dizisini kontrol ediyoruz
+                                    
+                                        // Veritabanından gelen oyuncuların üzerinden geçiyoruz
+                                        foreach ($veriler as $row) {
+                                            $id = htmlspecialchars($row['idoyuncu']);
+                                            $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                            $istediginiz_sayi = 29; // Örnek bir değer, gerçek uygulamanızda güncelleyin
+                                            $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                        
+                                            // Oyuncunun kategorisini kontrol et
+                                            if (preg_match($pattern, $row['kategori_idler'])) {
+                                                // Eğer oyuncu adı yönetmenler dizisinde bulunuyorsa, checkbox'ı işaretle
+                                                $checked = in_array($oyuncuad, $Oyuncu) ? 'checked' : '';
+                                                
+                                                // Checkbox'ı oluştur
+                                                echo "<label for='oyuncu1{$id}'><input type='checkbox' id='oyuncu1{$id}' name='oyuncuListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                                            }
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Film Aciklamasi -->
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label for="filmKonu">Filmin Konusu</label>
-                            <textarea class="form-control textarea" rows="6" name="filmkonu"
-                                id="filmKonu"><?php echo $filmler2['film_konu']  ?></textarea>
+                        <!-- Film Aciklamasi -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label for="filmKonu">Filmin Konusu</label>
+                                <textarea class="form-control textarea" rows="6" name="filmkonu"
+                                    id="filmKonu"><?php echo $filmler2['film_konu']  ?></textarea>
+                            </div>
                         </div>
                     </div>
             </div>
@@ -2317,22 +2434,13 @@ function formatDateTime($dateTimeString) {
         filesInpName: 'filmkapakedit', // input name sent to backend
         formSelector: '#filmdetay', // form selector
     });
-    
+
     let multipleUploader5 = new MultipleUploader('#multiple-uploader-galerifilm').init({
         maxUpload: 20, // maximum number of uploaded images
         maxSize: 2, // in size in mb
         filesInpName: 'filmgaleriedit', // input name sent to backend
         formSelector: '#filmdetay', // form selector
     });
-
-
-
-
-
-
-
-
-
     </script>
 
 
@@ -2342,7 +2450,7 @@ function formatDateTime($dateTimeString) {
     });
     </script>
     <script>
-    function showContent(contentId, id,statu) {
+    function showContent(contentId, id, statu) {
 
         if (typeof id === 'undefined') {
             localStorage.setItem("uri", contentId);
@@ -2364,7 +2472,7 @@ function formatDateTime($dateTimeString) {
             localStorage.setItem("uri", contentId);
 
             const url = new URL(window.location.href);
-            url.searchParams.set(statu+'id', id);
+            url.searchParams.set(statu + 'id', id);
             window.history.pushState({}, '', url);
             location.reload();
 
