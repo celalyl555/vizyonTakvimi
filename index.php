@@ -8,10 +8,20 @@ include('admin/conn.php');
 
 <!-- SQL Query -->
  <?php
+    $sqlEnEskiFilm = "SELECT * FROM filmler 
+    WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK
+    ORDER BY vizyon_tarihi ASC
+    LIMIT 1";
+    $stmtEnEskiFilm = $con->query($sqlEnEskiFilm);
+    $enEskiFilm = $stmtEnEskiFilm->fetch(PDO::FETCH_ASSOC);
+
     $sqlFilmlerVizyon = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK";
+    WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK 
+    ORDER BY vizyon_tarihi ASC 
+    LIMIT 3"; 
     $stmtFilmlerVizyon = $con->query($sqlFilmlerVizyon);
     $filmlerVizyon = $stmtFilmlerVizyon->fetchAll(PDO::FETCH_ASSOC);
+    
 
     $sqlFilmlerYakin = "SELECT * FROM filmler 
     WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK";
@@ -22,6 +32,21 @@ include('admin/conn.php');
     $stmtHaberler = $con->query($sqlHaberler);
     $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
 
+    $sqlFilmVerileri = "SELECT f.*, fi.film_adi
+    FROM filmveriler f
+    INNER JOIN (
+        SELECT film_id, MAX(toplamkisi) AS max_kisi
+        FROM filmveriler
+        GROUP BY film_id
+    ) AS max_filmler ON f.film_id = max_filmler.film_id
+    AND f.toplamkisi = max_filmler.max_kisi
+    INNER JOIN filmler fi ON f.film_id = fi.id
+    GROUP BY f.film_id
+    ORDER BY f.toplamkisi DESC
+    LIMIT 20";
+
+    $stmtFilmVerileri = $con->query($sqlFilmVerileri);
+    $filmVerileri = $stmtFilmVerileri->fetchAll(PDO::FETCH_ASSOC);
     ?>
 <!-- sql query final -->
     <main>
@@ -360,11 +385,11 @@ include('admin/conn.php');
                     <div class="vizyonLeft">
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
 
-                        <?php if (!empty($filmlerVizyon)): ?>
+                        <?php if (!empty($enEskiFilm)): ?>
                             <a href="#1" class="mainvizyonImg">
-                                <img src="assets/img/mainImg/01.jpg" alt="vizyon">
+                                <img src="kapakfoto/<?php echo $enEskiFilm['kapak_resmi']; ?>" alt="vizyon"> <!-- İlgili film resmini kullan -->
                                 <div class="overlay1">
-                                    <span class="namevizyon"><?php echo $filmlerVizyon[0]['film_adi']; ?></span>
+                                    <span class="namevizyon"><?php echo $enEskiFilm['film_adi']; ?></span>
                                 </div>
                             </a>
                         <?php endif; ?>
@@ -443,59 +468,34 @@ include('admin/conn.php');
                                 <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="haberfoto/<?php echo $film['haberfoto']; ?>" >
                             </div>
                             <div>
-                                <p><i class="fa-solid fa-hourglass-half"></i> <?= htmlspecialchars($haber['tarih']); ?></p>
+                                <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']); ?></p>
                                 <h3><?php echo $haber['baslik']; ?></h3>
                             </div>
                         </a>
                     <?php } ?>
                     <!-- kapanış -->
                     <a href="" class="tumuBtn">Tüm Haberler <i class="fa-solid fa-right-long"></i></a>
-                    
                 </div>
-                <!-- foreach kapanış -->
                 <div class="newsRight">
                     <div class="seyirci">
                         <div class="dateArea1">
                             <h3><i class="fa-solid fa-stopwatch"></i> En Çok İzlenenler</h3> <!-- en çok izlenen ilk 20 tane film (film verileri)-->
                         </div>
                         <ul class="list">
+                        <?php 
+                        $i = 1; // Sayaç başlatılıyor
+                        foreach ($filmVerileri as $film): 
+                        ?>
                             <li>
-                                <a href="" class="aling-center">
-                                    <span>1</span>
+                                <a href="#" class="align-center">
+                                    <span><?php  echo $i++; ?></span> <!-- Film ID'si -->
                                     <div class="infInside">
-                                        <p>Blade Runner 2049</p>
+                                        <p><?php echo $film['film_adi']; // Toplam kişi sayısı ?></p>
                                     </div>
                                     <span><i class="fa-solid fa-caret-right"></i></span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="" class="aling-center">
-                                    <span>2</span>
-                                    <div class="infInside">
-                                        <p>Soysuzlar Çetesi</p>
-                                    </div>
-                                    <span><i class="fa-solid fa-caret-right"></i></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="" class="aling-center">
-                                    <span>3</span>
-                                    <div class="infInside">
-                                        <p>Pardon</p>
-                                    </div>
-                                    <span><i class="fa-solid fa-caret-right"></i></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="" class="aling-center">
-                                    <span>4</span>
-                                    <div class="infInside">
-                                        <p>Star Wars</p>
-                                    </div>
-                                    <span><i class="fa-solid fa-caret-right"></i></span>
-                                </a>
-                            </li>
-                            
+                        <?php endforeach; ?>
                         </ul>                    
                     </div>
                 </div>
@@ -508,8 +508,29 @@ include('admin/conn.php');
     <!-- News Area End -->
 
     <!-- ============================================================================== -->
+<!-- benim yazdığım script (fatih kayacı) -->
+<?php function formatDateTime($dateTimeString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
 
+    // Tarih ve saati ayır
+    $dateTimeParts = explode(" ", $dateTimeString);
+    $dateParts = explode("-", $dateTimeParts[0]);
+    $timeParts = explode(":", $dateTimeParts[1]);
+
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    $hour = (int)$timeParts[0];
+    $minute = (int)$timeParts[1];
+
+    // Formatlanmış tarihi ve saati döndür
+    return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+}?>
     <?php include('footer.php');?>
-
 </body>
 </html>
