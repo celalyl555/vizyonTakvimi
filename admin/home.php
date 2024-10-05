@@ -1755,12 +1755,12 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <td class="align-left"><?= htmlspecialchars($veri['perde']) ?></td>
                                     <td class="align-left"><?= htmlspecialchars($veri['kisi']) ?></td>
                                     <td class="align-left">
-                                        <?= htmlspecialchars(number_format($veri['hasilat'], 2, ',', '.')) . ' ₺' ?>
+                                        <?= htmlspecialchars(number_format($veri['hasilat'], 2, ',', '.')) . '₺' ?>
                                     </td>
 
                                     <td class="align-left"><?= htmlspecialchars($veri['toplamkisi']) ?></td>
                                     <td class="align-left">
-                                        <?= htmlspecialchars(number_format($veri['toplamhasilat'], 2, ',', '.')) . ' ₺' ?>
+                                        <?= htmlspecialchars(number_format($veri['toplamhasilat'], 2, ',', '.')) . '₺' ?>
                                     </td>
 
                                 </tr>

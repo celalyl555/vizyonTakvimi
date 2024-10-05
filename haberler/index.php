@@ -1,4 +1,8 @@
-<?php include('../header.php');?>
+<?php 
+include('../admin/conn.php');
+include('../header.php');
+include('../SqlQueryFilm.php');
+?>
 
     <!-- ============================================================================== -->
 
@@ -28,43 +32,18 @@
             <div class="newsInside">
 
                 <div class="newsLeft">
+                    <?php foreach($haberlerGenel as $haber):?>
                     <a href="haberler/haber-detay.php" class="newsBox">
                         <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
+                            <img src="haberfoto/<?php echo $haber['haberfoto']?>" alt="">
                         </div>
                         <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
+                            <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']);?></p>
+                            <h3><?php echo $haber['baslik'];?></h3>
                         </div>
                     </a>
-                    <a href="haberler/haber-detay.php" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="haberler/haber-detay.php" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="haberler/haber-detay.php" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    
+                    <?php endforeach;?>
+
                     <div class="pageBtn">
                         <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
                         <button class="pageBtns activePage">1</button>
@@ -77,41 +56,16 @@
 
                 <div class="newsRight bgnone">
                     <h2><i class="fa-solid fa-newspaper"></i> Vizyona Girecekler</h2>
+                    <?php
+                    foreach($filmlerGenelYakin as $yakinFilmler):?>
                     <a href="" class="newsBoxHafta">
                         <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
+                            <img src="kapakfoto/<?php echo $yakinFilmler['kapak_resmi'];?>" alt="">
                         </div>
-                        <p>Venom 3</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
+                        <p><?php echo $yakinFilmler['film_adi'];?></p>
+                        <p class="date"><i class="fa-regular fa-clock"></i><?php echo formatDate($yakinFilmler['vizyon_tarihi']);?></p>
                     </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Pardon</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Arog</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Yahşi Batı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Blade Runner</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
+                    <?php endforeach;?>
                 </div>
             
             </div>
@@ -120,7 +74,46 @@
     </section>
 
     <!-- News Area End -->
+    <?php 
+    function formatDate($dateString) {
+        // Ay isimlerini tanımla
+        $months = [
+            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+        ];
 
+        // Tarih parçalarını ayır
+        $dateParts = explode("-", $dateString);
+        $year = $dateParts[0];
+        $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+        $day = (int)$dateParts[2];
+
+        // Formatlanmış tarihi döndür
+        return $day . ' ' . $months[$month] . ' ' . $year;
+    }
+
+    function formatDateTime($dateTimeString) {
+        // Ay isimlerini tanımla
+        $months = [
+            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+        ];
+
+        // Tarih ve saati ayır
+        $dateTimeParts = explode(" ", $dateTimeString);
+        $dateParts = explode("-", $dateTimeParts[0]);
+        $timeParts = explode(":", $dateTimeParts[1]);
+
+        $year = $dateParts[0];
+        $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+        $day = (int)$dateParts[2];
+
+        $hour = (int)$timeParts[0];
+        $minute = (int)$timeParts[1];
+
+        // Formatlanmış tarihi ve saati döndür
+        return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+    }?>
     <?php include('../footer.php');?>
 
 </body>
