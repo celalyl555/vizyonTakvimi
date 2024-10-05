@@ -480,13 +480,13 @@ table.table .avatar {
 }   
 
 .card-img-top {
-    object-fit: cover;
+    object-fit: scale-down;
     height: 200px;
     width: 100%;
 }
 
 .card-img-top-1 {
-    object-fit: cover;
+    object-fit: scale-down;
     height: 400px;
     width: 100%;
 }
@@ -612,4 +612,8 @@ table.table .avatar {
 
 .fixtext th, .fixtext td {
     width: auto !important;
+}
+
+.bgdark {
+    background-color: #eeeeee !important;
 }

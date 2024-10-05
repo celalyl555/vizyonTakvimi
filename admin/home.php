@@ -2302,7 +2302,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                     <div class="row bg-white border bt-0 p-3 m-0">
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../kapakfoto/<?php echo $filmler2['kapak_resmi']  ?>"
                                     alt="">
                             </div>
@@ -2333,7 +2333,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 foreach ($resimler as $resim) {
                             ?>
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>"
                                     alt="">
                             </div>
@@ -3337,7 +3337,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                     <div class="row bg-white border bt-0 p-3 m-0">
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../kapakfoto/<?php echo $filmler2['kapak_resmi']  ?>"
                                     alt="">
                             </div>
@@ -3368,7 +3368,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 foreach ($resimler as $resim) {
                             ?>
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>"
                                     alt="">
                             </div>
