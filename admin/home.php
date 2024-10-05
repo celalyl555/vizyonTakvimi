@@ -121,10 +121,11 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         $stmt->execute(['film_id' => $param]);
         $filmler2 = $stmt->fetch(PDO::FETCH_ASSOC);
 
-
-       
-
-      
+        // Eğer film verisi bulunamazsa hata mesajı göster
+        if (!$filmler2) {
+            echo "Film bulunamadı.";
+            exit; // veya yönlendirme yapabilirsiniz
+        }
 
         // Ekstra sorgular
         $stmt = $con->prepare('SELECT * FROM filmveriler WHERE film_id = :film_id');
@@ -139,52 +140,60 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         // Hata mesajını yakala ve ekrana yazdır
         echo "Hata: " . $e->getMessage();
     }
-    } 
-   
-  // Oyuncular verisini işleme
-  $oyuncuString = $filmler2['oyuncular'];
+} else {
+    echo "Film ID veya Dizi ID belirtilmedi.";
+    exit; // veya yönlendirme yapabilirsiniz
+}
 
-  // Eğer oyuncu verisi string ise, explode ile parçala
-  if (is_string($oyuncuString)) {
-      $oyuncular = explode(', ', $oyuncuString);
-  } else {
-      $oyuncular = $oyuncuString; // Zaten dizi ise doğrudan kullan
-  }
+// Oyuncular verisini işleme
+if (isset($filmler2['oyuncular'])) {
+    $oyuncuString = $filmler2['oyuncular'];
 
-  // Kategorilere göre oyuncuları ayırmak için dizi
-  $kategoriOyuncular = [
-      'Yönetmen' => [],
-      'Senaryo' => [],
-      'Görüntü Yönetmeni' => [],
-      'Müzik' => [],
-      'Kurgu' => [],
-      'Oyuncu' => []
-  ];
+    // Eğer oyuncu verisi string ise, explode ile parçala
+    if (is_string($oyuncuString)) {
+        $oyuncular = explode(', ', $oyuncuString);
+    } else {
+        $oyuncular = $oyuncuString; // Zaten dizi ise doğrudan kullan
+    }
 
-  // Oyuncuları kategorilere göre ayırma işlemi
-  foreach ($oyuncular as $oyuncuKategori) {
-      if (preg_match('/^(.*?)\s*\((.*?)\)$/', $oyuncuKategori, $matches)) {
-          $oyuncuAd = trim($matches[1]);
-          $kategori = trim($matches[2]);
+    // Kategorilere göre oyuncuları ayırmak için dizi
+    $kategoriOyuncular = [
+        'Yönetmen' => [],
+        'Senaryo' => [],
+        'Görüntü Yönetmeni' => [],
+        'Müzik' => [],
+        'Kurgu' => [],
+        'Oyuncu' => []
+    ];
 
-          // Kategori dizisine oyuncuyu ekle
-          if (isset($kategoriOyuncular[$kategori])) {
-              $kategoriOyuncular[$kategori][] = $oyuncuAd;
-          } else {
-              echo "Kategori bulunamadı: " . $kategori;
-          }
-      } else {
-          echo "Oyuncu verisi beklenmedik formatta: " . $oyuncuKategori;
-      }
-  }
+    // Oyuncuları kategorilere göre ayırma işlemi
+    foreach ($oyuncular as $oyuncuKategori) {
+        if (preg_match('/^(.*?)\s*\((.*?)\)$/', $oyuncuKategori, $matches)) {
+            $oyuncuAd = trim($matches[1]);
+            $kategori = trim($matches[2]);
 
-  // Kategorilere göre ayrılan oyuncuları alalım
-  $yonetmenler = $kategoriOyuncular['Yönetmen'];
-  $senaryolar = $kategoriOyuncular['Senaryo'];
-  $GörüntüYönetmeni = $kategoriOyuncular['Görüntü Yönetmeni'];
-  $Müzik = $kategoriOyuncular['Müzik'];
-  $Kurgu = $kategoriOyuncular['Kurgu'];
-  $Oyuncu = $kategoriOyuncular['Oyuncu'];
+            // Kategori dizisine oyuncuyu ekle
+            if (isset($kategoriOyuncular[$kategori])) {
+                $kategoriOyuncular[$kategori][] = $oyuncuAd;
+            } else {
+                echo "Kategori bulunamadı: " . $kategori;
+            }
+        } else {
+            echo "Oyuncu verisi beklenmedik formatta: " . $oyuncuKategori;
+        }
+    }
+
+    // Kategorilere göre ayrılan oyuncuları alalım
+    $yonetmenler = $kategoriOyuncular['Yönetmen'];
+    $senaryolar = $kategoriOyuncular['Senaryo'];
+    $GörüntüYönetmeni = $kategoriOyuncular['Görüntü Yönetmeni'];
+    $Müzik = $kategoriOyuncular['Müzik'];
+    $Kurgu = $kategoriOyuncular['Kurgu'];
+    $Oyuncu = $kategoriOyuncular['Oyuncu'];
+} else {
+    echo "Oyuncu verisi bulunamadı.";
+}
+;
 ?>
 
 
