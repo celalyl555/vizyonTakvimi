@@ -15,34 +15,34 @@ include('SqlQueryFilm.php');
             <div class="gallery">
 
                 <a href="#" class="image-container hero">
-                    <img src="haberfoto/<?php echo $haberler[0]['haberfoto']; ?>" class="hero">
+                    <img src="haberfoto/<?php echo $haberlerGenel[0]['haberfoto']; ?>" class="hero">
                     <div class="overlay">
-                        <span class="category"><?php echo $haberler[0]['baslik']; ?></span>
-                        <p><?php echo $haberler[0]['icerik']; ?></p>
+                        <span class="category"><?php echo $haberlerGenel[0]['baslik']; ?></span>
+                        <p><?php echo $haberlerGenel[0]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container hero2 img-radius">
-                    <img src="haberfoto/<?php echo $haberler[1]['haberfoto']; ?>" class="img-radius">
+                    <img src="haberfoto/<?php echo $haberlerGenel[1]['haberfoto']; ?>" class="img-radius">
                     <div class="overlay">
-                        <span class="category"><?php echo $haberler[1]['baslik']; ?></span>
-                        <p><?php echo $haberler[1]['icerik']; ?></p>
+                        <span class="category"><?php echo $haberlerGenel[1]['baslik']; ?></span>
+                        <p><?php echo $haberlerGenel[1]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container img-radius3">
-                    <img src="haberfoto/<?php echo $haberler[2]['haberfoto']; ?>" class="img-radius3">
+                    <img src="haberfoto/<?php echo $haberlerGenel[2]['haberfoto']; ?>" class="img-radius3">
                     <div class="overlay">
-                        <span class="category"><?php echo $haberler[2]['baslik']; ?></span>
-                        <p><?php echo $haberler[2]['icerik']; ?></p>
+                        <span class="category"><?php echo $haberlerGenel[2]['baslik']; ?></span>
+                        <p><?php echo $haberlerGenel[2]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container img-radius2">
-                    <img src="haberfoto/<?php echo $haberler[3]['haberfoto']; ?>" class="img-radius2">
+                    <img src="haberfoto/<?php echo $haberlerGenel[3]['haberfoto']; ?>" class="img-radius2">
                     <div class="overlay">
-                        <span class="category"><?php echo $haberler[3]['baslik']; ?></span>
-                        <p><?php echo $haberler[3]['icerik']; ?></p>
+                        <span class="category"><?php echo $haberlerGenel[3]['baslik']; ?></span>
+                        <p><?php echo $haberlerGenel[3]['icerik']; ?></p>
                     </div>
                 </a>
             </div>
