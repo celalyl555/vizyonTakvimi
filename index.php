@@ -8,6 +8,8 @@ include('admin/conn.php');
 
 <!-- SQL Query -->
  <?php
+ 
+ #vizyonda yeni sql query başlangıç
     $sqlEnEskiFilm = "SELECT * FROM filmler 
     WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK
     ORDER BY vizyon_tarihi ASC
@@ -21,13 +23,29 @@ include('admin/conn.php');
     LIMIT 3"; 
     $stmtFilmlerVizyon = $con->query($sqlFilmlerVizyon);
     $filmlerVizyon = $stmtFilmlerVizyon->fetchAll(PDO::FETCH_ASSOC);
-    
+#vizyonda yeni sql query bitiş
 
+#*******************************************************************************
+
+#yakında sql query başlangıç
+    $sqlEnYeniFilm = "SELECT * FROM filmler 
+    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+    ORDER BY vizyon_tarihi DESC
+    LIMIT 1";
+    $stmtEnYeniFilm = $con->query($sqlEnYeniFilm);
+    $enYeniFilm = $stmtEnYeniFilm->fetchAll(PDO::FETCH_ASSOC);
+    
+    print_r($enYeniFilm);
     $sqlFilmlerYakin = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK";
+    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+    ORDER BY vizyon_tarihi DESC
+    LIMIT 3";
     $stmtFilmlerYakin = $con->query($sqlFilmlerYakin);
     $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC);
 
+#yakında sql query bitiş
+
+#********************************************************************************
     $sqlHaberler = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
     $stmtHaberler = $con->query($sqlHaberler);
     $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
@@ -416,12 +434,12 @@ include('admin/conn.php');
                 <div class="vizyonSlier">
                     <div class="vizyonLeft">
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
-                        <?php if (!empty($filmlerYakin)): ?>
+                        <?php if (!empty($enYeniFilm)): ?>
                             <a href="#11" class="mainvizyonImg">
-                                <img src="assets/img/mainImg/01.jpg" alt="vizyon">
+                                <img src="kapakfoto/<?php echo $enYeniFilm[0]['kapak_resmi'];?>" alt="vizyon">
                                 <div class="overlay1">
-                                    <span class="namevizyon">Filmin Adı</span>
-                                    <p><?php echo $film['vizyon_tarihi']; ?></p>
+                                    <span class="namevizyon"><?php echo $enYeniFilm[0]['film_adi'];  ?></span>
+                                    <p><?php echo formatDate($enYeniFilm[0]['vizyon_tarihi']); ?></p>
                                 </div>
                             </a>
                             
@@ -436,7 +454,7 @@ include('admin/conn.php');
                             </div>
                             <div>
                                 <h3><?php echo $film['film_adi']; ?></h3>
-                                <p><?php echo $film['vizyon_tarihi']; ?></p>
+                                <p><?php echo formatDate($film['vizyon_tarihi']); ?></p>
                             </div>
                         </a>
                     <?php endforeach; ?>
@@ -508,8 +526,27 @@ include('admin/conn.php');
     <!-- News Area End -->
 
     <!-- ============================================================================== -->
-<!-- benim yazdığım script (fatih kayacı) -->
-<?php function formatDateTime($dateTimeString) {
+<!-- sonradan eklenen fonksiyonlar (fatih kayacı) -->
+ 
+<?php 
+function formatDate($dateString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    // Tarih parçalarını ayır
+    $dateParts = explode("-", $dateString);
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    // Formatlanmış tarihi döndür
+    return $day . ' ' . $months[$month] . ' ' . $year;
+}
+
+function formatDateTime($dateTimeString) {
     // Ay isimlerini tanımla
     $months = [
         "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
