@@ -10,7 +10,7 @@ use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 $filmId = isset($_POST['filmid']) ? $_POST['filmid'] : null;
 $dagitimId = isset($_POST['dagitimid']) ? $_POST['dagitimid'] : null;
-echo $filmId . $dagitimId ;
+$statu = isset($_POST['statu']) ? $_POST['statu'] : null;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_FILES['excelFile']) && $_FILES['excelFile']['error'] == UPLOAD_ERR_OK) {
@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sheet = $spreadsheet->getActiveSheet();
 
             // Veritabanı ekleme işlemi için PDO sorgusu
-            $stmt = $con->prepare("INSERT INTO filmveriler (film_id, dagitim_id, tarih, sinema, perde, kisi, hasilat, toplamkisi, toplamhasilat) 
-                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $con->prepare("INSERT INTO filmveriler (film_id, dagitim_id, tarih, sinema, perde, kisi, hasilat, toplamkisi, toplamhasilat, statu) 
+                                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                                    
             // Tarih kontrolü için sorgu
             $checkStmt = $con->prepare("SELECT COUNT(*) FROM filmveriler WHERE tarih = ? AND film_id = ? AND dagitim_id = ?");
@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Her satır için SQL sorgusunu çalıştır
-                $stmt->execute([$filmId, $dagitimId, $tarih, $sinema, $perde, $kisi, $hasilat, $topkisi, $tophasilat]);
+                $stmt->execute([$filmId, $dagitimId, $tarih, $sinema, $perde, $kisi, $hasilat, $topkisi, $tophasilat,$statu]);
 
                 // Başarıyla kaydedilen satır hakkında bilgi ver
                 echo "Satır $row başarıyla kaydedildi.<br>";

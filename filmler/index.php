@@ -1,5 +1,10 @@
-<?php include('../header.php');?>
-    <!-- ============================================================================== -->
+<?php 
+include('../admin/conn.php');
+include('../header.php');
+include('../SqlQueryFilm.php');
+?>
+
+<!-- ============================================================================== -->
     
     <!-- Table Area Start -->
 
@@ -33,33 +38,25 @@
                 <div class="vizyonSlier">
                     <div class="vizyonLeft">
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
-                        <a href="#1" class="mainvizyonImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="vizyon">
-                            <div class="overlay1">
-                                <span class="namevizyon">Filmin Adı</span>
-                            </div>
-                        </a>
+                        <?php if (!empty($enEskiFilm)): ?>
+                            <a href="#1" class="mainvizyonImg">
+                                <img src="kapakfoto/<?php echo $enEskiFilm['kapak_resmi']; ?>" alt="vizyon">
+                                <div class="overlay1">
+                                    <span class="namevizyon"><?php echo $enEskiFilm['film_adi'];?></span>
+                                </div>
+                            </a>
+                        <?php endif; ?>
                         <button class="arrows right"><i class="fa-solid fa-caret-right"></i></button>
                     </div>
                     <div class="vizyonRight">
+                    <?php foreach ($filmlerVizyon as $film): ?>
                         <a href="giderayak" class="vizyonBox">
                             <div class="vizyonBoxImg">
-                                <img src="assets/img/news/01.jpg" alt="">
+                                <img src="kapakfoto/<?php echo $film['kapak_resmi'];?>" alt="">
                             </div>
-                            <h3>giderayak</h3>
+                            <h3><?php echo $film['film_adi']; ?></h3>
                         </a>
-                        <a href="Soysuzlar" class="vizyonBox">
-                            <div class="vizyonBoxImg">
-                                <img src="assets/img/news/02.jpg" alt="">
-                            </div>
-                            <h3>Soysuzlar Çetesi</h3>
-                        </a>
-                        <a href="#3" class="vizyonBox">
-                            <div class="vizyonBoxImg">
-                                <img src="assets/img/mainImg/01.jpg" alt="">
-                            </div>
-                            <h3>Filmin Adı 3</h3>
-                        </a>
+                    <?php endforeach; ?>
                     </div>
                 </div>
 
@@ -69,43 +66,29 @@
                 <div class="vizyonSlier">
                     <div class="vizyonLeft">
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
-                        <a href="#11" class="mainvizyonImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="vizyon">
-                            <div class="overlay1">
-                                <span class="namevizyon">Filmin Adı</span>
-                                <p>01 Ağustos 2024</p>
-                            </div>
-                        </a>
+                        <?php if (!empty($enYeniFilm)): ?>
+                            <a href="#11" class="mainvizyonImg">
+                                <img src="kapakfoto/<?php echo $enYeniFilm['kapak_resmi']; ?>" alt="vizyon">
+                                <div class="overlay1">
+                                    <span class="namevizyon"><?php echo $enYeniFilm['film_adi']?></span>
+                                    <p><?php echo formatDate($enYeniFilm['vizyon_tarihi']);?></p>
+                                </div>
+                            </a>
+                        <?php endif; ?>
                         <button class="arrows right"><i class="fa-solid fa-caret-right"></i></button>
                     </div>
                     <div class="vizyonRight">
+                    <?php foreach ($filmlerYakin as $film): ?>
                         <a href="#giderayak" class="vizyonBox">
                             <div class="vizyonBoxImg">
-                                <img src="assets/img/news/01.jpg" alt="">
+                                <img src="kapakfoto/<?php echo $film['kapak_resmi']; ?>" alt="">
                             </div>
                             <div>
-                                <h3>giderayak</h3>
-                                <p>02 Ağustos 2024</p>
+                                <h3><?php echo $film['film_adi']; ?></h3>
+                                <p><?php echo formatDate($film['vizyon_tarihi']); ?></p>
                             </div>
                         </a>
-                        <a href="#Soysuzlar" class="vizyonBox">
-                            <div class="vizyonBoxImg">
-                                <img src="assets/img/news/02.jpg" alt="">
-                            </div>
-                            <div>
-                                <h3>Soysuzlar Çetesi</h3>
-                                <p>03 Ağustos 2024</p>
-                            </div>
-                        </a>
-                        <a href="#333" class="vizyonBox">
-                            <div class="vizyonBoxImg">
-                                <img src="assets/img/mainImg/01.jpg" alt="">
-                            </div>
-                            <div>
-                                <h3>Filmin Adı 3</h3>
-                                <p>04 Ağustos 2024</p>
-                            </div>
-                        </a>
+                    <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -128,44 +111,18 @@
             <div class="newsInside">
 
                 <div class="newsLeft">
-
+                <?php foreach ($haberler as $haber) { ?>
                     <a href="haberler/haber-detay.php" class="newsBox">
                         <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
+                            <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="haberfoto/<?php echo $film['haberfoto']; ?>">
                         </div>
                         <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="haberler/haber-detay.php" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="haberler/haber-detay.php" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="haberler/haber-detay.php" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
+                            <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']); ?></p>
+                            <h3><?php echo $haber['baslik']; ?></h3>
                         </div>
                     </a>
                     
+                    <?php } ?>
                     <div class="pageBtn">
                         <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
                         <button class="pageBtns activePage">1</button>
@@ -183,42 +140,19 @@
                         </div>
                         <ul class="list">
                             <li>
+                                <?php 
+                                $i = 1; // Sayaç başlatılıyor
+                                foreach ($filmVerileri as $film): 
+                                ?>
                                 <a href="filmler/film-detay.php" class="aling-center">
-                                    <span>1</span>
+                                    <span><?php  echo $i++; ?></span>
                                     <div class="infInside">
-                                        <p>Blade Runner 2049</p>
+                                        <p><?php echo $film['film_adi']; // Toplam kişi sayısı ?></p>
                                     </div>
                                     <span><i class="fa-solid fa-caret-right"></i></span>
                                 </a>
+                                <?php endforeach; ?>
                             </li>
-                            <li>
-                                <a href="filmler/film-detay.php" class="aling-center">
-                                    <span>2</span>
-                                    <div class="infInside">
-                                        <p>Soysuzlar Çetesi</p>
-                                    </div>
-                                    <span><i class="fa-solid fa-caret-right"></i></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="filmler/film-detay.php" class="aling-center">
-                                    <span>3</span>
-                                    <div class="infInside">
-                                        <p>Pardon</p>
-                                    </div>
-                                    <span><i class="fa-solid fa-caret-right"></i></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="filmler/film-detay.php" class="aling-center">
-                                    <span>4</span>
-                                    <div class="infInside">
-                                        <p>Star Wars</p>
-                                    </div>
-                                    <span><i class="fa-solid fa-caret-right"></i></span>
-                                </a>
-                            </li>
-                            
                         </ul>                    
                     </div>
                 </div>
@@ -229,7 +163,46 @@
     </section>
 
     <!-- News Area End -->
+    <?php 
+function formatDate($dateString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
 
+    // Tarih parçalarını ayır
+    $dateParts = explode("-", $dateString);
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    // Formatlanmış tarihi döndür
+    return $day . ' ' . $months[$month] . ' ' . $year;
+}
+
+function formatDateTime($dateTimeString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    // Tarih ve saati ayır
+    $dateTimeParts = explode(" ", $dateTimeString);
+    $dateParts = explode("-", $dateTimeParts[0]);
+    $timeParts = explode(":", $dateTimeParts[1]);
+
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    $hour = (int)$timeParts[0];
+    $minute = (int)$timeParts[1];
+
+    // Formatlanmış tarihi ve saati döndür
+    return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+}?>
     <?php include('../footer.php');?>
 
 </body>

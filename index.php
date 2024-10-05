@@ -3,82 +3,10 @@
 include('header.php');
 include('admin/conn.php');
 include('generate_vapid.php');
+include('SqlQueryFilm.php');
 ?>
     <!-- ============================================================================== -->
     <!-- Main Area  Start -->
-
-<!-- SQL Query -->
- <?php
- 
- #vizyonda yeni sql query başlangıç
-    $sqlEnEskiFilm = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK
-    ORDER BY vizyon_tarihi ASC
-    LIMIT 1";
-    $stmtEnEskiFilm = $con->query($sqlEnEskiFilm);
-    $enEskiFilm = $stmtEnEskiFilm->fetch(PDO::FETCH_ASSOC);
-
-    $sqlFilmlerVizyon = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK 
-    ORDER BY vizyon_tarihi ASC 
-    LIMIT 3"; 
-    $stmtFilmlerVizyon = $con->query($sqlFilmlerVizyon);
-    $filmlerVizyon = $stmtFilmlerVizyon->fetchAll(PDO::FETCH_ASSOC);
-#vizyonda yeni sql query bitiş
-
-#*******************************************************************************
-
-#yakında sql query başlangıç
-    $sqlEnYeniFilm = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
-    ORDER BY vizyon_tarihi DESC
-    LIMIT 1";
-    $stmtEnYeniFilm = $con->query($sqlEnYeniFilm);
-    $enYeniFilm = $stmtEnYeniFilm->fetchAll(PDO::FETCH_ASSOC);
-    
-    print_r($enYeniFilm);
-    $sqlFilmlerYakin = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
-    ORDER BY vizyon_tarihi DESC
-    LIMIT 3";
-    $stmtFilmlerYakin = $con->query($sqlFilmlerYakin);
-    $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC);
-
-#yakında sql query bitiş
-
-#********************************************************************************
-#haberler sql query başlangıç
-    $sqlHaberler = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
-    $stmtHaberler = $con->query($sqlHaberler);
-    $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
-#haberler sql query bitiş
-
-#*********************************************************************************
-#film verileri max kişi sql query başlangıç
-    $sqlFilmVerileri = "SELECT f.*, fi.film_adi
-    FROM filmveriler f
-    INNER JOIN (
-        SELECT film_id, MAX(toplamkisi) AS max_kisi
-        FROM filmveriler
-        GROUP BY film_id
-    ) AS max_filmler ON f.film_id = max_filmler.film_id
-    AND f.toplamkisi = max_filmler.max_kisi
-    INNER JOIN filmler fi ON f.film_id = fi.id
-    GROUP BY f.film_id
-    ORDER BY f.toplamkisi DESC
-    LIMIT 20";
-
-    $stmtFilmVerileri = $con->query($sqlFilmVerileri);
-    $filmVerileri = $stmtFilmVerileri->fetchAll(PDO::FETCH_ASSOC);
-#film verileri max kişi sql query başlangıç
-#*************************************************************************************
-
-#film verileri seyirci ve hasılat işlemleri sql query başlangıç
-
-#film verileri seyirci ve hasılat işlemleri sql query bitiş
-?>
-<!-- sql query final -->
-
 
     <main>
 
@@ -263,10 +191,10 @@ include('generate_vapid.php');
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
                         <?php if (!empty($enYeniFilm)): ?>
                             <a href="#11" class="mainvizyonImg">
-                                <img src="kapakfoto/<?php echo $enYeniFilm[0]['kapak_resmi'];?>" alt="vizyon">
+                                <img src="kapakfoto/<?php echo $enYeniFilm['kapak_resmi'];?>" alt="vizyon">
                                 <div class="overlay1">
-                                    <span class="namevizyon"><?php echo $enYeniFilm[0]['film_adi'];  ?></span>
-                                    <p><?php echo formatDate($enYeniFilm[0]['vizyon_tarihi']); ?></p>
+                                    <span class="namevizyon"><?php echo $enYeniFilm['film_adi'];  ?></span>
+                                    <p><?php echo formatDate($enYeniFilm['vizyon_tarihi']); ?></p>
                                 </div>
                             </a>
                             
@@ -301,7 +229,7 @@ include('generate_vapid.php');
   
         <div class="news">
 
-            <h2><i class="fa-solid fa-newspaper"></i> Filmler'den Haberler</h2>
+            <h2><i class="fa-solid fa-newspaper"></i> Haberler</h2>
 
             <div class="newsInside">
 
@@ -328,7 +256,7 @@ include('generate_vapid.php');
                         </div>
                         <ul class="list">
                         <?php 
-                        $i = 1; // Sayaç başlatılıyor
+                        $i = 1;
                         foreach ($filmVerileri as $film): 
                         ?>
                             <li>

@@ -3,9 +3,9 @@ include('../conn.php'); // PDO bağlantı dosyanız
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $baslik = isset($_POST['baslik']) ? $_POST['baslik'] : '';
-    $icerik = isset($_POST['icerik']) ? $_POST['icerik'] : '';
+    $icerik = isset($_POST['icerik']) ? $_POST['icerik'] : '';   
     $fotograf = isset($_FILES['kapakfoto']) ? $_FILES['kapakfoto'] : '';
-
+    $statu = isset($_POST['statu']) ? $_POST['statu'] : '';
 
     if (!empty($baslik) && !empty($icerik) && !empty($fotograf)) {
         try {
@@ -31,13 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo "Fotoğraf seçilmedi.";
             }
 
-            $sql = "INSERT INTO haberler (baslik, icerik, tarih, haberfoto) VALUES (:baslik, :icerik, :tarih, :haberfoto)";
+            $sql = "INSERT INTO haberler (baslik, icerik, tarih, haberfoto,statu) VALUES (:baslik, :icerik, :tarih, :haberfoto, :statu)";
             $stmt = $con->prepare($sql);
             $stmt->bindParam(':baslik', $baslik);
             $stmt->bindParam(':icerik', $icerik);
             $stmt->bindParam(':tarih', $tarih);
             $stmt->bindParam(':haberfoto', $fotografAdi);
-
+            $stmt->bindParam(':statu', $statu);
             if ($stmt->execute()) {
                 echo "Haber başarıyla kaydedildi.";
             } else {

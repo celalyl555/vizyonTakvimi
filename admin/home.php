@@ -93,7 +93,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
     
     try {
         // SQL sorgusu
-        $sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.film_konu, f.kapak_resmi, 
+        $sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi,f.bitis_tarihi,f.filmsure, f.film_konu, f.kapak_resmi, 
         COALESCE(GROUP_CONCAT(DISTINCT ft.filmturu SEPARATOR ', '), '') AS filmturleri, 
         COALESCE(GROUP_CONCAT(DISTINCT s.studyoad SEPARATOR ', '), '') AS studyolar,
         COALESCE(GROUP_CONCAT(DISTINCT sd.dagitimad SEPARATOR ', '), '') AS dagitim,
@@ -175,9 +175,7 @@ if (isset($filmler2['oyuncular'])) {
             } else {
                 
             }
-        } else {
-            echo "Oyuncu verisi beklenmedik formatta: " . $oyuncuKategori;
-        }
+        } 
     }
 
     
@@ -268,7 +266,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                     <button onclick="showContent('content7')"><span
                             class="fa fa-newspaper mr-3"></span>HABERLER</button>
                 </li>
-              
+
                 <li>
                     <button onclick="direct()"><span class="fa fa-sign-out-alt mr-3"></span>ÇIKIŞ</button>
                 </li>
@@ -337,11 +335,11 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                     <?php echo htmlspecialchars($row['adsoyad']); ?>
                                                 </td>
                                                 <td class="align-middle text-center">
-    <?php
+                                                    <?php
         $tarih = $row['dogum'];
         echo ($tarih === '0000-00-00' || empty($tarih)) ? '-' : formatDate($tarih);
     ?>
-</td>
+                                                </td>
 
                                                 <td class="align-middle text-center">
                                                     <?php echo !empty($row['olum']) ? formatDate($row['olum']) : '-'; ?>
@@ -745,6 +743,16 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                         <label>Vizyon Tarihi</label>
                                                         <input type="date" name="vizyonTarihi" class="form-control">
                                                     </div>
+                                                    <!--Film  -->
+                                                    <div class="form-group">
+                                                        <label>Film Süresi</label>
+                                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                                            <input type="number" name="filmsure" class="form-control"
+                                                                placeholder="Film Süresi dakika olarak" min="0">
+
+                                                        </div>
+                                                    </div>
+
                                                     <!-- Sinema Dağıtım -->
                                                     <div class="form-group">
                                                         <label for="sinemadagitim">Sinema Dağıtım</label>
@@ -1511,6 +1519,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                 <th class="align-middle text-center">Fotoğraf</th>
                                                 <th class="align-middle text-center">Haber Başlığı</th>
                                                 <th class="align-middle text-center">Yayın Tarihi</th>
+                                                <th class="align-middle text-center">Statü</th>
                                                 <th class="align-middle text-center"></th>
                                                 <th class="align-middle text-center"></th>
                                             </tr>
@@ -1529,6 +1538,19 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                 <td class="align-middle text-center">
                                                     <?php echo formatDateTime($row['tarih']); ?>
                                                 </td>
+                                                <td class="align-middle text-center">
+                                                    <?php 
+                                                        // statu değerine göre uygun metni belirle
+                                                        if ($row['statu'] == 1) {
+                                                            echo "Film";
+                                                        } elseif ($row['statu'] == 2) {
+                                                            echo "Dizi";
+                                                        } else {
+                                                            echo "Bilinmeyen"; // Diğer durumlar için varsayılan bir mesaj
+                                                        }
+                                                    ?>
+                                                </td>
+
                                                 <td class="align-middle text-center">
                                                     <div class="d-row-ayar">
                                                         <a href="#deleteEmployeeModalhaber" class="btn-delete m-0"
@@ -1623,6 +1645,15 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                 <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
                     <h2>Haber Ekle</h2>
+                    <div class="containerswitch">
+                        <span class="labelswitch">Filmler</span>
+                        <label class="switch" for="checkbox12">
+                            <input type="checkbox" id="checkbox12" />
+                            <div class="slider round"></div>
+                        </label>
+                        <span class="labelswitch">Diziler</span>
+                    </div>
+
                 </div>
 
                 <form id="formHaberler" class="bg-white border bt-0 mt-0 p-3" method="post"
@@ -1674,10 +1705,6 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                     });
                 </script>
 
-
-
-                row mt-3
-
             </div>
 
             <div id="content6" class="content pl-5" style="display: none;">
@@ -1725,13 +1752,19 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 <!-- PHP ile dinamik satırlar buraya gelir -->
                                 <?php foreach ($veriler2 as $veri): ?>
                                 <tr>
-                                    <td class="align-middle"><?= formatDate(htmlspecialchars($veri['tarih'])); ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['sinema']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['perde']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['kisi']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['hasilat']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['toplamkisi']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['toplamhasilat']) ?></td>
+                                    <td class="align-left"><?= formatDate(htmlspecialchars($veri['tarih'])); ?></td>
+                                    <td class="align-left"><?= htmlspecialchars($veri['sinema']) ?></td>
+                                    <td class="align-left"><?= htmlspecialchars($veri['perde']) ?></td>
+                                    <td class="align-left"><?= htmlspecialchars($veri['kisi']) ?></td>
+                                    <td class="align-left">
+                                        <?= htmlspecialchars(number_format($veri['hasilat'], 2, ',', '.')) . ' ₺' ?>
+                                    </td>
+
+                                    <td class="align-left"><?= htmlspecialchars($veri['toplamkisi']) ?></td>
+                                    <td class="align-left">
+                                        <?= htmlspecialchars(number_format($veri['toplamhasilat'], 2, ',', '.')) . ' ₺' ?>
+                                    </td>
+
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -1842,7 +1875,16 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <button type="button" class="close" data-dismiss="modal"
                                         aria-hidden="true">&times;</button>
                                 </div>
+
                                 <div class="modal-body">
+                                    <div class="containerswitch">
+                                        <span class="labelswitch1">Hafta içi</span>
+                                        <label class="switch" for="checkbox13">
+                                            <input type="checkbox" id="checkbox13" />
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <span class="labelswitch1">Hafta Sonu</span>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
                                         <input class="form-control" type="file" id="formFile" name="excelFile"
@@ -1912,6 +1954,17 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 <input type="date" class="form-control" name="vizyontaredit"
                                     value="<?php echo $filmler2['vizyon_tarihi']  ?>" id="vizyonTarihi">
                             </div>
+
+                            <div class="form-group">
+                                <label>Film Süresi</label>
+                                <div style="display: flex; gap: 10px; align-items: center;">
+                                    <input type="number" name="filmsureedit" class="form-control"
+                                        value="<?php echo $filmler2['filmsure']; ?>"
+                                        placeholder="Film Süresi dakika olarak" min="0">
+
+                                </div>
+                            </div>
+
                             <!-- Sinema Dağıtım -->
                             <div class="form-group">
                                 <label>Sinema Dağıtım</label>
@@ -2314,7 +2367,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
             <!-- DİZİLER -->
             <div id="content4" class="content" style="display: none;">
 
-            <div class="container-fluid">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-12 top-section">
                             <div class="table-wrapper">
@@ -2409,7 +2462,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <form id="diziForm" method="post" enctype="multipart/form-data">
 
                                         <div class="modal-header">
-                                            <h4 class="modal-title">Film Ekle</h4>
+                                            <h4 class="modal-title">Dizi Ekle</h4>
                                             <button type="button" class="close" data-dismiss="modal"
                                                 aria-hidden="true">&times;</button>
                                         </div>
@@ -2425,6 +2478,12 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                     <div class="form-group">
                                                         <label>Vizyon Tarihi</label>
                                                         <input type="date" name="vizyonTarihi" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="vizyonTarihi">Bitiş Tarihi</label>
+                                                        <input type="date" class="form-control" name="bitistar"
+                                                            value="<?php echo $filmler2['bitis_tarihi']  ?>"
+                                                            id="bitis_tarihi">
                                                     </div>
                                                     <!-- Sinema Dağıtım 
                                                     <div class="form-group">
@@ -2899,15 +2958,15 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     </div>
                                 </div>
                             </div>
-                           
-                           
-
-                        
 
 
-                            
 
-                          
+
+
+
+
+
+
                         </div>
 
                     </div>
@@ -2915,22 +2974,27 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
             </div>
 
-            <div id="content9" class="content" style="display: none;"> 
+            <div id="content9" class="content" style="display: none;">
                 <form id="dizidetay" method="post" enctype="multipart/form-data">
                     <input type="hidden" value="<?php echo $filmler2['id'] ?>" name="film_id">
 
                     <div class="row filmDetayAyar bg-white border bt-0 p-3 m-0">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="filmAdi">Film Adı</label>
+                                <label for="filmAdi">Dizi Adı</label>
                                 <input type="text" class="form-control" id="filmAdi" name="filmadedit"
                                     value="<?php echo $filmler2['film_adi']  ?>"
                                     placeholder="Varsa Film Adı Burda Yazıcak">
                             </div>
                             <div class="form-group">
-                                <label for="vizyonTarihi">Vizyon Tarihi</label>
+                                <label for="vizyonTarihi">Başlama Tarihi</label>
                                 <input type="date" class="form-control" name="vizyontaredit"
                                     value="<?php echo $filmler2['vizyon_tarihi']  ?>" id="vizyonTarihi">
+                            </div>
+                            <div class="form-group">
+                                <label for="vizyonTarihi">Bitiş Tarihi</label>
+                                <input type="date" class="form-control" name="bitistaredit"
+                                    value="<?php echo $filmler2['bitis_tarihi']  ?>" id="bitis_tarihi">
                             </div>
                             <!-- Sinema Dağıtım 
                             <div class="form-group">
@@ -3328,13 +3392,14 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                             <button type="submit" class="btn btn-primary btn-lg">Kaydet</button>
                         </div>
                     </div>
-                </form> </div>
+                </form>
+            </div>
         </div>
 
     </div>
     </div>
     </div>
-    
+
     <?php
 function formatDate($dateString) {
     // Ay isimlerini tanımla

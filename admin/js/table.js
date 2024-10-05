@@ -62,25 +62,69 @@ document.addEventListener('DOMContentLoaded', function () {
             pagination.innerHTML = '';
             let pageCount = Math.ceil(totalEntries / rowsPerPage);
 
-            for (let i = 1; i <= pageCount; i++) {
-                let li = document.createElement('li');
-                li.classList.add('page-item');
-                if (i === currentPage) li.classList.add('active');
-
-                let a = document.createElement('a');
-                a.classList.add('page-link');
-                a.innerText = i;
-                a.href = '#';
-                a.addEventListener('click', function (e) {
+            // "İlk" butonunu ekle
+            if (currentPage > 1) {
+                let firstButton = document.createElement('li');
+                firstButton.classList.add('page-item');
+                let firstLink = document.createElement('a');
+                firstLink.classList.add('page-link');
+                firstLink.innerText = '<<'; // "İlk" butonu
+                firstLink.href = '#';
+                firstLink.addEventListener('click', function (e) {
                     e.preventDefault();
-                    currentPage = i;
+                    currentPage = 1; // İlk sayfaya git
                     updateTable();
                     createPagination();
                 });
-
-                li.appendChild(a);
-                pagination.appendChild(li);
+                firstButton.appendChild(firstLink);
+                pagination.appendChild(firstButton);
             }
+
+            // Sayfa numaralarını göster
+            let startPage = Math.max(currentPage - 2, 1);
+            let endPage = Math.min(startPage + 4, pageCount);
+
+            for (let i = startPage; i <= endPage; i++) {
+                createPageButton(i);
+            }
+
+            // "Son" butonunu ekle
+            if (currentPage < pageCount) {
+                let lastButton = document.createElement('li');
+                lastButton.classList.add('page-item');
+                let lastLink = document.createElement('a');
+                lastLink.classList.add('page-link');
+                lastLink.innerText = '>>'; // "Son" butonu
+                lastLink.href = '#';
+                lastLink.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentPage = pageCount; // Son sayfaya git
+                    updateTable();
+                    createPagination();
+                });
+                lastButton.appendChild(lastLink);
+                pagination.appendChild(lastButton);
+            }
+        }
+
+        function createPageButton(pageNumber) {
+            let li = document.createElement('li');
+            li.classList.add('page-item');
+            if (pageNumber === currentPage) li.classList.add('active');
+
+            let a = document.createElement('a');
+            a.classList.add('page-link');
+            a.innerText = pageNumber;
+            a.href = '#';
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                currentPage = pageNumber;
+                updateTable();
+                createPagination();
+            });
+
+            li.appendChild(a);
+            pagination.appendChild(li);
         }
 
         updateTable();
@@ -88,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         select.addEventListener('change', function () {
             rowsPerPage = parseInt(this.value);
-            currentPage = 1; // Sayfa başa döner
+            currentPage = 1; // Sayfa başa döner 
             updateTable();
             createPagination();
         });
