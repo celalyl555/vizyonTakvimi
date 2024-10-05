@@ -124,7 +124,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         // Eğer film verisi bulunamazsa hata mesajı göster
         if (!$filmler2) {
             echo "Film bulunamadı.";
-            exit; // veya yönlendirme yapabilirsiniz
+            
         }
 
         // Ekstra sorgular
@@ -140,9 +140,6 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         // Hata mesajını yakala ve ekrana yazdır
         echo "Hata: " . $e->getMessage();
     }
-} else {
-    echo "Film ID veya Dizi ID belirtilmedi.";
-    exit; // veya yönlendirme yapabilirsiniz
 }
 
 // Oyuncular verisini işleme
@@ -183,17 +180,16 @@ if (isset($filmler2['oyuncular'])) {
         }
     }
 
-    // Kategorilere göre ayrılan oyuncuları alalım
-    $yonetmenler = $kategoriOyuncular['Yönetmen'];
-    $senaryolar = $kategoriOyuncular['Senaryo'];
-    $GörüntüYönetmeni = $kategoriOyuncular['Görüntü Yönetmeni'];
-    $Müzik = $kategoriOyuncular['Müzik'];
-    $Kurgu = $kategoriOyuncular['Kurgu'];
-    $Oyuncu = $kategoriOyuncular['Oyuncu'];
-} else {
-    echo "Oyuncu verisi bulunamadı.";
-}
-;
+    
+} 
+// Eğer $kategoriOyuncular boşsa her bir kategoriye boş bir dizi ata
+$yonetmenler = isset($kategoriOyuncular['Yönetmen']) ? $kategoriOyuncular['Yönetmen'] : [];
+$senaryolar = isset($kategoriOyuncular['Senaryo']) ? $kategoriOyuncular['Senaryo'] : [];
+$GörüntüYönetmeni = isset($kategoriOyuncular['Görüntü Yönetmeni']) ? $kategoriOyuncular['Görüntü Yönetmeni'] : [];
+$Müzik = isset($kategoriOyuncular['Müzik']) ? $kategoriOyuncular['Müzik'] : [];
+$Kurgu = isset($kategoriOyuncular['Kurgu']) ? $kategoriOyuncular['Kurgu'] : [];
+$Oyuncu = isset($kategoriOyuncular['Oyuncu']) ? $kategoriOyuncular['Oyuncu'] : [];
+
 ?>
 
 
