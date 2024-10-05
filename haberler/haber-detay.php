@@ -1,8 +1,11 @@
 <?php
 include('../admin/conn.php');
 include('../header.php');
+include('../SqlQueryHaber.php');
 
-$haberId = 5;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $haberId  = isset($_POST['idhaber']) ? $_POST['idhaber'] : null;
+}
 
 try {
     // Veritabanından haber bilgilerini al
@@ -24,92 +27,126 @@ try {
 
 ?>
 
-    <!-- ============================================================================== -->
-    
-    <!-- Table Area Start -->
+<!-- ============================================================================== -->
 
-    <section class="haftaSection">
+<!-- Table Area Start -->
 
-        <div class="haftaMain">
+<section class="haftaSection">
 
-            
-            
-        </div>
+    <div class="haftaMain">
 
-    </section>
 
-    <!-- Table Area End -->
 
-    <!-- ============================================================================== -->
+    </div>
 
-    <!-- ============================================================================== -->
-     
-    <!-- News Area End -->
+</section>
 
-    <section class="pt-0">
+<!-- Table Area End -->
 
-        <div class="news">
+<!-- ============================================================================== -->
 
-            <div class="newsInside">
+<!-- ============================================================================== -->
 
-                <div class="newsLeft">
-                    
-                    <div class="newsTextArea">
+<!-- News Area End -->
 
-                        <h2><?php echo $haber['baslik'];  ?></h2>
-                        <p><i class="fa-regular fa-clock color1"></i> <?php echo $haber['tarih'];  ?></p>
+<section class="pt-0">
 
-                        <?php echo $haber['icerik'];  ?>
-                    </div>
-                    
+    <div class="news">
+
+        <div class="newsInside">
+
+            <div class="newsLeft">
+
+                <div class="newsTextArea">
+
+                    <h2><?php echo $haber['baslik'];  ?></h2>
+                    <p><i class="fa-regular fa-clock color1"></i> <?php echo $haber['tarih'];  ?></p>
+
+                    <?php echo $haber['icerik'];  ?>
                 </div>
 
-                <div class="newsRight bgnone">
-                    <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
-                    <a href="" class="newsBoxHafta">
+            </div>
+
+            <div class="newsRight bgnone">
+                <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
+
+                <div class="newsContainer">
+                    <?php foreach ($haberlerGenel as $haber): ?>
+                    <a href="#" class="newsBoxHafta" data-id="<?php echo $haber['idhaber']; ?>">
                         <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
+                            <img src="haberfoto/<?php echo $haber['haberfoto']; ?>"
+                                alt="<?php echo htmlspecialchars($haber['baslik']); ?>">
                         </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
+                        <p><?php echo htmlspecialchars($haber['baslik']); ?></p>
+                        <p class="date"><i class="fa-regular fa-clock"></i>
+                            <?php echo formatDateTime($haber['tarih']); ?></p>
                     </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
+                    <?php endforeach; ?>
                 </div>
-            
+
+
+
+
+
             </div>
 
         </div>
-    </section>
 
-    <!-- News Area End -->
+    </div>
+</section>
 
-    <?php include('../footer.php');?>
+<!-- News Area End -->
+<script>
+    document.querySelectorAll('.newsBoxHafta').forEach(box => {
+        box.addEventListener('click', function(event) {
+            event.preventDefault(); // Varsayılan bağlantı davranışını engelle
+
+            const idhaber = this.getAttribute('data-id'); // data-id değerini al
+            
+            // Form oluştur
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'haberler/haber-detay.php'; // POST isteği göndereceğimiz sayfa
+
+            // idhaber'ı form elemanı olarak ekle
+            const hiddenField = document.createElement('input');
+            hiddenField.type = 'hidden';
+            hiddenField.name = 'idhaber'; // Form elemanının ismi
+            hiddenField.value = idhaber; // Değerini ayarla
+
+            form.appendChild(hiddenField); // Form elemanını forma ekle
+            document.body.appendChild(form); // Formu body'e ekle
+            form.submit(); // Formu gönder
+        });
+    });
+</script>
+
+<?php 
+
+function formatDateTime($dateTimeString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    // Tarih ve saati ayır
+    $dateTimeParts = explode(" ", $dateTimeString);
+    $dateParts = explode("-", $dateTimeParts[0]);
+    $timeParts = explode(":", $dateTimeParts[1]);
+
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    $hour = (int)$timeParts[0];
+    $minute = (int)$timeParts[1];
+
+    // Formatlanmış tarihi ve saati döndür
+    return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+}
+
+include('../footer.php');?>
 </body>
+
 </html>

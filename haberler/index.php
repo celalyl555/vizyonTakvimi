@@ -4,77 +4,79 @@ include('../header.php');
 include('../SqlQueryFilm.php');
 ?>
 
-    <!-- ============================================================================== -->
+<!-- ============================================================================== -->
 
-    <!-- Table Area Start -->
+<!-- Table Area Start -->
 
-    <section class="haftaSection">
+<section class="haftaSection">
 
-        <div class="haftaMain">
+    <div class="haftaMain">
 
-            <h2><i class="fa-regular fa-newspaper"></i> Haberler</h2>
-            <p>Türkiye'de faaliyet gösteren Dağıtımcılar için veriler</p>
-            
-        </div>
+        <h2><i class="fa-regular fa-newspaper"></i> Haberler</h2>
+        <p>Türkiye'de faaliyet gösteren Dağıtımcılar için veriler</p>
 
-    </section>
+    </div>
 
-    <!-- Table Area End -->
+</section>
 
-    <!-- ============================================================================== -->
-     
-    <!-- News Area End -->
+<!-- Table Area End -->
 
-    <section class="pt-0">
+<!-- ============================================================================== -->
 
-        <div class="news">
+<!-- News Area End -->
 
-            <div class="newsInside">
+<section class="pt-0">
 
-                <div class="newsLeft">
-                    <?php foreach($haberlerGenel as $haber):?>
-                    <a href="haberler/haber-detay.php" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="haberfoto/<?php echo $haber['haberfoto']?>" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']);?></p>
-                            <h3><?php echo $haber['baslik'];?></h3>
-                        </div>
-                    </a>
-                    <?php endforeach;?>
+    <div class="news">
 
-                    <div class="pageBtn">
-                        <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
-                        <button class="pageBtns activePage">1</button>
-                        <button class="pageBtns activePage">2</button>
-                        <button class="pageBtns activePage">3</button>
-                        <button class="pageBtns activePage"><i class="fa-solid fa-angles-right"></i></button>
+        <div class="newsInside">
+
+            <div class="newsLeft">
+                <?php foreach($haberlerGenel as $haber):?>
+                <a href="#" class="newsBox" data-id="<?php echo $haber['idhaber']; ?>">
+                    <div class="newsBoxImg">
+                        <img src="haberfoto/<?php echo $haber['haberfoto']?>" alt="">
                     </div>
-                    
-                </div>
+                    <div>
+                        <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']);?></p>
+                        <h3><?php echo $haber['baslik'];?></h3>
+                    </div>
+                </a>
+                <?php endforeach;?>
 
-                <div class="newsRight bgnone">
-                    <h2><i class="fa-solid fa-newspaper"></i> Vizyona Girecekler</h2>
-                    <?php
-                    foreach($filmlerGenelYakin as $yakinFilmler):?>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="kapakfoto/<?php echo $yakinFilmler['kapak_resmi'];?>" alt="">
-                        </div>
-                        <p><?php echo $yakinFilmler['film_adi'];?></p>
-                        <p class="date"><i class="fa-regular fa-clock"></i><?php echo formatDate($yakinFilmler['vizyon_tarihi']);?></p>
-                    </a>
-                    <?php endforeach;?>
+                <div class="pageBtn">
+                    <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
+                    <button class="pageBtns activePage">1</button>
+                    <button class="pageBtns activePage">2</button>
+                    <button class="pageBtns activePage">3</button>
+                    <button class="pageBtns activePage"><i class="fa-solid fa-angles-right"></i></button>
                 </div>
-            
+            </div>
+
+
+
+            <div class="newsRight bgnone">
+                <h2><i class="fa-solid fa-newspaper"></i> Vizyona Girecekler</h2>
+                <?php
+                    foreach($filmlerGenelYakin as $yakinFilmler):?>
+                <a href="" class="newsBoxHafta">
+                    <div class="haftaImg">
+                        <img src="kapakfoto/<?php echo $yakinFilmler['kapak_resmi'];?>" alt="">
+                    </div>
+                    <p><?php echo $yakinFilmler['film_adi'];?></p>
+                    <p class="date"><i
+                            class="fa-regular fa-clock"></i><?php echo formatDate($yakinFilmler['vizyon_tarihi']);?></p>
+                </a>
+                <?php endforeach;?>
             </div>
 
         </div>
-    </section>
 
-    <!-- News Area End -->
-    <?php 
+    </div>
+</section>
+
+<!-- News Area End -->
+<?php 
     function formatDate($dateString) {
         // Ay isimlerini tanımla
         $months = [
@@ -114,7 +116,33 @@ include('../SqlQueryFilm.php');
         // Formatlanmış tarihi ve saati döndür
         return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
     }?>
-    <?php include('../footer.php');?>
+<?php include('../footer.php');?>
 
 </body>
+
 </html>
+
+<script>
+document.querySelectorAll('.newsBox').forEach(box => {
+    box.addEventListener('click', function(event) {
+        event.preventDefault(); // Varsayılan bağlantı davranışını engelle
+
+        const idhaber = this.getAttribute('data-id'); // data-id değerini al
+
+        // Form oluştur
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'haberler/haber-detay.php'; // POST isteği göndereceğimiz sayfa
+
+        // idhaber'ı form elemanı olarak ekle
+        const hiddenField = document.createElement('input');
+        hiddenField.type = 'hidden';
+        hiddenField.name = 'idhaber'; // Form elemanının ismi
+        hiddenField.value = idhaber; // Değerini ayarla
+
+        form.appendChild(hiddenField); // Form elemanını forma ekle
+        document.body.appendChild(form); // Formu body'e ekle
+        form.submit(); // Formu gönder
+    });
+});
+</script>
