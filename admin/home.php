@@ -140,6 +140,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         echo "Hata: " . $e->getMessage();
     }
     } 
+   
   // Oyuncular verisini işleme
   $oyuncuString = $filmler2['oyuncular'];
 
