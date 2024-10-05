@@ -338,7 +338,12 @@ $Oyuncu = isset($kategoriOyuncular['Oyuncu']) ? $kategoriOyuncular['Oyuncu'] : [
                                                     <?php echo htmlspecialchars($row['adsoyad']); ?>
                                                 </td>
                                                 <td class="align-middle text-center">
-                                                    <?php echo formatDate($row['dogum']); ?></td>
+    <?php
+        $tarih = $row['dogum'];
+        echo ($tarih === '0000-00-00' || empty($tarih)) ? '-' : formatDate($tarih);
+    ?>
+</td>
+
                                                 <td class="align-middle text-center">
                                                     <?php echo !empty($row['olum']) ? formatDate($row['olum']) : '-'; ?>
                                                 </td>
@@ -370,8 +375,8 @@ $Oyuncu = isset($kategoriOyuncular['Oyuncu']) ? $kategoriOyuncular['Oyuncu'] : [
                                     </table>
                                 </div>
                                 <div class="clearfix">
-                                    <div class="hint-text">Showing <b id="currentPageEntries0">1</b> out of <b
-                                            id="totalEntries0"></b> entries</div>
+                                    <div class="hint-text"><b id="currentPageEntries0">1</b> arası <b
+                                            id="totalEntries0"></b> kayıt gösteriliyor</div>
                                     <ul class="pagination" id="pagination0">
                                         <!-- Dinamik sayfalama burada olacak -->
                                     </ul>

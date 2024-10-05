@@ -38,6 +38,7 @@ $oyuncuListesi = isset($_POST['oyuncuListesi']) && is_array($_POST['oyuncuListes
         'kurgu' => 37, // Buraya uygun kategori_id ekleyin
         'müzik' => 36, // Buraya uygun kategori_id ekleyin
         'oyuncu' => 29, // Buraya uygun kategori_id ekleyin
+        'yapimci' => 39,
     ];
 
     // Fotoğraflar için dizinler
