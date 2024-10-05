@@ -1752,13 +1752,19 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 <!-- PHP ile dinamik satırlar buraya gelir -->
                                 <?php foreach ($veriler2 as $veri): ?>
                                 <tr>
-                                    <td class="align-middle"><?= formatDate(htmlspecialchars($veri['tarih'])); ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['sinema']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['perde']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['kisi']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['hasilat']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['toplamkisi']) ?></td>
-                                    <td class="align-middle"><?= htmlspecialchars($veri['toplamhasilat']) ?></td>
+                                    <td class="align-left"><?= formatDate(htmlspecialchars($veri['tarih'])); ?></td>
+                                    <td class="align-left"><?= htmlspecialchars($veri['sinema']) ?></td>
+                                    <td class="align-left"><?= htmlspecialchars($veri['perde']) ?></td>
+                                    <td class="align-left"><?= htmlspecialchars($veri['kisi']) ?></td>
+                                    <td class="align-left">
+                                        <?= htmlspecialchars(number_format($veri['hasilat'], 2, ',', '.')) . ' ₺' ?>
+                                    </td>
+
+                                    <td class="align-left"><?= htmlspecialchars($veri['toplamkisi']) ?></td>
+                                    <td class="align-left">
+                                        <?= htmlspecialchars(number_format($veri['toplamhasilat'], 2, ',', '.')) . ' ₺' ?>
+                                    </td>
+
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -1869,16 +1875,16 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <button type="button" class="close" data-dismiss="modal"
                                         aria-hidden="true">&times;</button>
                                 </div>
-                               
+
                                 <div class="modal-body">
-                                <div class="containerswitch">
-                                    <span class="labelswitch1">Hafta içi</span>
-                                    <label class="switch" for="checkbox13">
-                                        <input type="checkbox" id="checkbox13" />
-                                        <div class="slider round"></div>
-                                    </label>
-                                    <span class="labelswitch1">Hafta Sonu</span>
-                                </div>
+                                    <div class="containerswitch">
+                                        <span class="labelswitch1">Hafta içi</span>
+                                        <label class="switch" for="checkbox13">
+                                            <input type="checkbox" id="checkbox13" />
+                                            <div class="slider round"></div>
+                                        </label>
+                                        <span class="labelswitch1">Hafta Sonu</span>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
                                         <input class="form-control" type="file" id="formFile" name="excelFile"
