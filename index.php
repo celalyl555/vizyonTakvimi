@@ -256,7 +256,7 @@ include('SqlQuery.php');
                         </div>
                         <ul class="list">
                         <?php 
-                        $i = 1; // Sayaç başlatılıyor
+                        $i = 1;
                         foreach ($filmVerileri as $film): 
                         ?>
                             <li>
