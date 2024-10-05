@@ -53,6 +53,7 @@ include('admin/conn.php');
 #haberler sql query bitiş
 
 #*********************************************************************************
+#film verileri max kişi sql query başlangıç
     $sqlFilmVerileri = "SELECT f.*, fi.film_adi
     FROM filmveriler f
     INNER JOIN (
@@ -68,12 +69,17 @@ include('admin/conn.php');
 
     $stmtFilmVerileri = $con->query($sqlFilmVerileri);
     $filmVerileri = $stmtFilmVerileri->fetchAll(PDO::FETCH_ASSOC);
-    ?>
+#film verileri max kişi sql query başlangıç
+#*************************************************************************************
+
+#film verileri seyirci ve hasılat işlemleri sql query başlangıç
+
+#film verileri seyirci ve hasılat işlemleri sql query bitiş
+?>
 <!-- sql query final -->
     <main>
 
         <div class="container">
-            <!-- haberler filmler ve dizilerden veriler  en güncel 4 tanesini sırala -->
             <!-- Sol resim alanı -->
             <div class="gallery">
 
@@ -109,7 +115,6 @@ include('admin/conn.php');
                     </div>
                 </a>
             </div>
-            <!-- burada bitiyor -->
     
             <!-- Sağ sekmeli alan -->
             <div class="tab-section">
@@ -123,12 +128,16 @@ include('admin/conn.php');
     
                 <div class="tab-content" id="seyirci">
                     <ul class="list">
-                        <!-- burada başlıyor 5 tane loopa sok en güncel veriler gelecek, hasılatiçin de aynı (film veriler tablosu)   -->
+                        <?php 
+                        $sayacSeyirci = 1;
+                        foreach ($filmVerileri as $film):
+                            if ($sayacSeyirci > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
+                        ?>
                         <li>
                             <a href="">
-                                <span>1</span>
+                                <span><?php echo $sayacSeyirci++?></span>
                                 <div class="infInside">
-                                    <p>Beterböcek Beterböcek</p>
+                                    <p><?php echo $film['film_adi']?></p>
                                     <div class="rowIns">
                                         <div>
                                             <p>Hafta Sonu</p>
@@ -141,123 +150,29 @@ include('admin/conn.php');
                                             <p>Toplam</p>
                                             <div class="rowIns2">
                                                 <i class="fa-regular fa-user"></i>
-                                                <p>32.457</p>
+                                                <p><?php echo $film['toplamkisi']?></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </li>
-                        
-                        <li>
-                            <a href="">
-                                <span>2</span>
-                                <div class="infInside">
-                                    <p>Deadpool & Wolverine</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>25.839</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>1.339.216</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>3</span>
-                                <div class="infInside">
-                                    <p>Ters Yüz 2</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>19.714</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>2.301.228</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>4</span>
-                                <div class="infInside">
-                                    <p>Çılgın Hırsız 4</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>16.082</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>976.868</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>5</span>
-                                <div class="infInside">
-                                    <p>Cambaz</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                        <?php endforeach; ?>
                     </ul>                    
                 </div>
     
                 <div class="tab-content" id="hasilat" style="display:none;">
                     <ul class="list">
-                    <li>
+                        <?php 
+                        $sayacHasilat = 1;
+                        foreach ($filmVerileri as $film):
+                            if ($sayacHasilat > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
+                        ?>
+                        <li>
                             <a href="">
-                                <span>1</span>
+                                <span> <?php echo $sayacHasilat++ ?></span>
                                 <div class="infInside">
-                                    <p>Beterböcek Beterböcek</p>
+                                    <p><?php echo $film['film_adi']?></p>
                                     <div class="rowIns">
                                         <div>
                                             <p>Hafta Sonu</p>
@@ -270,113 +185,14 @@ include('admin/conn.php');
                                             <p>Toplam</p>
                                             <div class="rowIns2">
                                                 <i class="fa-regular fa-user"></i>
-                                                <p>32.457</p>
+                                                <p><?php echo $film['toplamhasilat']?></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </li>
-                        
-                        <li>
-                            <a href="">
-                                <span>2</span>
-                                <div class="infInside">
-                                    <p>Deadpool & Wolverine</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>25.839</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>1.339.216</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>3</span>
-                                <div class="infInside">
-                                    <p>Ters Yüz 2</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>19.714</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>2.301.228</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>4</span>
-                                <div class="infInside">
-                                    <p>Çılgın Hırsız 4</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>16.082</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>976.868</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>5</span>
-                                <div class="infInside">
-                                    <p>Cambaz</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
                 <a href="hafta/haftalar.html" class="tumu">Tümü <i class="fa-solid fa-caret-right"></i></a>
