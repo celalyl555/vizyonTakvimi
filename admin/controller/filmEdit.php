@@ -59,7 +59,7 @@ $oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuLi
             // Yeni kapak fotoğrafını yükle
             $orijinalAd = basename($_FILES['filmkapakedit']['name'][0]);
             $dosyaUzantisi = pathinfo($orijinalAd, PATHINFO_EXTENSION);
-            $benzersizAd = time() . '_' . $filmadi . '.' . $dosyaUzantisi;
+            $benzersizAd = time() . '.' . $dosyaUzantisi;
             $kapakFotoYolu = $kapakFotoDizin . $benzersizAd;
 
             if (move_uploaded_file($_FILES['filmkapakedit']['tmp_name'][0], $kapakFotoYolu)) {
@@ -89,7 +89,7 @@ $oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuLi
             // Yeni galeri fotoğraflarını yükle
             foreach ($_FILES['filmgaleriedit']['name'] as $key => $galeriFotoAdi) {
                 $dosyaUzantisi = pathinfo($galeriFotoAdi, PATHINFO_EXTENSION);
-                $yeniFotoAdi = time() . $key . '_' . preg_replace('/[^a-zA-Z0-9_]/', '_', $filmadi) . '.' . $dosyaUzantisi;
+                $yeniFotoAdi = time() . $key . '_' . preg_replace('/[^a-zA-Z0-9_]/') . '.' . $dosyaUzantisi;
                 $galeriFotoYolu = $galeriDizin . $yeniFotoAdi;
 
                 if (move_uploaded_file($_FILES['filmgaleriedit']['tmp_name'][$key], $galeriFotoYolu)) {
