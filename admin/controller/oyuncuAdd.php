@@ -51,8 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Resim yükleme hatası: " . $hataMesaji;
         } else {
             // Dosya formatı kontrolü
-            $izinVerilenFormatlar = ['jpg', 'jpeg', 'png', 'gif'];
-            if (in_array($dosyaTipi, $izinVerilenFormatlar)) {
+            
                 // Dosyayı belirtilen klasöre yükleme
                 if (move_uploaded_file($_FILES['gorsel']['tmp_name'], $hedefDosya)) {
                     $sql = "INSERT INTO oyuncular (adsoyad, dogum, olum, resimyol) VALUES (:adSoyad, :dogumTarihi, :olumTarihi, :resimYolu)";
@@ -79,9 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     echo "Resim sunucuya yüklenirken bir hata oluştu.";
                 }
-            } else {
-                echo "Sadece JPG, JPEG, PNG ve GIF dosyaları kabul edilir.";
-            }
+            
         }
     } else {
         echo "Resim yüklenemedi.";
