@@ -665,7 +665,8 @@ $(document).ready(function() {
 
       var formData = new FormData();
       var fileInput = $('#formFile')[0].files[0]; // Seçilen dosya
-
+      const checkboxswitch = document.getElementById('checkbox13');
+      const valueToSend = checkboxswitch.checked ? 2 : 1;
       // Gizli inputlardan değerleri alalım
       var filmId = $('input[name="filmid"]').val();
       var dagitimId = $('input[name="dagitimid"]').val();
@@ -677,7 +678,7 @@ $(document).ready(function() {
           // Gizli inputlardan gelen değerleri FormData'ya ekleyelim
           formData.append('filmid', filmId);
           formData.append('dagitimid', dagitimId);
-
+          formData.append('statu', valueToSend);
           // AJAX isteğini gönderelim
           $.ajax({
               url: 'controller/excelAdd.php', // PHP dosyanızın yolu
@@ -688,6 +689,8 @@ $(document).ready(function() {
               success: function(response) {
                   console.log(response);
                  alert("Excel verileri başarıyla aktarıldı.");
+                 localStorage.setItem("uri", 'content6');
+                 location.reload();
               },
               error: function(jqXHR, textStatus, errorThrown) {
                   alert('Dosya yüklenirken bir hata oluştu.');
@@ -727,10 +730,7 @@ $(document).ready(function() {
           formData.append('basdate', basdate);
           formData.append('bitdate', bitdate);
           
-          // Progress bar'ı göster
-          $('#progress-container').show();
-          $('#progress-bar').css('width', '0%'); // Başlangıçta %0
-
+          
           // AJAX isteğini gönderelim
           $.ajax({
               url: 'controller/excelAdd2.php', // PHP dosyanızın yolu
@@ -739,29 +739,19 @@ $(document).ready(function() {
               processData: false, // Form verisini stringe çevirmesini engeller
               contentType: false, // Jquery'in içerik türü ayarlamasını engeller
               
-              // AJAX isteği sırasında ilerlemeyi güncelle
-              xhr: function() {
-                  var xhr = new window.XMLHttpRequest();
-                  xhr.upload.addEventListener("progress", function(evt) {
-                      if (evt.lengthComputable) {
-                          var percentComplete = evt.loaded / evt.total;
-                          percentComplete = parseInt(percentComplete * 100);
-                          // Progress bar'ı güncelle
-                          $('#progress-bar').css('width', percentComplete + '%');
-                      }
-                  }, false);
-                  return xhr;
-              },
+              
 
               success: function(response) {
                   console.log(response);
                   alert("Excel verileri başarıyla aktarıldı.");
-                  $('#progress-container').hide(); // Başarılı yüklemeden sonra progress bar'ı gizle
+                  localStorage.setItem("uri", 'content6');
+                  location.reload();
+              
               },
               error: function(jqXHR, textStatus, errorThrown) {
                   alert('Dosya yüklenirken bir hata oluştu.');
                   console.log('Error: ' + textStatus + ' - ' + errorThrown);
-                  $('#progress-container').hide(); // Hata durumunda da progress bar'ı gizle
+                 
               }
           });
       } else {

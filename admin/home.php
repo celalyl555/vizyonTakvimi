@@ -1549,7 +1549,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                             echo "Bilinmeyen"; // Diğer durumlar için varsayılan bir mesaj
                                                         }
                                                     ?>
-                                                    </td>
+                                                </td>
 
                                                 <td class="align-middle text-center">
                                                     <div class="d-row-ayar">
@@ -1704,10 +1704,6 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                         console.error(error);
                     });
                 </script>
-
-
-
-                row mt-3
 
             </div>
 
@@ -1873,7 +1869,16 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <button type="button" class="close" data-dismiss="modal"
                                         aria-hidden="true">&times;</button>
                                 </div>
+                               
                                 <div class="modal-body">
+                                <div class="containerswitch">
+                                    <span class="labelswitch1">Hafta içi</span>
+                                    <label class="switch" for="checkbox13">
+                                        <input type="checkbox" id="checkbox13" />
+                                        <div class="slider round"></div>
+                                    </label>
+                                    <span class="labelswitch1">Hafta Sonu</span>
+                                </div>
                                     <div class="mb-3">
                                         <label for="formFile" class="form-label">Excel Dosyasını Seçin:</label>
                                         <input class="form-control" type="file" id="formFile" name="excelFile"
@@ -1950,7 +1955,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <input type="number" name="filmsureedit" class="form-control"
                                         value="<?php echo $filmler2['filmsure']; ?>"
                                         placeholder="Film Süresi dakika olarak" min="0">
-                                    
+
                                 </div>
                             </div>
 
@@ -2469,10 +2474,11 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                         <input type="date" name="vizyonTarihi" class="form-control">
                                                     </div>
                                                     <div class="form-group">
-                                <label for="vizyonTarihi">Bitiş Tarihi</label>
-                                <input type="date" class="form-control" name="bitistar"
-                                    value="<?php echo $filmler2['bitis_tarihi']  ?>" id="bitis_tarihi">
-                            </div>
+                                                        <label for="vizyonTarihi">Bitiş Tarihi</label>
+                                                        <input type="date" class="form-control" name="bitistar"
+                                                            value="<?php echo $filmler2['bitis_tarihi']  ?>"
+                                                            id="bitis_tarihi">
+                                                    </div>
                                                     <!-- Sinema Dağıtım 
                                                     <div class="form-group">
                                                         <label for="sinemadagitim">Sinema Dağıtım</label>
