@@ -46,6 +46,14 @@
     $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC);
 
 
+#********************************************************************************
+    $sqlFilmlerGenelYakin = "SELECT * FROM filmler 
+    WHERE vizyon_tarihi BETWEEN CURDATE() AND CURDATE() + INTERVAL 2 WEEK 
+    ORDER BY vizyon_tarihi DESC
+    LIMIT 5";
+    $stmtFilmlerGenelYakin = $con->query($sqlFilmlerGenelYakin);
+    $filmlerGenelYakin = $stmtFilmlerGenelYakin->fetchAll(PDO::FETCH_ASSOC);
+
 #yakında sql query bitiş
 
 #********************************************************************************
@@ -56,9 +64,9 @@
 
 #********************************************************************************
 
-    $sqlHaberler = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
-    $stmtHaberler = $con->query($sqlHaberler);
-    $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
+    $sqlHaberlerGenel = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
+    $stmtHaberlerGenel = $con->query($sqlHaberlerGenel);
+    $haberlerGenel = $stmtHaberlerGenel->fetchAll(PDO::FETCH_ASSOC);
 #haberler sql query bitiş
 
 #*********************************************************************************
