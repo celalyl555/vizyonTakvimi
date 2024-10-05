@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "Resim yükleme hatası: " . $hataMesaji;
         } else {
             // Dosya formatı kontrolü
-            $izinVerilenFormatlar = ['jpg', 'jpeg', 'png', 'gif'];
+            $izinVerilenFormatlar = ['jpg', 'jpeg', 'png', 'gif' , 'webp' ];
             if (in_array($dosyaTipi, $izinVerilenFormatlar)) {
                 // Dosyayı belirtilen klasöre yükleme
                 if (move_uploaded_file($_FILES['gorsel']['tmp_name'], $hedefDosya)) {
