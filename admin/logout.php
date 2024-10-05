@@ -1,6 +1,9 @@
 <?php
 session_start();
 session_destroy();
-// Redirect to the login page:
-header('Location: index');
 ?>
+<script>
+    localStorage.removeItem("uri");
+    // Sayfanın yönlendirilmesini sağla
+    window.location.href = 'index'; // Bu, PHP header yerine kullanılacak
+</script>
