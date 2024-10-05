@@ -229,7 +229,7 @@ include('SqlQueryFilm.php');
   
         <div class="news">
 
-            <h2><i class="fa-solid fa-newspaper"></i> Filmler'den Haberler</h2>
+            <h2><i class="fa-solid fa-newspaper"></i> Haberler</h2>
 
             <div class="newsInside">
 
