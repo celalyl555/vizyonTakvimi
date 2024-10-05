@@ -156,7 +156,12 @@
     color: #FFFFFF;
     font-weight: 900;
 }
-
+.labelswitch1 {
+    margin: 0 10px;
+    font-size: 16px;
+    color: #000;
+    font-weight: 900;
+}
 .switch {
   display: inline-block;
   height: 34px;
