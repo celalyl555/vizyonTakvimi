@@ -1,7 +1,7 @@
 <?php 
 include('../admin/conn.php');
 include('../header.php');
-include('../SqlQuery.php');
+include('../SqlQueryFilm.php');
 ?>
 
 <!-- ============================================================================== -->

@@ -3,7 +3,7 @@
 include('header.php');
 include('admin/conn.php');
 include('generate_vapid.php');
-include('SqlQuery.php');
+include('SqlQueryFilm.php');
 ?>
     <!-- ============================================================================== -->
     <!-- Main Area  Start -->
@@ -229,7 +229,7 @@ include('SqlQuery.php');
   
         <div class="news">
 
-            <h2><i class="fa-solid fa-newspaper"></i> Filmler'den Haberler</h2>
+            <h2><i class="fa-solid fa-newspaper"></i> Haberler</h2>
 
             <div class="newsInside">
 
