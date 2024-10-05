@@ -97,7 +97,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         COALESCE(GROUP_CONCAT(DISTINCT ft.filmturu SEPARATOR ', '), '') AS filmturleri, 
         COALESCE(GROUP_CONCAT(DISTINCT s.studyoad SEPARATOR ', '), '') AS studyolar,
         COALESCE(GROUP_CONCAT(DISTINCT sd.dagitimad SEPARATOR ', '), '') AS dagitim,
-        COALESCE(sd.iddagitim, '') AS dagitim_id,
+        COALESCE(GROUP_CONCAT(DISTINCT sd.iddagitim SEPARATOR ', '), '') AS dagitim_id,  -- Burada GROUP_CONCAT ekledik
         COALESCE(GROUP_CONCAT(DISTINCT u.country_name SEPARATOR ', '), '') AS ulkeler,
         COALESCE(GROUP_CONCAT(DISTINCT g.resim_yolu SEPARATOR ', '), '') AS resimler,
         COALESCE(GROUP_CONCAT(DISTINCT CONCAT(o.adsoyad, ' (', k.kategoriAd, ')') SEPARATOR ', '), '') AS oyuncular
@@ -115,7 +115,8 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         LEFT JOIN oyuncular o ON ol.oyuncu_id = o.idoyuncu
         LEFT JOIN kategori k ON ol.kategori_id = k.idKategori
         WHERE f.id = :film_id
-        GROUP BY f.id, sd.iddagitim";
+        GROUP BY f.id";
+
 
         $stmt = $con->prepare($sql);
         $stmt->execute(['film_id' => $param]);
@@ -141,7 +142,6 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         echo "Hata: " . $e->getMessage();
     }
 }
-
 // Oyuncular verisini işleme
 if (isset($filmler2['oyuncular'])) {
     $oyuncuString = $filmler2['oyuncular'];
@@ -156,11 +156,11 @@ if (isset($filmler2['oyuncular'])) {
     // Kategorilere göre oyuncuları ayırmak için dizi
     $kategoriOyuncular = [
         'Yönetmen' => [],
-        'Senaryo' => [],
+        'Senaryo Yazarı' => [],
         'Görüntü Yönetmeni' => [],
         'Müzik' => [],
         'Kurgu' => [],
-        'Oyuncu' => []
+        'Aktör' => []
     ];
 
     // Oyuncuları kategorilere göre ayırma işlemi
@@ -184,12 +184,11 @@ if (isset($filmler2['oyuncular'])) {
 } 
 // Eğer $kategoriOyuncular boşsa her bir kategoriye boş bir dizi ata
 $yonetmenler = isset($kategoriOyuncular['Yönetmen']) ? $kategoriOyuncular['Yönetmen'] : [];
-$senaryolar = isset($kategoriOyuncular['Senaryo']) ? $kategoriOyuncular['Senaryo'] : [];
+$senaryolar = isset($kategoriOyuncular['Senaryo Yazarı']) ? $kategoriOyuncular['Senaryo Yazarı'] : [];
 $GörüntüYönetmeni = isset($kategoriOyuncular['Görüntü Yönetmeni']) ? $kategoriOyuncular['Görüntü Yönetmeni'] : [];
 $Müzik = isset($kategoriOyuncular['Müzik']) ? $kategoriOyuncular['Müzik'] : [];
 $Kurgu = isset($kategoriOyuncular['Kurgu']) ? $kategoriOyuncular['Kurgu'] : [];
-$Oyuncu = isset($kategoriOyuncular['Oyuncu']) ? $kategoriOyuncular['Oyuncu'] : [];
-
+$Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [];
 ?>
 
 
