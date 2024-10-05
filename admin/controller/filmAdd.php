@@ -22,7 +22,6 @@ $dagitimListesi = isset($_POST['dagitimListesi']) && is_array($_POST['dagitimLis
 $studyoListesi = isset($_POST['studyoListesi']) && is_array($_POST['studyoListesi']) ? $_POST['studyoListesi'] : null;
 $ulkeListesi = isset($_POST['ulkeListesi']) && is_array($_POST['ulkeListesi']) ? $_POST['ulkeListesi'] : null;
 $filmturuListesi = isset($_POST['filmturuListesi']) && is_array($_POST['filmturuListesi']) ? $_POST['filmturuListesi'] : null;
-print_r($filmturuListesi);
 $yonetmenListesi = isset($_POST['yonetmenListesi']) && is_array($_POST['yonetmenListesi']) ? $_POST['yonetmenListesi'] : null;
 $senaryoListesi = isset($_POST['senaryoListesi']) && is_array($_POST['senaryoListesi']) ? $_POST['senaryoListesi'] : null;
 $gyonetmeniListesi = isset($_POST['gyonetmeniListesi']) && is_array($_POST['gyonetmeniListesi']) ? $_POST['gyonetmeniListesi'] : null;

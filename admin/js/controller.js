@@ -467,10 +467,10 @@ $(document).ready(function() {
           contentType: false, 
           processData: false, 
           success: function(response){
-            alert(response);
+            console.log(response);
           
-            localStorage.setItem("uri", 'content3');
-            location.reload();
+           localStorage.setItem("uri", 'content6');
+           location.reload();
             
           },
           error: function(jqXHR, textStatus, errorThrown){
@@ -504,7 +504,7 @@ $(document).ready(function() {
           contentType: false, 
           processData: false, 
           success: function(response){
-            alert(response);
+            console.log(response);
           
             localStorage.setItem("uri", 'content9');
             location.reload();

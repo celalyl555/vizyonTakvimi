@@ -10,25 +10,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Film ID'sini al
         $film_id = $_POST['film_id'];
 
-       // Form verilerini alıyoruz
-$filmadi = !empty($_POST['filmadedit']) ? $_POST['filmadedit'] : null;
-$filmkonu = !empty($_POST['filmkonu']) ? $_POST['filmkonu'] : null;
-$vizyonTarihi = !empty($_POST['vizyontaredit']) ? $_POST['vizyontaredit'] : null;
+        // Form verilerini alıyoruz
+        $filmadi = !empty($_POST['filmadedit']) ? $_POST['filmadedit'] : null;
+        $filmkonu = !empty($_POST['filmkonu']) ? $_POST['filmkonu'] : null;
+        $vizyonTarihi = !empty($_POST['vizyontaredit']) ? $_POST['vizyontaredit'] : null;
 
-// Array olan veriler
-$dagitimListesi = isset($_POST['dagitimListesiedit']) && is_array($_POST['dagitimListesiedit']) ? $_POST['dagitimListesiedit'] : null;
-$studyoListesi = isset($_POST['studyoListesiedit']) && is_array($_POST['studyoListesiedit']) ? $_POST['studyoListesiedit'] : null;
-$ulkeListesi = isset($_POST['ulkeListesiedit']) && is_array($_POST['ulkeListesiedit']) ? $_POST['ulkeListesiedit'] : null;
-$filmturuListesi = isset($_POST['filmturuListesiedit']) && is_array($_POST['filmturuListesiedit']) ? $_POST['filmturuListesiedit'] : null;
-
-$yonetmenListesi = isset($_POST['yonetmenListesiedit']) && is_array($_POST['yonetmenListesiedit']) ? $_POST['yonetmenListesiedit'] : null;
-$senaryoListesi = isset($_POST['senaryoListesiedit']) && is_array($_POST['senaryoListesiedit']) ? $_POST['senaryoListesiedit'] : null;
-$gyonetmeniListesi = isset($_POST['goryonetmenListesiedit']) && is_array($_POST['goryonetmenListesiedit']) ? $_POST['goryonetmenListesiedit'] : null;
-$kurguListesi = isset($_POST['kurguListesiedit']) && is_array($_POST['kurguListesiedit']) ? $_POST['kurguListesiedit'] : null;
-$müzikListesi = isset($_POST['muzikListesiedit']) && is_array($_POST['muzikListesiedit']) ? $_POST['muzikListesiedit'] : null;
-$oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuListesiedit']) ? $_POST['oyuncuListesiedit'] : null;
-
-
+        // Array olan veriler
+        $dagitimListesi = isset($_POST['dagitimListesiedit']) && is_array($_POST['dagitimListesiedit']) ? $_POST['dagitimListesiedit'] : [];
+        $studyoListesi = isset($_POST['studyoListesiedit']) && is_array($_POST['studyoListesiedit']) ? $_POST['studyoListesiedit'] : [];
+        $ulkeListesi = isset($_POST['ulkeListesiedit']) && is_array($_POST['ulkeListesiedit']) ? $_POST['ulkeListesiedit'] : [];
+        $filmturuListesi = isset($_POST['filmturuListesiedit']) && is_array($_POST['filmturuListesiedit']) ? $_POST['filmturuListesiedit'] : [];
+        $yonetmenListesi = isset($_POST['yonetmenListesiedit']) && is_array($_POST['yonetmenListesiedit']) ? $_POST['yonetmenListesiedit'] : [];
+        $senaryoListesi = isset($_POST['senaryoListesiedit']) && is_array($_POST['senaryoListesiedit']) ? $_POST['senaryoListesiedit'] : [];
+        $gyonetmeniListesi = isset($_POST['goryonetmenListesiedit']) && is_array($_POST['goryonetmenListesiedit']) ? $_POST['goryonetmenListesiedit'] : [];
+        $kurguListesi = isset($_POST['kurguListesiedit']) && is_array($_POST['kurguListesiedit']) ? $_POST['kurguListesiedit'] : [];
+        $müzikListesi = isset($_POST['muzikListesiedit']) && is_array($_POST['muzikListesiedit']) ? $_POST['muzikListesiedit'] : [];
+        $oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuListesiedit']) ? $_POST['oyuncuListesiedit'] : [];
         $kategoriIdMap = [
             'yonetmen' => 34,
             'senaryo' => 38,
@@ -36,6 +33,7 @@ $oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuLi
             'kurgu' => 37,
             'müzik' => 36,
             'oyuncu' => 29,
+            'yapimci' => 39,
         ];
 
         // Fotoğraflar için dizinler
@@ -85,11 +83,11 @@ $oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuLi
             // Eski galeri fotoğraflarını veritabanından sil
             $stmt = $con->prepare("DELETE FROM film_galeri WHERE film_id = ?");
             $stmt->execute([$film_id]);
-
+            $r=0;
             // Yeni galeri fotoğraflarını yükle
             foreach ($_FILES['filmgaleriedit']['name'] as $key => $galeriFotoAdi) {
                 $dosyaUzantisi = pathinfo($galeriFotoAdi, PATHINFO_EXTENSION);
-                $yeniFotoAdi = time() . '.' . $dosyaUzantisi;
+                $yeniFotoAdi = time() .$r. '.' . $dosyaUzantisi;
                 $galeriFotoYolu = $galeriDizin . $yeniFotoAdi;
 
                 if (move_uploaded_file($_FILES['filmgaleriedit']['tmp_name'][$key], $galeriFotoYolu)) {
@@ -98,69 +96,140 @@ $oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuLi
                 } else {
                     echo "Galeri fotoğrafı yüklenirken bir hata oluştu: " . $yeniFotoAdi;
                 }
+                $r++;
             }
         }
 
-        // Diğer ilişkileri güncelleme
-        function updateRelation($con, $table, $column, $film_id, $list) {
-            foreach ($list as $id) {
-                $stmt = $con->prepare("UPDATE $table SET $column = ? WHERE film_id = ?");
-                $stmt->execute([$id, $film_id]);
-            }
+        // Dağıtım listesini güncelleme
+        $stmt = $con->prepare("DELETE FROM film_dagitim WHERE film_id = ?");
+        $stmt->execute([$film_id]);
+        foreach ($dagitimListesi as $id) {
+            $stmt = $con->prepare("INSERT INTO film_dagitim (film_id, dagitim_id) VALUES (?, ?)");
+            $stmt->execute([$film_id, $id]);
         }
 
-        if (!empty($dagitimListesi)) {
-            updateRelation($con, 'film_dagitim', 'dagitim_id', $film_id, $dagitimListesi);
+        // Stüdyo listesini güncelleme
+        $stmt = $con->prepare("DELETE FROM film_studyolar WHERE film_id = ?");
+        $stmt->execute([$film_id]);
+        foreach ($studyoListesi as $id) {
+            $stmt = $con->prepare("INSERT INTO film_studyolar (film_id, studyo_id) VALUES (?, ?)");
+            $stmt->execute([$film_id, $id]);
         }
 
-        if (!empty($studyoListesi)) {
-            updateRelation($con, 'film_studyolar', 'studyo_id', $film_id, $studyoListesi);
+        // Ülke listesini güncelleme
+        $stmt = $con->prepare("DELETE FROM film_ulkeler WHERE film_id = ?");
+        $stmt->execute([$film_id]);
+        foreach ($ulkeListesi as $id) {
+            $stmt = $con->prepare("INSERT INTO film_ulkeler (film_id, ulke_id) VALUES (?, ?)");
+            $stmt->execute([$film_id, $id]);
         }
 
-        if (!empty($ulkeListesi)) {
-            updateRelation($con, 'film_ulkeler', 'ulke_id', $film_id, $ulkeListesi);
+        // Film türü listesini güncelleme
+        $stmt = $con->prepare("DELETE FROM film_filmturu WHERE film_id = ?");
+        $stmt->execute([$film_id]);
+        foreach ($filmturuListesi as $id) {
+            $stmt = $con->prepare("INSERT INTO film_filmturu (film_id, filmturu_id) VALUES (?, ?)");
+            $stmt->execute([$film_id, $id]);
         }
 
-        if (!empty($filmturuListesi)) {
-            updateRelation($con, 'film_filmturu', 'filmturu_id', $film_id, $filmturuListesi);
-        }
+       
+        
 
-        // Oyuncu ilişkileri için
-        function updateActorRelation($con, $table, $column, $film_id, $list, $category) {
-            foreach ($list as $id) {
-                $stmt = $con->prepare("UPDATE $table SET $column = ? WHERE film_id = ? AND kategori_id = ?");
-                $stmt->execute([$id, $film_id, $category]);
-            }
-        }
 
-        if (!empty($yonetmenListesi)) {
-            updateActorRelation($con, 'oyuncuiliski', 'oyuncu_id', $film_id, $yonetmenListesi, $kategoriIdMap['yonetmen']);
-        }
 
-        if (!empty($senaryoListesi)) {
-            updateActorRelation($con, 'oyuncuiliski', 'oyuncu_id', $film_id, $senaryoListesi, $kategoriIdMap['senaryo']);
-        }
 
-        if (!empty($gyonetmeniListesi)) {
-            updateActorRelation($con, 'oyuncuiliski', 'oyuncu_id', $film_id, $gyonetmeniListesi, $kategoriIdMap['gyonetmen']);
-        }
 
-        if (!empty($kurguListesi)) {
-            updateActorRelation($con, 'oyuncuiliski', 'oyuncu_id', $film_id, $kurguListesi, $kategoriIdMap['kurgu']);
-        }
 
-        if (!empty($müzikListesi)) {
-            updateActorRelation($con, 'oyuncuiliski', 'oyuncu_id', $film_id, $müzikListesi, $kategoriIdMap['müzik']);
-        }
 
+
+
+// Yönetmen listesini güncelleme
+if (!empty($yonetmenListesi)) {
+    // Eski yönetmen kayıtlarını sil
+    $stmt = $con->prepare("DELETE FROM oyuncuiliski WHERE film_id = ? AND kategori_id = ?");
+    $stmt->execute([$film_id, $kategoriIdMap['yonetmen']]);
+
+    // Yeni yönetmen kayıtlarını ekle
+    foreach ($yonetmenListesi as $oyuncu_id) {
+        $stmt = $con->prepare("INSERT INTO oyuncuiliski (film_id, oyuncu_id, kategori_id) VALUES (?, ?, ?)");
+        $stmt->execute([$film_id, $oyuncu_id, $kategoriIdMap['yonetmen']]);
+    }
+}
+
+// Senaryo listesini güncelleme
+if (!empty($senaryoListesi)) {
+    // Eski senaryo kayıtlarını sil
+    $stmt = $con->prepare("DELETE FROM oyuncuiliski WHERE film_id = ? AND kategori_id = ?");
+    $stmt->execute([$film_id, $kategoriIdMap['senaryo']]);
+
+    // Yeni senaryo kayıtlarını ekle
+    foreach ($senaryoListesi as $oyuncu_id) {
+        $stmt = $con->prepare("INSERT INTO oyuncuiliski (film_id, oyuncu_id, kategori_id) VALUES (?, ?, ?)");
+        $stmt->execute([$film_id, $oyuncu_id, $kategoriIdMap['senaryo']]);
+    }
+}
+
+// Görüntü yönetmeni listesini güncelleme
+if (!empty($gyonetmeniListesi)) {
+    // Eski görüntü yönetmeni kayıtlarını sil
+    $stmt = $con->prepare("DELETE FROM oyuncuiliski WHERE film_id = ? AND kategori_id = ?");
+    $stmt->execute([$film_id, $kategoriIdMap['gyonetmen']]);
+
+    // Yeni görüntü yönetmeni kayıtlarını ekle
+    foreach ($gyonetmeniListesi as $oyuncu_id) {
+        $stmt = $con->prepare("INSERT INTO oyuncuiliski (film_id, oyuncu_id, kategori_id) VALUES (?, ?, ?)");
+        $stmt->execute([$film_id, $oyuncu_id, $kategoriIdMap['gyonetmen']]);
+    }
+}
+
+// Kurgu listesini güncelleme
+if (!empty($kurguListesi)) {
+    // Eski kurgu kayıtlarını sil
+    $stmt = $con->prepare("DELETE FROM oyuncuiliski WHERE film_id = ? AND kategori_id = ?");
+    $stmt->execute([$film_id, $kategoriIdMap['kurgu']]);
+
+    // Yeni kurgu kayıtlarını ekle
+    foreach ($kurguListesi as $oyuncu_id) {
+        $stmt = $con->prepare("INSERT INTO oyuncuiliski (film_id, oyuncu_id, kategori_id) VALUES (?, ?, ?)");
+        $stmt->execute([$film_id, $oyuncu_id, $kategoriIdMap['kurgu']]);
+    }
+}
+
+// Müzik listesini güncelleme
+if (!empty($müzikListesi)) {
+    // Eski müzik kayıtlarını sil
+    $stmt = $con->prepare("DELETE FROM oyuncuiliski WHERE film_id = ? AND kategori_id = ?");
+    $stmt->execute([$film_id, $kategoriIdMap['müzik']]);
+
+    // Yeni müzik kayıtlarını ekle
+    foreach ($müzikListesi as $oyuncu_id) {
+        $stmt = $con->prepare("INSERT INTO oyuncuiliski (film_id, oyuncu_id, kategori_id) VALUES (?, ?, ?)");
+        $stmt->execute([$film_id, $oyuncu_id, $kategoriIdMap['müzik']]);
+    }
+}
+
+        // Oyuncu listesini güncelleme
         if (!empty($oyuncuListesi)) {
-            updateActorRelation($con, 'oyuncuiliski', 'oyuncu_id', $film_id, $oyuncuListesi, $kategoriIdMap['oyuncu']);
+            // Eski oyuncu kayıtlarını sil
+            $stmt = $con->prepare("DELETE FROM oyuncuiliski WHERE film_id = ? AND kategori_id = ?");
+            $stmt->execute([$film_id, $kategoriIdMap['oyuncu']]);
+        
+            
+                foreach ($oyuncuListesi as $oyuncu_id) {
+                    $stmt = $con->prepare("INSERT INTO oyuncuiliski (film_id, oyuncu_id, kategori_id) VALUES (?, ?, ?)");
+                    $stmt->execute([$film_id, $oyuncu_id, $kategoriIdMap['oyuncu']]);
+                }
+            
         }
 
-        echo "Film Güncellendi";
-    } catch (Exception $e) {
-        echo $e->getMessage();
+
+
+
+
+
+        echo "Film başarıyla güncellendi!";
+    } catch (PDOException $e) {
+        echo "Veritabanı hatası: " . $e->getMessage();
     }
 }
 ?>
-``
