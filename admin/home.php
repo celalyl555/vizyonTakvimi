@@ -173,7 +173,7 @@ if (isset($filmler2['oyuncular'])) {
             if (isset($kategoriOyuncular[$kategori])) {
                 $kategoriOyuncular[$kategori][] = $oyuncuAd;
             } else {
-                echo "Kategori bulunamadı: " . $kategori;
+                
             }
         } else {
             echo "Oyuncu verisi beklenmedik formatta: " . $oyuncuKategori;
