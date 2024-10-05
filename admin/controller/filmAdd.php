@@ -16,7 +16,8 @@ $filmadi = !empty($_POST['filmadi']) ? $_POST['filmadi'] : null;
 $statu = !empty($_POST['statu']) ? $_POST['statu'] : null;
 $filmkonu = !empty($_POST['filmKonu']) ? $_POST['filmKonu'] : null;
 $vizyonTarihi = !empty($_POST['vizyonTarihi']) ? $_POST['vizyonTarihi'] : null;
-
+$bitistar = !empty($_POST['bitistar']) ? $_POST['bitistar'] : null;
+$filmsure = !empty($_POST['filmsure']) ? $_POST['filmsure'] : null;
 // Array olan veriler
 $dagitimListesi = isset($_POST['dagitimListesi']) && is_array($_POST['dagitimListesi']) ? $_POST['dagitimListesi'] : null;
 $studyoListesi = isset($_POST['studyoListesi']) && is_array($_POST['studyoListesi']) ? $_POST['studyoListesi'] : null;
@@ -74,8 +75,8 @@ $oyuncuListesi = isset($_POST['oyuncuListesi']) && is_array($_POST['oyuncuListes
     }
 
     // Film bilgilerini veritabanına ekleme
-    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi, kapak_resmi, film_konu, statu) VALUES (?,?,?,?,?)");
-    $stmt->execute([$filmadi, $vizyonTarihi, $kapakFotoYollari[0], $filmkonu,$statu]);
+    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi,bitis_tarihi, kapak_resmi, film_konu,filmsure, statu) VALUES (?,?,?,?,?,?,?)");
+    $stmt->execute([$filmadi, $vizyonTarihi,$bitistar, $kapakFotoYollari[0], $filmkonu,$filmsure,$statu]);
     $film_id = $con->lastInsertId(); // Eklenen filmin ID'sini alıyoruz
 
     $f=0;

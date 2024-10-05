@@ -585,10 +585,13 @@ $(document).ready(function() {
 
 $(document).ready(function() {
   $('#formHaberler').on('submit', function(event) {
-      event.preventDefault(); // Sayfanın yenilenmesini önler
+      event.preventDefault(); // Sayfanın yenilenmesini önler   
 
       var haberBaslik = $('#haberBaslik').val();
       var haberIcerik = $('#haberIcerik').val();
+      const checkboxswitch = document.getElementById('checkbox12');
+      const valueToSend = checkboxswitch.checked ? 2 : 1;
+
       var kapakFotoInput = $('input[name="kapakfoto[]"]'); // name ile inputu seç
      
       var kapakFoto = kapakFotoInput[0].files; // Dosyaları seç
@@ -597,7 +600,7 @@ $(document).ready(function() {
       var formData = new FormData();
       formData.append('baslik', haberBaslik);
       formData.append('icerik', haberIcerik);
-
+      formData.append('statu', valueToSend);
       // Dosyaları FormData'ya ekle
       for (var i = 0; i < kapakFoto.length; i++) {
           formData.append('kapakfoto[]', kapakFoto[i]);

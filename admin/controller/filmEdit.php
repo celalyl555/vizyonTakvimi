@@ -10,11 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Film ID'sini al
         $film_id = $_POST['film_id'];
 
-        // Form verilerini alıyoruz
+        // Form verilerini alıyoruz  
         $filmadi = !empty($_POST['filmadedit']) ? $_POST['filmadedit'] : null;
         $filmkonu = !empty($_POST['filmkonu']) ? $_POST['filmkonu'] : null;
         $vizyonTarihi = !empty($_POST['vizyontaredit']) ? $_POST['vizyontaredit'] : null;
-
+        $bitistar = !empty($_POST['bitistaredit']) ? $_POST['bitistaredit'] : null;
+        $filsure = !empty($_POST['filmsureedit']) ? $_POST['filmsureedit'] : null;
         // Array olan veriler
         $dagitimListesi = isset($_POST['dagitimListesiedit']) && is_array($_POST['dagitimListesiedit']) ? $_POST['dagitimListesiedit'] : [];
         $studyoListesi = isset($_POST['studyoListesiedit']) && is_array($_POST['studyoListesiedit']) ? $_POST['studyoListesiedit'] : [];
@@ -41,8 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $galeriDizin = "../../galeri/";
 
         // Mevcut film bilgilerini güncelle
-        $stmt = $con->prepare("UPDATE filmler SET film_adi = ?, vizyon_tarihi = ?, film_konu = ? WHERE id = ?");
-        $stmt->execute([$filmadi, $vizyonTarihi, $filmkonu, $film_id]);
+        $stmt = $con->prepare("UPDATE filmler SET film_adi = ?, vizyon_tarihi = ?,bitis_tarihi = ?, film_konu = ?, filmsure = ? WHERE id = ?");
+        $stmt->execute([$filmadi, $vizyonTarihi,$bitistar, $filmkonu, $filsure, $film_id]);
 
         // Kapak fotoğrafını güncelleme
         if (!empty($_FILES['filmkapakedit']['name'][0])) {
