@@ -10,21 +10,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Film ID'sini al
         $film_id = $_POST['film_id'];
 
-        // Form verilerini alıyoruz
-        $filmadi = $_POST['filmadedit']; 
-        $filmkonu = $_POST['filmkonu']; 
-        $vizyonTarihi = $_POST['vizyontaredit']; 
-        $dagitimListesi = $_POST['dagitimListesiedit']; // Array
-        $studyoListesi = $_POST['studyoListesiedit']; // Array
-        $ulkeListesi = $_POST['ulkeListesiedit']; // Array
-        $filmturuListesi = $_POST['filmturuListesiedit']; // Array
-        
-        $yonetmenListesi = $_POST['yonetmenListesiedit']; // Array
-        $senaryoListesi = $_POST['senaryoListesiedit']; // Array
-        $gyonetmeniListesi = $_POST['goryonetmenListesiedit']; // Array
-        $kurguListesi = $_POST['kurguListesiedit']; // Array
-        $müzikListesi = $_POST['muzikListesiedit']; // Array
-        $oyuncuListesi = $_POST['oyuncuListesiedit']; // Array
+       // Form verilerini alıyoruz
+$filmadi = !empty($_POST['filmadedit']) ? $_POST['filmadedit'] : null;
+$filmkonu = !empty($_POST['filmkonu']) ? $_POST['filmkonu'] : null;
+$vizyonTarihi = !empty($_POST['vizyontaredit']) ? $_POST['vizyontaredit'] : null;
+
+// Array olan veriler
+$dagitimListesi = isset($_POST['dagitimListesiedit']) && is_array($_POST['dagitimListesiedit']) ? $_POST['dagitimListesiedit'] : null;
+$studyoListesi = isset($_POST['studyoListesiedit']) && is_array($_POST['studyoListesiedit']) ? $_POST['studyoListesiedit'] : null;
+$ulkeListesi = isset($_POST['ulkeListesiedit']) && is_array($_POST['ulkeListesiedit']) ? $_POST['ulkeListesiedit'] : null;
+$filmturuListesi = isset($_POST['filmturuListesiedit']) && is_array($_POST['filmturuListesiedit']) ? $_POST['filmturuListesiedit'] : null;
+
+$yonetmenListesi = isset($_POST['yonetmenListesiedit']) && is_array($_POST['yonetmenListesiedit']) ? $_POST['yonetmenListesiedit'] : null;
+$senaryoListesi = isset($_POST['senaryoListesiedit']) && is_array($_POST['senaryoListesiedit']) ? $_POST['senaryoListesiedit'] : null;
+$gyonetmeniListesi = isset($_POST['goryonetmenListesiedit']) && is_array($_POST['goryonetmenListesiedit']) ? $_POST['goryonetmenListesiedit'] : null;
+$kurguListesi = isset($_POST['kurguListesiedit']) && is_array($_POST['kurguListesiedit']) ? $_POST['kurguListesiedit'] : null;
+$müzikListesi = isset($_POST['muzikListesiedit']) && is_array($_POST['muzikListesiedit']) ? $_POST['muzikListesiedit'] : null;
+$oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuListesiedit']) ? $_POST['oyuncuListesiedit'] : null;
+
 
         $kategoriIdMap = [
             'yonetmen' => 34,
