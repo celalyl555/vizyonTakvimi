@@ -12,14 +12,14 @@ include('generate_vapid.php');
  
  #vizyonda yeni sql query başlangıç
     $sqlEnEskiFilm = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK
+    WHERE statu = 1 AND vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK
     ORDER BY vizyon_tarihi ASC
     LIMIT 1";
     $stmtEnEskiFilm = $con->query($sqlEnEskiFilm);
     $enEskiFilm = $stmtEnEskiFilm->fetch(PDO::FETCH_ASSOC);
 
     $sqlFilmlerVizyon = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK 
+    WHERE statu = 1 AND vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK 
     ORDER BY vizyon_tarihi ASC 
     LIMIT 3"; 
     $stmtFilmlerVizyon = $con->query($sqlFilmlerVizyon);
@@ -30,15 +30,14 @@ include('generate_vapid.php');
 
 #yakında sql query başlangıç
     $sqlEnYeniFilm = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+    WHERE statu = 1 AND vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK 
     ORDER BY vizyon_tarihi DESC
     LIMIT 1";
     $stmtEnYeniFilm = $con->query($sqlEnYeniFilm);
     $enYeniFilm = $stmtEnYeniFilm->fetchAll(PDO::FETCH_ASSOC);
     
-    print_r($enYeniFilm);
     $sqlFilmlerYakin = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+    WHERE statu = 1 AND vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
     ORDER BY vizyon_tarihi DESC
     LIMIT 3";
     $stmtFilmlerYakin = $con->query($sqlFilmlerYakin);
