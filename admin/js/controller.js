@@ -150,7 +150,7 @@ $(document).ready(function() {
 
     // FİLMLER SAYFASI 
 
-    //Film türü ekleme
+    //Film türü ekleme 
 
     $(document).ready(function() {
       $('#submitBtnfilmturu').click(function(e) {
@@ -179,7 +179,31 @@ $(document).ready(function() {
       });
     });
 
-
+    $(document).ready(function() {
+      $('#submitBtndizituru').click(function(e) {
+        e.preventDefault(); // Sayfanın yeniden yüklenmesini engeller
+        // Kategori adını al
+        var filmturu = $('#dizi_turu').val();
+  
+        // AJAX isteğini yap
+        $.ajax({
+          url: 'controller/filmController.php',
+          type: 'POST',
+          data: { filmturu: filmturu },
+          success: function(response) {
+            // Başarılı olursa yapılacak işlemler
+          
+          
+              localStorage.setItem("uri", 'content4');
+              location.reload();
+          },
+          error: function(xhr, status, error) {
+            // Hata olursa yapılacak işlemler
+            console.log('Hata: ' + error);
+          }
+        });
+      });
+    });
 
     // Film türü Silme 
 
@@ -211,6 +235,31 @@ $(document).ready(function() {
   });
 
 
+  $(document).ready(function() {
+    $('#dizituruSil').click(function(e) {
+      e.preventDefault(); // Sayfanın yeniden yüklenmesini engeller
+
+      // Kategori adını al
+      var filmturuid = $('#kategoriid').val();
+   
+      $.ajax({
+        url: 'controller/filmController.php',
+        type: 'POST',
+        data: { filmturuid: filmturuid },
+        success: function(response) {
+          // Başarılı olursa yapılacak işlemler
+          
+        
+            localStorage.setItem("uri", 'content4');
+            location.reload();
+        },
+        error: function(xhr, status, error) {
+          // Hata olursa yapılacak işlemler
+          console.log('Hata: ' + error);
+        }
+      });
+    });
+  });
 
       //Stüdyo ekleme
 
@@ -343,7 +392,7 @@ $(document).ready(function() {
               $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
                   formData.append($(this).attr('id'), $(this).val());
               });
-      
+              formData.append('statu', 1);
               $.ajax({
                 url: "controller/filmAdd.php", // PHP dosyasının yolu
                 type: "POST",
@@ -365,7 +414,38 @@ $(document).ready(function() {
           }); 
       });  
       
+ // Dizi  kayıt
+ $(document).ready(function () {
+  $('#diziForm').on('submit', function (e) {
+      e.preventDefault(); // Formun varsayılan submit işlemini durdurur.
 
+      // Form verilerini toplama
+      var formData = new FormData(this);
+      // Multi-select alanlarındaki seçilen değerleri toplama
+      $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
+          formData.append($(this).attr('id'), $(this).val());
+      });
+      formData.append('statu', 2);
+      $.ajax({
+        url: "controller/filmAdd.php", // PHP dosyasının yolu
+        type: "POST",
+        data: formData,
+        contentType: false, 
+        processData: false, 
+        success: function(response){
+          alert(response);
+            if(response.trim()==="" || response.trim===null){
+              localStorage.setItem("uri", 'content4');
+              location.reload();
+            }
+          
+        },
+        error: function(jqXHR, textStatus, errorThrown){
+            alert("Bir hata oluştu: " + textStatus + " " + errorThrown);
+        }
+       });
+  }); 
+});  
 
    // Film Güncelleme
 
@@ -421,7 +501,7 @@ $(document).ready(function() {
           // Başarılı olursa yapılacak işlemler
           const button = document.getElementById('deletefilmgeri');
             button.click();
-            localStorage.setItem("uri", 'content3');
+            localStorage.setItem("uri", 'content3');    
             location.reload();
         },
         error: function(xhr, status, error) {
@@ -431,6 +511,39 @@ $(document).ready(function() {
       });
     });
   });
+
+    // Film Sil
+
+    $(document).ready(function() {
+      $('#diziSil').click(function(e) {
+        e.preventDefault(); // Sayfanın yeniden yüklenmesini engeller
+  
+        // Kategori adını al
+        var filmSil= $('#kategoriid').val();
+        $.ajax({
+          url: 'controller/filmController.php',
+          type: 'POST',
+          data: { filmSil: filmSil },
+          success: function(response) {
+            
+            
+              localStorage.setItem("uri", 'content4');    
+              location.reload();
+          },
+          error: function(xhr, status, error) {
+            // Hata olursa yapılacak işlemler
+            console.log('Hata: ' + error);
+          }
+        });
+      });
+    });
+  
+
+
+
+
+
+
 // haberler ekleme
 
 

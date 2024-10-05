@@ -11,21 +11,25 @@ ini_set('display_startup_errors', 1);
 // Form gönderildiyse
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     try {
-    // Film ile ilgili form verilerini alıyoruz     
-    $filmadi = $_POST['filmadi']; 
-    $filmkonu = $_POST['filmKonu']; 
-    $vizyonTarihi = $_POST['vizyonTarihi']; 
-    $dagitimListesi = $_POST['dagitimListesi']; // Array
-    $studyoListesi = $_POST['studyoListesi']; // Array
-    $ulkeListesi = $_POST['ulkeListesi']; // Array
-    $filmturuListesi = $_POST['filmturuListesi']; // Array
-    
-    $yonetmenListesi = $_POST['yonetmenListesi']; // Array
-    $senaryoListesi = $_POST['senaryoListesi']; // Array
-    $gyonetmeniListesi = $_POST['gyonetmeniListesi']; // Array
-    $kurguListesi = $_POST['kurguListesi']; // Array
-    $müzikListesi = $_POST['müzikListesi']; // Array
-    $oyuncuListesi = $_POST['oyuncuListesi']; // Array
+  // Film ile ilgili form verilerini alıyoruz     
+$filmadi = !empty($_POST['filmadi']) ? $_POST['filmadi'] : null;
+$statu = !empty($_POST['statu']) ? $_POST['statu'] : null;
+$filmkonu = !empty($_POST['filmKonu']) ? $_POST['filmKonu'] : null;
+$vizyonTarihi = !empty($_POST['vizyonTarihi']) ? $_POST['vizyonTarihi'] : null;
+
+// Array olan veriler
+$dagitimListesi = isset($_POST['dagitimListesi']) && is_array($_POST['dagitimListesi']) ? $_POST['dagitimListesi'] : null;
+$studyoListesi = isset($_POST['studyoListesi']) && is_array($_POST['studyoListesi']) ? $_POST['studyoListesi'] : null;
+$ulkeListesi = isset($_POST['ulkeListesi']) && is_array($_POST['ulkeListesi']) ? $_POST['ulkeListesi'] : null;
+$filmturuListesi = isset($_POST['filmturuListesi']) && is_array($_POST['filmturuListesi']) ? $_POST['filmturuListesi'] : null;
+
+$yonetmenListesi = isset($_POST['yonetmenListesi']) && is_array($_POST['yonetmenListesi']) ? $_POST['yonetmenListesi'] : null;
+$senaryoListesi = isset($_POST['senaryoListesi']) && is_array($_POST['senaryoListesi']) ? $_POST['senaryoListesi'] : null;
+$gyonetmeniListesi = isset($_POST['gyonetmeniListesi']) && is_array($_POST['gyonetmeniListesi']) ? $_POST['gyonetmeniListesi'] : null;
+$kurguListesi = isset($_POST['kurguListesi']) && is_array($_POST['kurguListesi']) ? $_POST['kurguListesi'] : null;
+$müzikListesi = isset($_POST['müzikListesi']) && is_array($_POST['müzikListesi']) ? $_POST['müzikListesi'] : null;
+$oyuncuListesi = isset($_POST['oyuncuListesi']) && is_array($_POST['oyuncuListesi']) ? $_POST['oyuncuListesi'] : null;
+
 
     $kategoriIdMap = [
         'yonetmen' => 34,
@@ -70,8 +74,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Film bilgilerini veritabanına ekleme
-    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi, kapak_resmi, film_konu) VALUES (?,?,?,?)");
-    $stmt->execute([$filmadi, $vizyonTarihi, $kapakFotoYollari[0], $filmkonu]);
+    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi, kapak_resmi, film_konu, statu) VALUES (?,?,?,?,?)");
+    $stmt->execute([$filmadi, $vizyonTarihi, $kapakFotoYollari[0], $filmkonu,$statu]);
     $film_id = $con->lastInsertId(); // Eklenen filmin ID'sini alıyoruz
 
     $f=0;

@@ -65,15 +65,27 @@ $stmt = $con->query($sql);
 $veriler = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
-// FİLMLER VERİ TABANI
-$sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.kapak_resmi, GROUP_CONCAT(ft.filmturu SEPARATOR ', ') AS filmturleri
+$sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.kapak_resmi, f.statu, GROUP_CONCAT(ft.filmturu SEPARATOR ', ') AS filmturleri
 FROM filmler f
 JOIN film_filmturu fft ON f.id = fft.film_id
 JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
 GROUP BY f.id";
 
 $stmt = $con->query($sql);
-$filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$filmler45 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$filmler = [];
+$diziler = [];
+
+foreach ($filmler45 as $films) {
+    if ($films['statu'] == 1) {
+        $filmler[] = $films;
+    } elseif ($films['statu'] == 2) {
+        $diziler[] = $films;
+    }
+}
+
+// Şimdi $filmlerList filmler verilerini, $dizilerList diziler verilerini içerecek.
+
 
 if (isset($_GET['filmid'])) {
     $film_id  = $_GET['filmid'];
@@ -115,8 +127,8 @@ if (isset($_GET['filmid'])) {
         $veriler2= $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $stmt = $con->prepare('SELECT * FROM filmsalon WHERE film_id='. $film_id);
-$stmt->execute();
-$salonlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute();
+        $salonlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     } catch (PDOException $e) {
         // Hata mesajını yakala ve ekrana yazdır
@@ -489,7 +501,7 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
                                                     </a>
 
                                                 </div>
-<div class="row mt-3">
+            <div class="row mt-3">
                             <div class="col-sm-12">
                                 <label for="rowsPerPageSelect1">Satır Sayısı: </label>
                                 <select id="rowsPerPageSelect1" class="rows-per-page-select">
@@ -1446,7 +1458,7 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
             </div>
 
 
-            <div id="content4" class="content" style="display: none;">DİZİLER</div>
+
 
             <div id="content7" class="content" style="display: none;">
                 <div class="container-fluid">
@@ -2248,12 +2260,12 @@ $Oyuncu =$kategoriOyuncular['Oyuncu'];
 
                     <div class="row bg-white border bt-0 p-3 m-0">
                         <?php
-// $filmler2['resimler'] dizisindeki resimleri ayırın
-$resimler = explode(', ', $filmler2['resimler']); // Resimler virgülle ayrılmış olabilir
+                                // $filmler2['resimler'] dizisindeki resimleri ayırın
+                                $resimler = explode(', ', $filmler2['resimler']); // Resimler virgülle ayrılmış olabilir
 
-// Her bir resmi HTML'deki yapıya yerleştirmek için döngü kullanın
-foreach ($resimler as $resim) {
-    ?>
+                                // Her bir resmi HTML'deki yapıya yerleştirmek için döngü kullanın
+                                foreach ($resimler as $resim) {
+                            ?>
                         <div class="col-md-3 mb-4">
                             <div class="card">
                                 <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>"
@@ -2261,8 +2273,8 @@ foreach ($resimler as $resim) {
                             </div>
                         </div>
                         <?php
-}
-?>
+                                }
+                            ?>
 
                         <div class="col-md-3 mb-4">
                             <div class="multiple-uploader" id="multiple-uploader-galerifilm">
@@ -2284,14 +2296,614 @@ foreach ($resimler as $resim) {
                 </form>
             </div>
 
+            <!-- DİZİLER -->
+            <div id="content4" class="content" style="display: none;">
+
+ <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-12 top-section">
+                            <div class="table-wrapper">
+                                <div class="table-title">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <H5>DİZİLER</H5>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <a href="#addEmployeeModaldizi"
+                                                class="btn btn-success d-flex align-items-center" data-toggle="modal">
+                                                <i class="material-icons mr-2">&#xE147;</i> <span>Dizi Ekle</span>
+                                            </a>
+
+                                        </div>
+                                        <div class="row mt-3">
+                                            <div class="col-sm-12">
+                                                <label for="rowsPerPageSelect8">Satır Sayısı: </label>
+                                                <select id="rowsPerPageSelect8" class="rows-per-page-select">
+                                                    <option value="5">5</option>
+                                                    <option value="10">10</option>
+                                                    <option value="20">20</option>
+                                                    <option value="50">50</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-over">
+                                    <table class="table table-striped table-hover paginated-table">
+                                        <thead>
+                                            <tr>
+                                                <th class="w-fit">Dizi Afişi</th>
+                                                <th>Dizi Adı</th>
+                                                <th>Vizyon Tarihi</th>
+                                                <th>Dizi Türü</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($diziler as $row): ?>
+                                            <tr>
+                                                <td><img src="../kapakfoto/<?php echo htmlspecialchars($row['kapak_resmi']); ?>"
+                                                        class="rounded img-thumbnail tumbimg" alt="Fotoğraf"></td>
+                                                <td class="align-middle">
+                                                    <?php echo htmlspecialchars($row['film_adi']); ?>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <?php echo formatDate($row['vizyon_tarihi']); ?></td>
+                                                <td class="align-middle">
+                                                    <?php echo !empty($row['filmturleri']) ? htmlspecialchars($row['filmturleri']) : '-'; ?>
+                                                </td>
+
+
+
+                                                </td>
+                                                <td class="align-middle">
+
+                                                    <a href="#deleteEmployeeModaldiziler" class="btn-delete"
+                                                        onclick="getId('<?php echo $row['id']; ?>');"
+                                                        data-toggle="modal"><i class="material-icons"
+                                                            data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+
+                                                </td>
+                                                <td class="align-middle">
+                                                    <button
+                                                        onclick="showContent('content6','<?php echo $row['id']; ?>','film')"
+                                                        class="btn-page"><i
+                                                            class="material-icons">chevron_right</i></button>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="clearfix">
+                                    <div class="hint-text">Showing <b id="currentPageEntries8">1</b> out of <b
+                                            id="totalEntries8"></b> entries</div>
+                                    <ul class="pagination" id="pagination8">
+                                        <!-- Dinamik sayfalama burada olacak -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ADD Modal HTML -->
+                        <div id="addEmployeeModaldizi" class="modal fade">
+                            <div class="modal-dialog modal-xl">
+                                <!-- Modal genişliğini artırmak için modal-xl kullanıldı -->
+                                <div class="modal-content">
+                                    <form id="diziForm" method="post" enctype="multipart/form-data">
+
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Film Ekle</h4>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <!-- İlk sütun -->
+                                                    <div class="form-group">
+                                                        <label>Dizi Adı</label>
+                                                        <input type="text" name="filmadi" class="form-control">
+                                                    </div>
+                                                    <!-- Vizyon Tarihi -->
+                                                    <div class="form-group">
+                                                        <label>Vizyon Tarihi</label>
+                                                        <input type="date" name="vizyonTarihi" class="form-control">
+                                                    </div>
+                                                    <!-- Sinema Dağıtım 
+                                                    <div class="form-group">
+                                                        <label for="sinemadagitim">Sinema Dağıtım</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" id="sinemadagitim" name="sinemadagitim"
+                                                                class="tagInput form-control"
+                                                                placeholder="Seçilen dağıtım şirketleri" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($dagitimListesi as $dagitim) {
+                                                                        $id = htmlspecialchars($dagitim['iddagitim']);
+                                                                        $country_name = htmlspecialchars($dagitim['dagitimad']);
+                                                                        echo "<label for='dagitim{$id}'><input type='checkbox' id='dagitim{$id}' name='dagitimListesi[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+                                                    <!-- Stüdyo 
+                                                    <div class="form-group">
+                                                        <label>Stüdyo</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen stüdyolar" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($studyoListesi as $studyo) {
+                                                                        $id = htmlspecialchars($studyo['id']);
+                                                                        $country_name = htmlspecialchars($studyo['studyoad']);
+                                                                        echo "<label for='studyo{$id}'><input type='checkbox' id='studyo{$id}' name='studyoListesi[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div> -->
+
+                                                    <!-- ülke -->
+                                                    <div class="form-group">
+                                                        <label>Ülke</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen ülkeler" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($ulkeListesi as $ulke) {
+                                                                        $id = htmlspecialchars($ulke['id']);
+                                                                        $country_name = htmlspecialchars($ulke['country_name']);
+                                                                        echo "<label for='ulkelerr{$id}'><input type='checkbox' id='ulkelerr{$id}' name='ulkeListesi[]' value='{$id}' onclick='updateTags(this)' />{$country_name}</label>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Film Türü -->
+                                                    <div class="form-group">
+                                                        <label>Film Türü</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen film türleri" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($filmturuListesi as $filmturu) {
+                                                                        $id = htmlspecialchars($filmturu['idfilm']);
+                                                                        $film_turu = htmlspecialchars($filmturu['filmturu']);
+                                                                        echo "<label for='filmturuu{$id}'><input type='checkbox' id='filmturuu{$id}' name='filmturuListesi[]' value='{$id}' onclick='updateTags(this)' />{$film_turu}</label>";
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <!-- İkinci sütun -->
+
+
+                                                    <!-- Yönetmen -->
+                                                    <div class="form-group">
+                                                        <label>Yönetmen</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen yönetmen" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                   foreach ($veriler as $row) {
+                                                                       
+                                                                    $id = htmlspecialchars($row['idoyuncu']);
+                                                                    $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                                                    $istediginiz_sayi = 34;
+                                                                    $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                                                    if (preg_match($pattern, $row['kategori_idler'])) {
+                                                                        echo "<label for='yonetmenn{$id}'><input type='checkbox' id='yonetmenn{$id}' name='yonetmenListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                                                    } 
+                                                                   
+                                                            }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Senaryo -->
+                                                    <div class="form-group">
+                                                        <label>Senaryo</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen senaryo yazarı" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($veriler as $row) {
+                                                                       
+                                                                        $id = htmlspecialchars($row['idoyuncu']);
+                                                                        $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                                                        $istediginiz_sayi = 38;
+                                                                        $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                                                        if (preg_match($pattern, $row['kategori_idler'])) {
+                                                                            echo "<label for='senaryoo{$id}'><input type='checkbox' id='senaryoo{$id}' name='senaryoListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                                                        } 
+                                                                       
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Görüntü Yönetmeni 
+                                                    <div class="form-group">
+                                                        <label>Görüntü Yönetmeni</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen görüntü yönetmeni" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                   foreach ($veriler as $row) {
+                                                                       
+                                                                    $id = htmlspecialchars($row['idoyuncu']);
+                                                                    $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                                                    $istediginiz_sayi = 35;
+                                                                    $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                                                    if (preg_match($pattern, $row['kategori_idler'])) {
+                                                                        echo "<label for='gyonetmenn{$id}'><input type='checkbox' id='gyonetmenn{$id}' name='gyonetmeniListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                                                    } 
+                                                                   
+                                                            }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>-->
+                                                    <!-- Kurgu -->
+                                                    <div class="form-group">
+                                                        <label>Kurgu</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen film türleri burada görünecek..."
+                                                                readonly onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($veriler as $row) {
+                                                                       
+                                                                        $id = htmlspecialchars($row['idoyuncu']);
+                                                                        $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                                                        $istediginiz_sayi = 37;
+                                                                        $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                                                        if (preg_match($pattern, $row['kategori_idler'])) {
+                                                                            echo "<label for='kurguu{$id}'><input type='checkbox' id='kurguu{$id}' name='kurguListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                                                        } 
+                                                                       
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Müzik -->
+                                                    <div class="form-group">
+                                                        <label>Müzik</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen film türleri burada görünecek..."
+                                                                readonly onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($veriler as $row) {
+                                                                       
+                                                                        $id = htmlspecialchars($row['idoyuncu']);
+                                                                        $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                                                        $istediginiz_sayi = 36;
+                                                                        $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                                                        if (preg_match($pattern, $row['kategori_idler'])) {
+                                                                            echo "<label for='muzikk{$id}'><input type='checkbox' id='muzikk{$id}' name='müzikListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                                                        } 
+                                                                       
+                                                                }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Film Oyuncuları -->
+                                                    <div class="form-group">
+                                                        <label>Film Oyuncuları</label>
+                                                        <div class="selected-tags">
+                                                            <input type="text" class="tagInput form-control"
+                                                                placeholder="Seçilen film oyuncuları" readonly
+                                                                onclick="toggleDropdown(this)">
+                                                        </div>
+                                                        <div class="multiselect">
+                                                            <div class="checkboxes">
+                                                                <input type="text" class="searchBox"
+                                                                    placeholder="Ara..." onkeyup="filterFunction(this)">
+                                                                <?php
+                                                                    foreach ($veriler as $row) {
+                                                                       
+                                                                            $id = htmlspecialchars($row['idoyuncu']);
+                                                                            $oyuncuad = htmlspecialchars($row['adsoyad']);
+                                                                            $istediginiz_sayi = 29;
+                                                                            $pattern = '/\b' . preg_quote($istediginiz_sayi, '/') . '\b/';
+                                                                            if (preg_match($pattern, $row['kategori_idler'])) {
+                                                                                echo "<label for='filmoyuncuu{$id}'><input type='checkbox' id='filmoyuncuu{$id}' name='oyuncuListesi[]' value='{$id}' onclick='updateTags(this)' />{$oyuncuad}</label>";
+
+                                                                            } 
+                                                                           
+                                                                    }
+                                                                ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                                <!-- Film Aciklamasi -->
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="filmKonuu">Filmin Konusu</label>
+                                                        <textarea class="form-control textarea" rows="6" name="filmKonu"
+                                                            id="filmKonu"></textarea>
+                                                    </div>
+                                                </div>
+                                                <!-- sağ sol sütun bitiş -->
+                                                <div class="multiple-uploader" id="single-uploader-dizi">
+                                                    <div class="mup-msg">
+                                                        <span class="mup-main-msg">Kapak Resmi Yüklemek için
+                                                            Tıklayınız.</span>
+                                                        <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
+                                                            Fotoğrafı Yükleyiniz.</span>
+
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="multiple-uploader" id="multiple-uploader-dizi">
+                                                    <div class="mup-msg">
+                                                        <span class="mup-main-msg">Film Galerisine Fotoğraf Eklemek için
+                                                            Tıklayınız.</span>
+                                                        <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
+                                                            Yükleyiniz.</span>
+
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="button" id="addoyuncugeri" class="btn btn-default"
+                                                data-dismiss="modal" value="Geri">
+                                            <input type="submit" class="btn btn-info" value="Kaydet">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- Delete Modal HTML -->
+                        <div id="deleteEmployeeModaldiziler" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form>
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Sil</h4>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
+                                            <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="button" id="deletefilmgeri" class="btn btn-default"
+                                                data-dismiss="modal" value="Geri">
+                                            <input type="submit" id="diziSil" class="btn btn-danger" value="Sil">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Film Türü İşlemleri -->
+
+                    <div class="col-12 bottom-section">
+                        <div class="row wrap-1440">
+                            <div class="col-md-4 left-column p-0">
+                                <div class="table-wrapper">
+                                    <div class="table-title">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5>DİZİ TÜRLERİ</h5>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <a href="#addEmployeeModalturu1"
+                                                    class="btn btn-success d-flex align-items-center"
+                                                    data-toggle="modal">
+                                                    <i class="material-icons mr-2">&#xE147;</i> <span>Dizi Türü
+                                                        Ekle</span>
+                                                </a>
+
+                                            </div>
+                                            <div class="row mt-3">
+                                                <div class="col-sm-12">
+                                                    <label for="rowsPerPageSelect9">Satır Sayısı: </label>
+                                                    <select id="rowsPerPageSelect9" class="rows-per-page-select">
+                                                        <option value="5">5</option>
+                                                        <option value="10">10</option>
+                                                        <option value="20">20</option>
+                                                        <option value="50">50</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-over">
+                                        <table class="table table-striped table-hover paginated-table">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2">Dizi Türü</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <?php 
+                                                       foreach ($filmturuListesi as $filmturu) {
+                                                        echo "<td>" . htmlspecialchars($filmturu['filmturu']) . "</td>"; // Her bir kategori adını güvenli bir şekilde göster
+                                                    
+                                                    
+                                                       ?>
+
+                                                    <td class="text-center">
+
+                                                        <a href="#deleteEmployeeModaldizituru" id="kategoridelete"
+                                                            onclick="getId('<?php echo $filmturu['idfilm']; ?>');"
+                                                            class="btn-delete p-03" data-toggle="modal">
+                                                            <i class="material-icons" data-toggle="tooltip"
+                                                                title="Delete">&#xE872;</i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+
+                                                <?php     }?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="clearfix">
+                                        <div class="hint-text">Showing <b id="currentPageEntries9">1</b> out of <b
+                                                id="totalEntries9"></b> entries</div>
+                                        <ul class="pagination" id="pagination9">
+                                            <!-- Dinamik sayfalama burada olacak -->
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Add Modal HTML -->
+                            <div id="addEmployeeModalturu1" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form id="kategoriEkleForm">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Ekle</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label>Dizi Türü</label>
+                                                    <input type="text" name="dizi_turu" id="dizi_turu"
+                                                        class="form-control" required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="addfilmturuModal" class="btn btn-default"
+                                                    data-dismiss="modal" value="Geri">
+                                                <input type="button" class="btn btn-info" value="Kaydet"
+                                                    id="submitBtndizituru">
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Delete Modal HTML -->
+                            <div id="deleteEmployeeModaldizituru" class="modal fade">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form>
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Sil</h4>
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-hidden="true">&times;</button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
+                                                <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <input type="button" id="deleteEmployeeModalfilmturugeri"
+                                                    class="btn btn-default" data-dismiss="modal" value="Geri">
+                                                <input type="submit" id="dizituruSil" class="btn btn-danger"
+                                                    value="Sil">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                           
+                           
+
+                        
+
+
+                            
+
+                          
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
 
 
         </div>
 
-
-
     </div>
-
     </div>
     </div>
 
@@ -2516,6 +3128,22 @@ function formatDateTime($dateTimeString) {
         filesInpName: 'filmgaleriedit', // input name sent to backend
         formSelector: '#filmdetay', // form selector
     });
+
+
+    let multipleUploader6 = new MultipleUploader('#single-uploader-dizi').init({
+        maxUpload: 1, // maximum number of uploaded images
+        maxSize: 2, // in size in mb
+        filesInpName: 'kapakfotograf', // input name sent to backend
+        formSelector: '#diziForm', // form selector
+    });
+
+    let multipleUploader7 = new MultipleUploader('#multiple-uploader-dizi').init({
+        maxUpload: 20, // maximum number of uploaded images
+        maxSize: 2, // in size in mb
+        filesInpName: 'galerifotograf', // input name sent to backend
+        formSelector: '#diziForm', // form selector
+    });
+
     </script>
 
 
