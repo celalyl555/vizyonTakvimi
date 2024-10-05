@@ -56,7 +56,7 @@ $oyuncuListesi = isset($_POST['oyuncuListesi']) && is_array($_POST['oyuncuListes
             $dosyaUzantisi = pathinfo($orijinalAd, PATHINFO_EXTENSION); // Dosya uzantısını al (örneğin: jpg, png)
             
             // Benzersiz dosya adı oluştur (örneğin: zaman_rastgeleSayi.jpg)
-            $benzersizAd = time() . '_' . $filmadi. '.' . $dosyaUzantisi;
+            $benzersizAd = time() . '.' . $dosyaUzantisi;
             
             // Dosya yolunu belirle
             $kapakFotoYolu = $kapakFotoDizin . $benzersizAd;
@@ -89,7 +89,7 @@ if (!empty($_FILES['galerifotograf']['name'][0])) {
         $dosyaUzantisi = pathinfo($galeriFotoAdi, PATHINFO_EXTENSION); // Örneğin: jpg, png
         
         // Zaman damgası ve film adı ile yeni dosya adı oluştur
-        $yeniFotoAdi = time() .$f . '_' . preg_replace('/[^a-zA-Z0-9_]/', '_', $filmadi) . '.' . $dosyaUzantisi; // Geçersiz karakterleri temizle
+        $yeniFotoAdi = time() .$f . '_' . preg_replace('/[^a-zA-Z0-9_]/') . '.' . $dosyaUzantisi; // Geçersiz karakterleri temizle
         
         // Galeri dizinini kontrol et
         if (!is_dir($galeriDizin)) {
