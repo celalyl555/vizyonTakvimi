@@ -183,7 +183,7 @@ body.loggedin {
 .table-title {        
     padding-bottom: 15px;
     background: #435d7d;
-    color: #fff;
+    color: #fff !important;
     padding: 16px 30px;
     margin: -20px -25px 10px;
     border-radius: 3px 3px 0 0;
@@ -191,6 +191,7 @@ body.loggedin {
 .table-title h2 {
     margin: 5px 0 0;
     font-size: 24px;
+    color: #fff !important;
 }
 .table-title .btn-group {
     float: right;
@@ -607,4 +608,8 @@ table.table .avatar {
         flex: 0 0 100%;
         max-width: 100%;
     }
+}
+
+.fixtext th, .fixtext td {
+    width: auto !important;
 }

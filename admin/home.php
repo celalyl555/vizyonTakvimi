@@ -291,17 +291,16 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <H5>OYUNCULAR</H5>
+                                            <h2>OYUNCULAR</h2>
                                         </div>
                                         <div class="col-sm-6">
                                             <a href="#addEmployeeModal"
                                                 class="btn btn-success d-flex align-items-center" data-toggle="modal">
                                                 <i class="material-icons mr-2">&#xE147;</i> <span>Oyuncu Ekle</span>
                                             </a>
-
                                         </div>
                                         <div class="row mt-3">
-                                            <div class="col-sm-12">
+                                            <div class="col-12 ml-4 rowSelect">
                                                 <label for="rowsPerPageSelect0">Satır Sayısı: </label>
                                                 <select id="rowsPerPageSelect0" class="rows-per-page-select">
                                                     <option value="5">5</option>
@@ -322,6 +321,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                 <th class="align-middle text-center">Doğum Tarihi</th>
                                                 <th class="align-middle text-center">Ölüm Tarihi</th>
                                                 <th class="align-middle text-center">Roller</th>
+                                                <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -329,8 +329,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                             <tr>
                                                 <td class="align-middle text-center"><img
                                                         src="../foto/<?php echo htmlspecialchars($row['resimyol']); ?>"
-                                                        class="rounded img-thumbnail" alt="Fotoğraf"
-                                                        style="width: 50px; height: 50px;"></td>
+                                                        class="rounded img-thumbnail tumbimg" alt="Fotoğraf"></td>
                                                 <td class="align-middle text-center">
                                                     <?php echo htmlspecialchars($row['adsoyad']); ?>
                                                 </td>
@@ -412,11 +411,11 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
 
                                             <div class="form-group">
-                                                <label for="sinemadagitim">Sinema Dağıtım</label>
+                                                <label for="sinemadagitim">Roller</label>
                                                 <div class="selected-tags">
                                                     <input type="text" id="sinemadagitim" name="sinemadagitim"
                                                         class="tagInput form-control"
-                                                        placeholder="Seçilen dağıtım şirketleri" readonly
+                                                        placeholder="Seçilen Roller" readonly
                                                         onclick="toggleDropdown(this)">
                                                 </div>
                                                 <div class="multiselect">
@@ -503,7 +502,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                         <div class="table-title">
                                             <div class="row">
                                                 <div class="col-sm-6">
-                                                    <h5>KATEGORİLER</h5>
+                                                    <h2>KATEGORİLER</h2>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <a href="#addEmployeeModalKategori"
@@ -560,8 +559,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                             </tbody>
                                         </table>
                                         <div class="clearfix">
-                        <div class="hint-text">Showing <b id="currentPageEntries1">1</b> out of <b
-                                id="totalEntries1"></b> entries</div>
+                        <div class="hint-text"><b id="currentPageEntries1">1</b> arası <b
+                                id="totalEntries1"></b> kayıt gösteriliyor</div>
                         <ul class="pagination" id="pagination1">
                           
                         </ul>
@@ -639,7 +638,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <H5>FİLMLER</H5>
+                                            <h2>FİLMLER</h2>
                                         </div>
                                         <div class="col-sm-6">
                                             <a href="#addEmployeeModalfilmm"
@@ -649,7 +648,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                                         </div>
                                         <div class="row mt-3">
-                                            <div class="col-sm-12">
+                                            <div class="col-12 ml-4 rowSelect">
                                                 <label for="rowsPerPageSelect1">Satır Sayısı: </label>
                                                 <select id="rowsPerPageSelect1" class="rows-per-page-select">
                                                     <option value="5">5</option>
@@ -711,8 +710,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     </table>
                                 </div>
                                 <div class="clearfix">
-                                    <div class="hint-text">Showing <b id="currentPageEntries1">1</b> out of <b
-                                            id="totalEntries1"></b> entries</div>
+                                    <div class="hint-text"><b id="currentPageEntries1">1</b> arası <b
+                                            id="totalEntries1"></b> kayıt gösteriliyor</div>
                                     <ul class="pagination" id="pagination1">
                                         <!-- Dinamik sayfalama burada olacak -->
                                     </ul>
@@ -1108,7 +1107,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <div class="table-title">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <h5>FİLM TÜRLERİ</h5>
+                                                <h2>FİLM TÜRLERİ</h2>
                                             </div>
                                             <div class="col-sm-6">
                                                 <a href="#addEmployeeModalfilmturu"
@@ -1120,7 +1119,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                                             </div>
                                             <div class="row mt-3">
-                                                <div class="col-sm-12">
+                                                <div class="col-12 ml-4 rowSelect">
                                                     <label for="rowsPerPageSelect2">Satır Sayısı: </label>
                                                     <select id="rowsPerPageSelect2" class="rows-per-page-select">
                                                         <option value="5">5</option>
@@ -1164,8 +1163,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                         </table>
                                     </div>
                                     <div class="clearfix">
-                                        <div class="hint-text">Showing <b id="currentPageEntries2">1</b> out of <b
-                                                id="totalEntries2"></b> entries</div>
+                                        <div class="hint-text"><b id="currentPageEntries2">1</b> arası <b
+                                                id="totalEntries2"></b> kayıt gösteriliyor</div>
                                         <ul class="pagination" id="pagination2">
                                             <!-- Dinamik sayfalama burada olacak -->
                                         </ul>
@@ -1231,7 +1230,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <div class="table-title">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <h5>STÜDYO</h5>
+                                                <h2>STÜDYO</h2>
                                             </div>
                                             <div class="col-sm-6">
                                                 <a href="#addEmployeeModalstudyo"
@@ -1243,7 +1242,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                                             </div>
                                             <div class="row mt-3">
-                                                <div class="col-sm-12">
+                                                <div class="col-12 ml-4 rowSelect">
                                                     <label for="rowsPerPageSelect3">Satır Sayısı: </label>
                                                     <select id="rowsPerPageSelect3" class="rows-per-page-select">
                                                         <option value="5">5</option>
@@ -1287,8 +1286,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                         </table>
                                     </div>
                                     <div class="clearfix">
-                                        <div class="hint-text">Showing <b id="currentPageEntries3">1</b> out of <b
-                                                id="totalEntries3"></b> entries</div>
+                                        <div class="hint-text"><b id="currentPageEntries3">1</b> arası <b
+                                                id="totalEntries3"></b> kayıt gösteriliyor</div>
                                         <ul class="pagination" id="pagination3">
                                             <!-- Dinamik sayfalama burada olacak -->
                                         </ul>
@@ -1355,7 +1354,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     <div class="table-title">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <h5>SİNEMA DAĞITIM</h5>
+                                                <h2>SİNEMA DAĞITIM</h2>
                                             </div>
                                             <div class="col-sm-6">
                                                 <a href="#addEmployeeModaldagitim"
@@ -1367,7 +1366,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                                             </div>
                                             <div class="row mt-3">
-                                                <div class="col-sm-12">
+                                                <div class="col-12 ml-4 rowSelect">
                                                     <label for="rowsPerPageSelect4">Satır Sayısı: </label>
                                                     <select id="rowsPerPageSelect4" class="rows-per-page-select">
                                                         <option value="5">5</option>
@@ -1413,8 +1412,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                         </table>
                                     </div>
                                     <div class="clearfix">
-                                        <div class="hint-text">Showing <b id="currentPageEntries4">1</b> out of <b
-                                                id="totalEntries4"></b> entries</div>
+                                        <div class="hint-text"><b id="currentPageEntries4">1</b> arası <b
+                                                id="totalEntries4"></b> kayıt gösteriliyor</div>
                                         <ul class="pagination" id="pagination4">
                                             <!-- Dinamik sayfalama burada olacak -->
                                         </ul>
@@ -1491,7 +1490,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <h5>HABERLER</h5>
+                                            <h2>HABERLER</h2>
                                         </div>
                                         <div class="col-sm-6">
                                             <a href="#" class="btn btn-success d-flex align-items-center"
@@ -1501,7 +1500,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                         </div>
                                     </div>
                                     <div class="row mt-3">
-                                        <div class="col-sm-12">
+                                        <div class="col-12 ml-1 rowSelect">
                                             <label for="rowsPerPageSelect5">Satır Sayısı: </label>
                                             <select id="rowsPerPageSelect5" class="rows-per-page-select">
                                                 <option value="5">5</option>
@@ -1529,8 +1528,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                             <tr>
                                                 <td class="align-middle text-center">
                                                     <img src="../haberfoto/<?php echo htmlspecialchars($row['haberfoto']); ?>"
-                                                        class="rounded img-thumbnail" alt="Fotoğraf"
-                                                        style="width: 50px; height: 50px;">
+                                                        class="rounded img-thumbnail tumbimg" alt="Fotoğraf">
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <?php echo htmlspecialchars($row['baslik']); ?>
@@ -1571,8 +1569,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     </table>
                                 </div>
                                 <div class="clearfix">
-                                    <div class="hint-text">Showing <b id="currentPageEntries5">1</b> out of <b
-                                            id="totalEntries5"></b> entries</div>
+                                    <div class="hint-text"><b id="currentPageEntries5">1</b> arası <b
+                                            id="totalEntries5"></b> kayıt gösteriliyor</div>
                                     <ul class="pagination" id="pagination5">
                                         <!-- Dinamik sayfalama burada olacak -->
                                     </ul>
@@ -1724,7 +1722,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                         </div>
                         <!-- Seçilen satır sayısını belirleyen select -->
                         <div class="row mt-3">
-                            <div class="col-sm-12">
+                            <div class="col-12 ml-1 rowSelect">
                                 <label for="rowsPerPageSelect6">Satır Sayısı: </label>
                                 <select id="rowsPerPageSelect6" class="rows-per-page-select">
                                     <option value="5">5</option>
@@ -1736,7 +1734,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                         </div>
                     </div>
                     <div class="table-over">
-                        <table class="table table-striped table-hover paginated-table" id="boxOfficeTable1">
+                        <table class="table table-striped table-hover paginated-table fixtext" id="boxOfficeTable1">
                             <thead>
                                 <tr>
                                     <th>Tarih</th>
@@ -1771,8 +1769,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                         </table>
                     </div>
                     <div class="clearfix">
-                        <div class="hint-text">Showing <b id="currentPageEntries6">1</b> out of <b
-                                id="totalEntries6"></b> entries</div>
+                        <div class="hint-text"><b id="currentPageEntries6">1</b> arası <b
+                                id="totalEntries6"></b> kayıt gösteriliyor</div>
                         <ul class="pagination" id="pagination6">
                             <!-- Dinamik sayfalama burada olacak -->
                         </ul>
@@ -1795,7 +1793,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 </a>
                             </div>
 
-                            <div class="col-sm-12">
+                            <div class="col-12 ml-1 rowSelect">
                                 <label for="rowsPerPageSelect7">Satır Sayısı: </label>
                                 <select id="rowsPerPageSelect7" class="rows-per-page-select">
                                     <option value="5">5</option>
@@ -1850,8 +1848,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                     </div>
                     <div class="clearfix">
-                        <div class="hint-text">Showing <b id="currentPageEntries7">1</b> out of <b
-                                id="totalEntries7"></b> entries</div>
+                        <div class="hint-text"><b id="currentPageEntries7">1</b> arası <b
+                                id="totalEntries7"></b> kayıt gösteriliyor</div>
                         <ul class="pagination" id="pagination7">
                             <!-- Dinamik sayfalama burada olacak -->
                         </ul>
@@ -2374,7 +2372,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <H5>DİZİLER</H5>
+                                            <H2>DİZİLER</H2>
                                         </div>
                                         <div class="col-sm-6">
                                             <a href="#addEmployeeModaldizi"
@@ -2384,7 +2382,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                                         </div>
                                         <div class="row mt-3">
-                                            <div class="col-sm-12">
+                                            <div class="col-12 ml-4 rowSelect">
                                                 <label for="rowsPerPageSelect8">Satır Sayısı: </label>
                                                 <select id="rowsPerPageSelect8" class="rows-per-page-select">
                                                     <option value="5">5</option>
@@ -2446,8 +2444,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     </table>
                                 </div>
                                 <div class="clearfix">
-                                    <div class="hint-text">Showing <b id="currentPageEntries8">1</b> out of <b
-                                            id="totalEntries8"></b> entries</div>
+                                    <div class="hint-text"><b id="currentPageEntries8">1</b> arası <b
+                                            id="totalEntries8"></b> kayıt gösteriliyor</div>
                                     <ul class="pagination" id="pagination8">
                                         <!-- Dinamik sayfalama burada olacak -->
                                     </ul>
@@ -2835,12 +2833,12 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                     <div class="col-12 bottom-section">
                         <div class="row wrap-1440">
-                            <div class="col-md-4 left-column p-0">
+                            <div class="col-md-12 left-column p-0">
                                 <div class="table-wrapper">
                                     <div class="table-title">
                                         <div class="row">
                                             <div class="col-sm-6">
-                                                <h5>DİZİ TÜRLERİ</h5>
+                                                <h2>DİZİ TÜRLERİ</h2>
                                             </div>
                                             <div class="col-sm-6">
                                                 <a href="#addEmployeeModalturu1"
@@ -2852,7 +2850,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                                             </div>
                                             <div class="row mt-3">
-                                                <div class="col-sm-12">
+                                                <div class="col-12 ml-4 rowSelect">
                                                     <label for="rowsPerPageSelect9">Satır Sayısı: </label>
                                                     <select id="rowsPerPageSelect9" class="rows-per-page-select">
                                                         <option value="5">5</option>
@@ -2896,8 +2894,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                         </table>
                                     </div>
                                     <div class="clearfix">
-                                        <div class="hint-text">Showing <b id="currentPageEntries9">1</b> out of <b
-                                                id="totalEntries9"></b> entries</div>
+                                        <div class="hint-text"><b id="currentPageEntries9">1</b> arası <b
+                                                id="totalEntries9"></b> kayıt gösteriliyor</div>
                                         <ul class="pagination" id="pagination9">
                                             <!-- Dinamik sayfalama burada olacak -->
                                         </ul>
@@ -2977,6 +2975,10 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
             <div id="content9" class="content" style="display: none;">
                 <form id="dizidetay" method="post" enctype="multipart/form-data">
                     <input type="hidden" value="<?php echo $filmler2['id'] ?>" name="film_id">
+
+                    <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
+                        <h2>Dizi Detayları</h2>
+                    </div>
 
                     <div class="row filmDetayAyar bg-white border bt-0 p-3 m-0">
                         <div class="col-6">
