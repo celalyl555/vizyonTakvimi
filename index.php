@@ -79,8 +79,7 @@ include('generate_vapid.php');
 ?>
 <!-- sql query final -->
 
-<h1>Push Bildirimlerine İzin Verin</h1>
-<button id="subscribe">Bildirimleri Aktif Et</button>
+
     <main>
 
         <div class="container">
@@ -210,78 +209,11 @@ include('generate_vapid.php');
     <!-- ============================================================================== -->
     
     <!-- vizyon Area End -->
-    <button id="notifyButton">Bildirim Gönder</button>
-
-<script>
-    // Kullanıcının bildirim iznini istemek için
-    document.addEventListener('DOMContentLoaded', () => {
-        if (Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
-    });
-
-    document.getElementById('notifyButton').addEventListener('click', () => {
-        // Ajax isteği ile push.php'yi çağır
-        fetch('push.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    console.log('Bildirim gönderildi.');
-                } else {
-                    console.error('Bildirim gönderilemedi:', data.message);
-                }
-            })
-            .catch(error => console.error('Hata:', error));
-    });
-</script>
-
-    <script>
-   if ('serviceWorker' in navigator && 'PushManager' in window) {
-    alert("bura");
-    navigator.serviceWorker.register('/sw.js')
-    .then(function(swReg) {
-        console.log('Service Worker is registered', swReg);
-
-        // İzin durumu kontrolü
-        return Notification.requestPermission().then(function(permission) {
-            if (permission === 'granted') {
-                console.log('Notification permission granted.');
-
-                // Abonelik oluştur
-                return swReg.pushManager.subscribe({
-                    userVisibleOnly: true,
-                    applicationServerKey: urlB64ToUint8Array(publicKey) // VAPID public key
-                });
-            } else {
-                console.log('Unable to get permission to notify.');
-            }
-        });
-    })
-    .then(function(subscription) {
-        // Aboneliği sunucuya gönder
-        fetch('/subscribe', {
-            method: 'POST',
-            body: JSON.stringify(subscription),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(function(response) {
-            if (response.ok) {
-                console.log('Subscription saved in the database.');
-            } else {
-                console.log('Failed to save subscription in the database.');
-            }
-        });
-    })
-    .catch(function(error) {
-        console.error('Service Worker registration failed:', error);
-    });
-}
+   
 
 
-    
 
-</script>
+  
     <section>
         <div class="vizyon">
 
