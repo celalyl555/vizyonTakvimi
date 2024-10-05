@@ -90,7 +90,7 @@ foreach ($filmler45 as $films) {
 if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
     // film_id veya diziid değerini al
     $param = isset($_GET['filmid']) ? $_GET['filmid'] : (isset($_GET['diziid']) ? $_GET['diziid'] : null);
-    echo $param;
+    
     try {
         // SQL sorgusu
         $sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.film_konu, f.kapak_resmi, 
@@ -2993,8 +2993,8 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
                                                   $id = htmlspecialchars($ulke['id']);
                                                   $country_name = htmlspecialchars($ulke['country_name']);
                                                   $checked = in_array($country_name, $ulkeler) ? 'checked' : ''; // Seçili ise 'checked' ekle
-                                                  echo "<label for='ulke1{$id}'>
-                                                          <input type='checkbox' id='ulke1{$id}' name='ulkeListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />
+                                                  echo "<label for='ulkee1{$id}'>
+                                                          <input type='checkbox' id='ulkee1{$id}' name='ulkeListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />
                                                           {$country_name}
                                                         </label>";
                                               }
@@ -3020,8 +3020,8 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
                                                   $id = htmlspecialchars($filmturuu['idfilm']);
                                                   $country_name = htmlspecialchars($filmturuu['filmturu']);
                                                   $checked = in_array($country_name, $filmturleri) ? 'checked' : ''; // Seçili ise 'checked' ekle
-                                                  echo "<label for='filmturu1{$id}'>
-                                                          <input type='checkbox' id='filmturu1{$id}' name='filmturuListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />
+                                                  echo "<label for='filmturuu1{$id}'>
+                                                          <input type='checkbox' id='filmturuu1{$id}' name='filmturuListesiedit[]' value='{$id}' {$checked} onclick='updateTags(this)' />
                                                           {$country_name}
                                                         </label>";
                                               }
@@ -3059,7 +3059,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
                     $checked = in_array($oyuncuad, $yonetmenler) ? 'checked' : '';
                     
                     // Checkbox'ı oluştur
-                    echo "<label for='yonetmen1{$id}'><input type='checkbox' id='yonetmen1{$id}' name='yonetmenListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                    echo "<label for='yonetmenn1{$id}'><input type='checkbox' id='yonetmenn1{$id}' name='yonetmenListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
                 }
             }
             ?>
@@ -3095,7 +3095,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
                     $checked = in_array($oyuncuad, $senaryolar) ? 'checked' : '';
                     
                     // Checkbox'ı oluştur
-                    echo "<label for='senaryo1{$id}'><input type='checkbox' id='senaryo1{$id}' name='senaryoListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                    echo "<label for='senaryoo1{$id}'><input type='checkbox' id='senaryoo1{$id}' name='senaryoListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
                 }
             }
             ?>
@@ -3166,7 +3166,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
                     $checked = in_array($oyuncuad, $Kurgu) ? 'checked' : '';
                     
                     // Checkbox'ı oluştur
-                    echo "<label for='kurgu1{$id}'><input type='checkbox' id='kurgu1{$id}' name='kurguListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                    echo "<label for='kurguu1{$id}'><input type='checkbox' id='kurguu1{$id}' name='kurguListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
                 }
             }
             ?>
@@ -3202,7 +3202,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
                     $checked = in_array($oyuncuad, $Müzik) ? 'checked' : '';
                     
                     // Checkbox'ı oluştur
-                    echo "<label for='muzik1{$id}'><input type='checkbox' id='muzik1{$id}' name='muzikListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                    echo "<label for='muzikk1{$id}'><input type='checkbox' id='muzikk1{$id}' name='muzikListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
                 }
             }
             ?>
@@ -3237,7 +3237,7 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
                                                 $checked = in_array($oyuncuad, $Oyuncu) ? 'checked' : '';
                                                 
                                                 // Checkbox'ı oluştur
-                                                echo "<label for='oyuncu1{$id}'><input type='checkbox' id='oyuncu1{$id}' name='oyuncuListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
+                                                echo "<label for='oyuncuu1{$id}'><input type='checkbox' id='oyuncuu1{$id}' name='oyuncuListesiedit[]' value='{$id}' onclick='updateTags(this)' {$checked}/>{$oyuncuad}</label>";
                                             }
                                         }
                                         ?>

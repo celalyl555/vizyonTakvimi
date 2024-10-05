@@ -491,6 +491,7 @@ $(document).ready(function() {
 
         // Form verilerini toplama
         var formData = new FormData(this);
+        
         // Multi-select alanlarındaki seçilen değerleri toplama
         $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
             formData.append($(this).attr('id'), $(this).val());
@@ -505,7 +506,7 @@ $(document).ready(function() {
           success: function(response){
             alert(response);
           
-            localStorage.setItem("uri", 'content3');
+            localStorage.setItem("uri", 'content9');
             location.reload();
             
           },

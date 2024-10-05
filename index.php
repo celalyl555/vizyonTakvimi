@@ -8,6 +8,8 @@ include('admin/conn.php');
 
 <!-- SQL Query -->
  <?php
+ 
+ #vizyonda yeni sql query başlangıç
     $sqlEnEskiFilm = "SELECT * FROM filmler 
     WHERE vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK
     ORDER BY vizyon_tarihi ASC
@@ -21,17 +23,37 @@ include('admin/conn.php');
     LIMIT 3"; 
     $stmtFilmlerVizyon = $con->query($sqlFilmlerVizyon);
     $filmlerVizyon = $stmtFilmlerVizyon->fetchAll(PDO::FETCH_ASSOC);
-    
+#vizyonda yeni sql query bitiş
 
+#*******************************************************************************
+
+#yakında sql query başlangıç
+    $sqlEnYeniFilm = "SELECT * FROM filmler 
+    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+    ORDER BY vizyon_tarihi DESC
+    LIMIT 1";
+    $stmtEnYeniFilm = $con->query($sqlEnYeniFilm);
+    $enYeniFilm = $stmtEnYeniFilm->fetchAll(PDO::FETCH_ASSOC);
+    
+    print_r($enYeniFilm);
     $sqlFilmlerYakin = "SELECT * FROM filmler 
-    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK";
+    WHERE vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+    ORDER BY vizyon_tarihi DESC
+    LIMIT 3";
     $stmtFilmlerYakin = $con->query($sqlFilmlerYakin);
     $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC);
 
+#yakında sql query bitiş
+
+#********************************************************************************
+#haberler sql query başlangıç
     $sqlHaberler = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
     $stmtHaberler = $con->query($sqlHaberler);
     $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
+#haberler sql query bitiş
 
+#*********************************************************************************
+#film verileri max kişi sql query başlangıç
     $sqlFilmVerileri = "SELECT f.*, fi.film_adi
     FROM filmveriler f
     INNER JOIN (
@@ -47,47 +69,52 @@ include('admin/conn.php');
 
     $stmtFilmVerileri = $con->query($sqlFilmVerileri);
     $filmVerileri = $stmtFilmVerileri->fetchAll(PDO::FETCH_ASSOC);
-    ?>
+#film verileri max kişi sql query başlangıç
+#*************************************************************************************
+
+#film verileri seyirci ve hasılat işlemleri sql query başlangıç
+
+#film verileri seyirci ve hasılat işlemleri sql query bitiş
+?>
 <!-- sql query final -->
     <main>
 
         <div class="container">
-            <!-- haberler filmler ve dizilerden veriler  en güncel 4 tanesini sırala -->
             <!-- Sol resim alanı -->
             <div class="gallery">
+
                 <a href="#" class="image-container hero">
-                    <img src="assets/img/news/04.jpg" class="hero">
+                    <img src="haberfoto/<?php echo $haberler[0]['haberfoto']; ?>" class="hero">
                     <div class="overlay">
-                        <span class="category">CYF Tech</span>
-                        <p>CYF Tech ABD: Beterböcek'ten 110 milyon dolar</p>
+                        <span class="category"><?php echo $haberler[0]['baslik']; ?></span>
+                        <p><?php echo $haberler[0]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container hero2 img-radius">
-                    <img src="assets/img/mainImg/01.jpg" class="img-radius">
+                    <img src="haberfoto/<?php echo $haberler[1]['haberfoto']; ?>" class="img-radius">
                     <div class="overlay">
-                        <span class="category">Yerli Dizi</span>
-                        <p>Kızılcık Şerbeti dizisinin 3. sezon başlangıç tarihi açıklandı</p>
+                        <span class="category"><?php echo $haberler[1]['baslik']; ?></span>
+                        <p><?php echo $haberler[1]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container img-radius3">
-                    <img src="assets/img/mainImg/01.jpg" class="img-radius3">
+                    <img src="haberfoto/<?php echo $haberler[2]['haberfoto']; ?>" class="img-radius3">
                     <div class="overlay">
-                        <span class="category">Fragman</span>
-                        <p>Gelin Takımı filminden fragman yayınlandı</p>
+                        <span class="category"><?php echo $haberler[2]['baslik']; ?></span>
+                        <p><?php echo $haberler[2]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container img-radius2">
-                    <img src="assets/img/mainImg/01.jpg" class="img-radius2">
+                    <img src="haberfoto/<?php echo $haberler[3]['haberfoto']; ?>" class="img-radius2">
                     <div class="overlay">
-                        <span class="category">Vizyonda</span>
-                        <p>Vizyona bu hafta: 13 yeni film gösterimde!</p>
+                        <span class="category"><?php echo $haberler[3]['baslik']; ?></span>
+                        <p><?php echo $haberler[3]['icerik']; ?></p>
                     </div>
                 </a>
             </div>
-            <!-- burada bitiyor -->
     
             <!-- Sağ sekmeli alan -->
             <div class="tab-section">
@@ -101,12 +128,16 @@ include('admin/conn.php');
     
                 <div class="tab-content" id="seyirci">
                     <ul class="list">
-                        <!-- burada başlıyor 5 tane loopa sok en güncel veriler gelecek, hasılatiçin de aynı (film veriler tablosu)   -->
+                        <?php 
+                        $sayacSeyirci = 1;
+                        foreach ($filmVerileri as $film):
+                            if ($sayacSeyirci > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
+                        ?>
                         <li>
                             <a href="">
-                                <span>1</span>
+                                <span><?php echo $sayacSeyirci++?></span>
                                 <div class="infInside">
-                                    <p>Beterböcek Beterböcek</p>
+                                    <p><?php echo $film['film_adi']?></p>
                                     <div class="rowIns">
                                         <div>
                                             <p>Hafta Sonu</p>
@@ -119,123 +150,29 @@ include('admin/conn.php');
                                             <p>Toplam</p>
                                             <div class="rowIns2">
                                                 <i class="fa-regular fa-user"></i>
-                                                <p>32.457</p>
+                                                <p><?php echo $film['toplamkisi']?></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </li>
-                        
-                        <li>
-                            <a href="">
-                                <span>2</span>
-                                <div class="infInside">
-                                    <p>Deadpool & Wolverine</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>25.839</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>1.339.216</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>3</span>
-                                <div class="infInside">
-                                    <p>Ters Yüz 2</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>19.714</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>2.301.228</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>4</span>
-                                <div class="infInside">
-                                    <p>Çılgın Hırsız 4</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>16.082</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>976.868</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>5</span>
-                                <div class="infInside">
-                                    <p>Cambaz</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                        <?php endforeach; ?>
                     </ul>                    
                 </div>
     
                 <div class="tab-content" id="hasilat" style="display:none;">
                     <ul class="list">
-                    <li>
+                        <?php 
+                        $sayacHasilat = 1;
+                        foreach ($filmVerileri as $film):
+                            if ($sayacHasilat > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
+                        ?>
+                        <li>
                             <a href="">
-                                <span>1</span>
+                                <span> <?php echo $sayacHasilat++ ?></span>
                                 <div class="infInside">
-                                    <p>Beterböcek Beterböcek</p>
+                                    <p><?php echo $film['film_adi']?></p>
                                     <div class="rowIns">
                                         <div>
                                             <p>Hafta Sonu</p>
@@ -248,113 +185,14 @@ include('admin/conn.php');
                                             <p>Toplam</p>
                                             <div class="rowIns2">
                                                 <i class="fa-regular fa-user"></i>
-                                                <p>32.457</p>
+                                                <p><?php echo $film['toplamhasilat']?></p>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </a>
                         </li>
-                        
-                        <li>
-                            <a href="">
-                                <span>2</span>
-                                <div class="infInside">
-                                    <p>Deadpool & Wolverine</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>25.839</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>1.339.216</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>3</span>
-                                <div class="infInside">
-                                    <p>Ters Yüz 2</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>19.714</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>2.301.228</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>4</span>
-                                <div class="infInside">
-                                    <p>Çılgın Hırsız 4</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>16.082</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>976.868</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                    
-                        <li>
-                            <a href="">
-                                <span>5</span>
-                                <div class="infInside">
-                                    <p>Cambaz</p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>11.506</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
                 <a href="hafta/haftalar.html" class="tumu">Tümü <i class="fa-solid fa-caret-right"></i></a>
@@ -416,12 +254,12 @@ include('admin/conn.php');
                 <div class="vizyonSlier">
                     <div class="vizyonLeft">
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
-                        <?php if (!empty($filmlerYakin)): ?>
+                        <?php if (!empty($enYeniFilm)): ?>
                             <a href="#11" class="mainvizyonImg">
-                                <img src="assets/img/mainImg/01.jpg" alt="vizyon">
+                                <img src="kapakfoto/<?php echo $enYeniFilm[0]['kapak_resmi'];?>" alt="vizyon">
                                 <div class="overlay1">
-                                    <span class="namevizyon">Filmin Adı</span>
-                                    <p><?php echo $film['vizyon_tarihi']; ?></p>
+                                    <span class="namevizyon"><?php echo $enYeniFilm[0]['film_adi'];  ?></span>
+                                    <p><?php echo formatDate($enYeniFilm[0]['vizyon_tarihi']); ?></p>
                                 </div>
                             </a>
                             
@@ -436,7 +274,7 @@ include('admin/conn.php');
                             </div>
                             <div>
                                 <h3><?php echo $film['film_adi']; ?></h3>
-                                <p><?php echo $film['vizyon_tarihi']; ?></p>
+                                <p><?php echo formatDate($film['vizyon_tarihi']); ?></p>
                             </div>
                         </a>
                     <?php endforeach; ?>
@@ -508,8 +346,27 @@ include('admin/conn.php');
     <!-- News Area End -->
 
     <!-- ============================================================================== -->
-<!-- benim yazdığım script (fatih kayacı) -->
-<?php function formatDateTime($dateTimeString) {
+<!-- sonradan eklenen fonksiyonlar (fatih kayacı) -->
+ 
+<?php 
+function formatDate($dateString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    // Tarih parçalarını ayır
+    $dateParts = explode("-", $dateString);
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    // Formatlanmış tarihi döndür
+    return $day . ' ' . $months[$month] . ' ' . $year;
+}
+
+function formatDateTime($dateTimeString) {
     // Ay isimlerini tanımla
     $months = [
         "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
