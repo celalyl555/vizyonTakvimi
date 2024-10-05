@@ -1519,6 +1519,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                 <th class="align-middle text-center">Fotoğraf</th>
                                                 <th class="align-middle text-center">Haber Başlığı</th>
                                                 <th class="align-middle text-center">Yayın Tarihi</th>
+                                                <th class="align-middle text-center">Statü</th>
                                                 <th class="align-middle text-center"></th>
                                                 <th class="align-middle text-center"></th>
                                             </tr>
@@ -1537,6 +1538,19 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                 <td class="align-middle text-center">
                                                     <?php echo formatDateTime($row['tarih']); ?>
                                                 </td>
+                                                <td class="align-middle text-center">
+                                                    <?php 
+                                                        // statu değerine göre uygun metni belirle
+                                                        if ($row['statu'] == 1) {
+                                                            echo "Film";
+                                                        } elseif ($row['statu'] == 2) {
+                                                            echo "Dizi";
+                                                        } else {
+                                                            echo "Bilinmeyen"; // Diğer durumlar için varsayılan bir mesaj
+                                                        }
+                                                    ?>
+                                                    </td>
+
                                                 <td class="align-middle text-center">
                                                     <div class="d-row-ayar">
                                                         <a href="#deleteEmployeeModalhaber" class="btn-delete m-0"
@@ -1631,6 +1645,15 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                 <div class="d-flex justify-content-between align-items-center custombg1 mt-5 mb-0">
                     <h2>Haber Ekle</h2>
+                    <div class="containerswitch">
+                        <span class="labelswitch">Filmler</span>
+                        <label class="switch" for="checkbox12">
+                            <input type="checkbox" id="checkbox12" />
+                            <div class="slider round"></div>
+                        </label>
+                        <span class="labelswitch">Diziler</span>
+                    </div>
+
                 </div>
 
                 <form id="formHaberler" class="bg-white border bt-0 mt-0 p-3" method="post"
