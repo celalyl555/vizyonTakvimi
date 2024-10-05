@@ -46,10 +46,13 @@ include('admin/conn.php');
 #yakında sql query bitiş
 
 #********************************************************************************
+#haberler sql query başlangıç
     $sqlHaberler = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
     $stmtHaberler = $con->query($sqlHaberler);
     $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
+#haberler sql query bitiş
 
+#*********************************************************************************
     $sqlFilmVerileri = "SELECT f.*, fi.film_adi
     FROM filmveriler f
     INNER JOIN (
@@ -73,35 +76,36 @@ include('admin/conn.php');
             <!-- haberler filmler ve dizilerden veriler  en güncel 4 tanesini sırala -->
             <!-- Sol resim alanı -->
             <div class="gallery">
+
                 <a href="#" class="image-container hero">
-                    <img src="assets/img/news/04.jpg" class="hero">
+                    <img src="haberfoto/<?php echo $haberler[0]['haberfoto']; ?>" class="hero">
                     <div class="overlay">
-                        <span class="category">CYF Tech</span>
-                        <p>CYF Tech ABD: Beterböcek'ten 110 milyon dolar</p>
+                        <span class="category"><?php echo $haberler[0]['baslik']; ?></span>
+                        <p><?php echo $haberler[0]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container hero2 img-radius">
-                    <img src="assets/img/mainImg/01.jpg" class="img-radius">
+                    <img src="haberfoto/<?php echo $haberler[1]['haberfoto']; ?>" class="img-radius">
                     <div class="overlay">
-                        <span class="category">Yerli Dizi</span>
-                        <p>Kızılcık Şerbeti dizisinin 3. sezon başlangıç tarihi açıklandı</p>
+                        <span class="category"><?php echo $haberler[1]['baslik']; ?></span>
+                        <p><?php echo $haberler[1]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container img-radius3">
-                    <img src="assets/img/mainImg/01.jpg" class="img-radius3">
+                    <img src="haberfoto/<?php echo $haberler[2]['haberfoto']; ?>" class="img-radius3">
                     <div class="overlay">
-                        <span class="category">Fragman</span>
-                        <p>Gelin Takımı filminden fragman yayınlandı</p>
+                        <span class="category"><?php echo $haberler[2]['baslik']; ?></span>
+                        <p><?php echo $haberler[2]['icerik']; ?></p>
                     </div>
                 </a>
         
                 <a href="#" class="image-container img-radius2">
-                    <img src="assets/img/mainImg/01.jpg" class="img-radius2">
+                    <img src="haberfoto/<?php echo $haberler[3]['haberfoto']; ?>" class="img-radius2">
                     <div class="overlay">
-                        <span class="category">Vizyonda</span>
-                        <p>Vizyona bu hafta: 13 yeni film gösterimde!</p>
+                        <span class="category"><?php echo $haberler[3]['baslik']; ?></span>
+                        <p><?php echo $haberler[3]['icerik']; ?></p>
                     </div>
                 </a>
             </div>
