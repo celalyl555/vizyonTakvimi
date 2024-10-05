@@ -210,3 +210,16 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.rows-per-page-select {
+    color: #333;
+    border-radius: 8px;
+}
+
+.rowSelect {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+}

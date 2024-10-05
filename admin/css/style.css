@@ -1551,7 +1551,17 @@ pre {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch; }
     .table-responsive-sm > .table-bordered {
-      border: 0; } }
+      border: 0; } 
+      .table-title .btn {
+        float: left;
+        width: 100%;
+        margin-left: 0px;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+    }
 
 @media (max-width: 767.98px) {
   .table-responsive-md {
@@ -4708,7 +4718,7 @@ a.close.disabled {
 .modal-dialog {
   position: relative;
   width: auto;
-  margin: 0.5rem;
+  margin: 1.75rem auto !important;
   pointer-events: none; }
   .modal.fade .modal-dialog {
     -webkit-transition: -webkit-transform 0.3s ease-out;

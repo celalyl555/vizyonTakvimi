@@ -19,7 +19,7 @@
 					<i class="fas fa-lock"></i>
 				</label>
 				<input type="password" name="password" placeholder="Parola" id="password" required>
-				<input type="submit" value="Login">
+				<input type="submit" value="Giriş">
 			</form>
 		</div>
 	</div>
