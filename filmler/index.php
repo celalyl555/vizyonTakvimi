@@ -1,5 +1,75 @@
-<?php include('../header.php');?>
-    <!-- ============================================================================== -->
+<?php 
+include('../admin/conn.php');
+include('../header.php');?>
+
+<!-- Sql query start -->
+<?php
+
+ #vizyonda yeni sql query başlangıç
+ $sqlEnEskiFilm = "SELECT * FROM filmler 
+ WHERE statu = 1 AND vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK
+ ORDER BY vizyon_tarihi ASC
+ LIMIT 1";
+ $stmtEnEskiFilm = $con->query($sqlEnEskiFilm);
+ $enEskiFilm = $stmtEnEskiFilm->fetch(PDO::FETCH_ASSOC);
+
+ $sqlFilmlerVizyon = "SELECT * FROM filmler 
+ WHERE statu = 1 AND vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK 
+ ORDER BY vizyon_tarihi ASC 
+ LIMIT 3"; 
+ $stmtFilmlerVizyon = $con->query($sqlFilmlerVizyon);
+ $filmlerVizyon = $stmtFilmlerVizyon->fetchAll(PDO::FETCH_ASSOC);
+#vizyonda yeni sql query bitiş
+
+#*******************************************************************************
+
+#yakında sql query başlangıç
+ $sqlEnYeniFilm = "SELECT * FROM filmler 
+ WHERE statu = 1 AND vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK 
+ ORDER BY vizyon_tarihi DESC
+ LIMIT 1";
+ $stmtEnYeniFilm = $con->query($sqlEnYeniFilm);
+ $enYeniFilm = $stmtEnYeniFilm->fetchAll(PDO::FETCH_ASSOC);
+ 
+ $sqlFilmlerYakin = "SELECT * FROM filmler 
+ WHERE statu = 1 AND vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+ ORDER BY vizyon_tarihi DESC
+ LIMIT 3";
+ $stmtFilmlerYakin = $con->query($sqlFilmlerYakin);
+ $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC);
+
+#yakında sql query bitiş
+
+#********************************************************************************
+#haberler sql query başlangıç
+ $sqlHaberler = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
+ $stmtHaberler = $con->query($sqlHaberler);
+ $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
+#haberler sql query bitiş
+
+#*********************************************************************************
+#film verileri max kişi sql query başlangıç
+ $sqlFilmVerileri = "SELECT f.*, fi.film_adi
+ FROM filmveriler f
+ INNER JOIN (
+     SELECT film_id, MAX(toplamkisi) AS max_kisi
+     FROM filmveriler
+     GROUP BY film_id
+ ) AS max_filmler ON f.film_id = max_filmler.film_id
+ AND f.toplamkisi = max_filmler.max_kisi
+ INNER JOIN filmler fi ON f.film_id = fi.id
+ GROUP BY f.film_id
+ ORDER BY f.toplamkisi DESC
+ LIMIT 20";
+
+ $stmtFilmVerileri = $con->query($sqlFilmVerileri);
+ $filmVerileri = $stmtFilmVerileri->fetchAll(PDO::FETCH_ASSOC);
+
+?>
+<!-- Sql query finish-->
+
+
+<!-- ============================================================================== -->
     
     <!-- Table Area Start -->
 
@@ -33,33 +103,25 @@
                 <div class="vizyonSlier">
                     <div class="vizyonLeft">
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
-                        <a href="#1" class="mainvizyonImg">
-                            <img src="assets/img/mainImg/01.jpg" alt="vizyon">
-                            <div class="overlay1">
-                                <span class="namevizyon">Filmin Adı</span>
-                            </div>
-                        </a>
+                        <?php if (!empty($enEskiFilm)): ?>
+                            <a href="#1" class="mainvizyonImg">
+                                <img src="../kapakfoto/<?php echo $enEskiFilm['kapak_resmi']; ?>" alt="vizyon">
+                                <div class="overlay1">
+                                    <span class="namevizyon"><?php echo $enEskiFilm['film_adi'];?></span>
+                                </div>
+                            </a>
+                        <?php endif; ?>
                         <button class="arrows right"><i class="fa-solid fa-caret-right"></i></button>
                     </div>
                     <div class="vizyonRight">
+                    <?php foreach ($filmlerVizyon as $film): ?>
                         <a href="giderayak" class="vizyonBox">
                             <div class="vizyonBoxImg">
-                                <img src="assets/img/news/01.jpg" alt="">
+                                <img src="../kapakfoto/<?php echo $film['kapak_resmi']; ?>" alt="">
                             </div>
-                            <h3>giderayak</h3>
+                            <h3><?php echo $film['film_adi']; ?></h3>
                         </a>
-                        <a href="Soysuzlar" class="vizyonBox">
-                            <div class="vizyonBoxImg">
-                                <img src="assets/img/news/02.jpg" alt="">
-                            </div>
-                            <h3>Soysuzlar Çetesi</h3>
-                        </a>
-                        <a href="#3" class="vizyonBox">
-                            <div class="vizyonBoxImg">
-                                <img src="assets/img/mainImg/01.jpg" alt="">
-                            </div>
-                            <h3>Filmin Adı 3</h3>
-                        </a>
+                    <?php endforeach; ?>
                     </div>
                 </div>
 

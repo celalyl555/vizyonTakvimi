@@ -18,12 +18,16 @@ include('generate_vapid.php');
     $stmtEnEskiFilm = $con->query($sqlEnEskiFilm);
     $enEskiFilm = $stmtEnEskiFilm->fetch(PDO::FETCH_ASSOC);
 
+    // Vizyondaki diğer filmleri çekiyoruz, en eski film hariç
     $sqlFilmlerVizyon = "SELECT * FROM filmler 
     WHERE statu = 1 AND vizyon_tarihi >= CURDATE() - INTERVAL 2 WEEK 
+    AND id != :enEskiFilmId
     ORDER BY vizyon_tarihi ASC 
     LIMIT 3"; 
-    $stmtFilmlerVizyon = $con->query($sqlFilmlerVizyon);
-    $filmlerVizyon = $stmtFilmlerVizyon->fetchAll(PDO::FETCH_ASSOC);
+    $stmtFilmlerVizyon = $con->prepare($sqlFilmlerVizyon); // query yerine prepare
+    $stmtFilmlerVizyon->bindParam(':enEskiFilmId', $enEskiFilm['id'], PDO::PARAM_INT); // en eski film id'sini bağlıyoruz
+    $stmtFilmlerVizyon->execute(); // prepared statement'ı çalıştırıyoruz
+    $filmlerVizyon = $stmtFilmlerVizyon->fetchAll(PDO::FETCH_ASSOC); // sonuçları alıyoruz
 #vizyonda yeni sql query bitiş
 
 #*******************************************************************************
@@ -34,14 +38,18 @@ include('generate_vapid.php');
     ORDER BY vizyon_tarihi DESC
     LIMIT 1";
     $stmtEnYeniFilm = $con->query($sqlEnYeniFilm);
-    $enYeniFilm = $stmtEnYeniFilm->fetchAll(PDO::FETCH_ASSOC);
-    
+    $enYeniFilm = $stmtEnYeniFilm->fetch(PDO::FETCH_ASSOC); // `fetchAll` yerine `fetch` kullanıyoruz çünkü tek bir kayıt alıyoruz
+
+    // Yakın vizyondaki diğer filmleri çekiyoruz, en yeni film hariç
     $sqlFilmlerYakin = "SELECT * FROM filmler 
     WHERE statu = 1 AND vizyon_tarihi <= CURDATE() + INTERVAL 2 WEEK
+    AND id != :enYeniFilmId
     ORDER BY vizyon_tarihi DESC
     LIMIT 3";
-    $stmtFilmlerYakin = $con->query($sqlFilmlerYakin);
-    $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC);
+    $stmtFilmlerYakin = $con->prepare($sqlFilmlerYakin); // query yerine prepare
+    $stmtFilmlerYakin->bindParam(':enYeniFilmId', $enYeniFilm['id'], PDO::PARAM_INT); // en yeni film id'sini bağlıyoruz
+    $stmtFilmlerYakin->execute(); // prepared statement'ı çalıştırıyoruz
+    $filmlerYakin = $stmtFilmlerYakin->fetchAll(PDO::FETCH_ASSOC); // sonuçları alıyoruz
 
 #yakında sql query bitiş
 
@@ -262,10 +270,10 @@ include('generate_vapid.php');
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
                         <?php if (!empty($enYeniFilm)): ?>
                             <a href="#11" class="mainvizyonImg">
-                                <img src="kapakfoto/<?php echo $enYeniFilm[0]['kapak_resmi'];?>" alt="vizyon">
+                                <img src="kapakfoto/<?php echo $enYeniFilm['kapak_resmi'];?>" alt="vizyon">
                                 <div class="overlay1">
-                                    <span class="namevizyon"><?php echo $enYeniFilm[0]['film_adi'];  ?></span>
-                                    <p><?php echo formatDate($enYeniFilm[0]['vizyon_tarihi']); ?></p>
+                                    <span class="namevizyon"><?php echo $enYeniFilm['film_adi'];  ?></span>
+                                    <p><?php echo formatDate($enYeniFilm['vizyon_tarihi']); ?></p>
                                 </div>
                             </a>
                             
