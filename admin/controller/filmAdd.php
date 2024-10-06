@@ -30,6 +30,10 @@ $kurguListesi = isset($_POST['kurguListesi']) && is_array($_POST['kurguListesi']
 $müzikListesi = isset($_POST['müzikListesi']) && is_array($_POST['müzikListesi']) ? $_POST['müzikListesi'] : null;
 $oyuncuListesi = isset($_POST['oyuncuListesi']) && is_array($_POST['oyuncuListesi']) ? $_POST['oyuncuListesi'] : null;
 
+$topHasilat = !empty($_POST['topHasilat']) ? $_POST['topHasilat'] : null;
+$topSeyirci = !empty($_POST['topSeyirci']) ? $_POST['topSeyirci'] : null;
+
+ $seourl=seoUrl($filmadi);
 
     $kategoriIdMap = [
         'yonetmen' => 34,
@@ -75,8 +79,8 @@ $oyuncuListesi = isset($_POST['oyuncuListesi']) && is_array($_POST['oyuncuListes
     }
 
     // Film bilgilerini veritabanına ekleme
-    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi,bitis_tarihi, kapak_resmi, film_konu,filmsure, statu) VALUES (?,?,?,?,?,?,?)");
-    $stmt->execute([$filmadi, $vizyonTarihi,$bitistar, $kapakFotoYollari[0], $filmkonu,$filmsure,$statu]);
+    $stmt = $con->prepare("INSERT INTO filmler (film_adi,vizyon_tarihi,bitis_tarihi, kapak_resmi, film_konu,filmsure, statu, seo_url,topHasilat,topKisi) VALUES (?,?,?,?,?,?,?,?,?,?)");
+    $stmt->execute([$filmadi, $vizyonTarihi,$bitistar, $kapakFotoYollari[0], $filmkonu,$filmsure,$statu,$seourl,$topHasilat,$topSeyirci ]);
     $film_id = $con->lastInsertId(); // Eklenen filmin ID'sini alıyoruz
 
     $f=0;
@@ -199,5 +203,31 @@ if (!empty($oyuncuListesi)) {
 }
 }
 
+
+
+
+
+
+
+function seoUrl($haberAdi) {
+    // Türkçe karakterleri İngilizce karakterlere çevir
+    $turkce = array('Ç', 'Ş', 'Ğ', 'Ü', 'İ', 'Ö', 'ç', 'ş', 'ğ', 'ü', 'ı', 'ö');
+    $ingilizce = array('C', 'S', 'G', 'U', 'I', 'O', 'c', 's', 'g', 'u', 'i', 'o');
+    $seoAdi = str_replace($turkce, $ingilizce, $haberAdi);
+
+    // Küçük harfe dönüştür
+    $seoAdi = strtolower($seoAdi);
+
+    // Harf ve sayılar dışındaki karakterleri kaldır
+    $seoAdi = preg_replace('/[^a-z0-9\s-]/', '', $seoAdi);
+
+    // Boşlukları ve birden fazla boşluğu tek tire ile değiştir
+    $seoAdi = preg_replace('/\s+/', '-', $seoAdi);
+
+    // Baş ve sondaki tireleri temizle
+    $seoAdi = trim($seoAdi, '-');
+
+    return $seoAdi;
+}
 ?>
 

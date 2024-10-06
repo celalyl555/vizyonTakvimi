@@ -27,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $kurguListesi = isset($_POST['kurguListesiedit']) && is_array($_POST['kurguListesiedit']) ? $_POST['kurguListesiedit'] : [];
         $müzikListesi = isset($_POST['muzikListesiedit']) && is_array($_POST['muzikListesiedit']) ? $_POST['muzikListesiedit'] : [];
         $oyuncuListesi = isset($_POST['oyuncuListesiedit']) && is_array($_POST['oyuncuListesiedit']) ? $_POST['oyuncuListesiedit'] : [];
+        $topHasilat = !empty($_POST['topHasilatedit']) ? $_POST['topHasilatedit'] : null;
+        $topSeyirci = !empty($_POST['topSeyirciedit']) ? $_POST['topSeyirciedit'] : null;
+        $seourl=seoUrl($filmadi);
+echo $topHasilat;
         $kategoriIdMap = [
             'yonetmen' => 34,
             'senaryo' => 38,
@@ -42,8 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $galeriDizin = "../../galeri/";
 
         // Mevcut film bilgilerini güncelle
-        $stmt = $con->prepare("UPDATE filmler SET film_adi = ?, vizyon_tarihi = ?,bitis_tarihi = ?, film_konu = ?, filmsure = ? WHERE id = ?");
-        $stmt->execute([$filmadi, $vizyonTarihi,$bitistar, $filmkonu, $filsure, $film_id]);
+        $stmt = $con->prepare("UPDATE filmler SET film_adi = ?, vizyon_tarihi = ?,bitis_tarihi = ?, film_konu = ?, filmsure = ?, seo_url = ?, topHasilat = ?, topKisi = ? WHERE id = ?");
+        $stmt->execute([$filmadi, $vizyonTarihi,$bitistar, $filmkonu, $filsure,  $seourl, $topHasilat, $topSeyirci, $film_id]);
 
         // Kapak fotoğrafını güncelleme
         if (!empty($_FILES['filmkapakedit']['name'][0])) {
@@ -232,5 +236,28 @@ if (!empty($müzikListesi)) {
     } catch (PDOException $e) {
         echo "Veritabanı hatası: " . $e->getMessage();
     }
+}
+
+
+
+function seoUrl($haberAdi) {
+    // Türkçe karakterleri İngilizce karakterlere çevir
+    $turkce = array('Ç', 'Ş', 'Ğ', 'Ü', 'İ', 'Ö', 'ç', 'ş', 'ğ', 'ü', 'ı', 'ö');
+    $ingilizce = array('C', 'S', 'G', 'U', 'I', 'O', 'c', 's', 'g', 'u', 'i', 'o');
+    $seoAdi = str_replace($turkce, $ingilizce, $haberAdi);
+
+    // Küçük harfe dönüştür
+    $seoAdi = strtolower($seoAdi);
+
+    // Harf ve sayılar dışındaki karakterleri kaldır
+    $seoAdi = preg_replace('/[^a-z0-9\s-]/', '', $seoAdi);
+
+    // Boşlukları ve birden fazla boşluğu tek tire ile değiştir
+    $seoAdi = preg_replace('/\s+/', '-', $seoAdi);
+
+    // Baş ve sondaki tireleri temizle
+    $seoAdi = trim($seoAdi, '-');
+
+    return $seoAdi;
 }
 ?>

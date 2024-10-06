@@ -2,6 +2,41 @@
 include('../admin/conn.php');
 include('../header.php');
 include('../SqlQueryFilm.php');
+
+try {
+    $sql = "
+    SELECT 
+        f.*, 
+        GROUP_CONCAT(DISTINCT ftur.filmturu SEPARATOR ', ') AS filmturleri,
+        GROUP_CONCAT(DISTINCT s.dagitimad SEPARATOR ', ') AS dagitimlar
+    FROM 
+        filmler f
+    LEFT JOIN 
+        film_filmturu ft ON f.id = ft.film_id
+    LEFT JOIN 
+        filmturleri ftur ON ft.filmturu_id = ftur.idfilm
+    LEFT JOIN 
+        film_dagitim d ON f.id = d.film_id
+    LEFT JOIN 
+        sinemadagitim s ON d.dagitim_id = s.iddagitim
+    GROUP BY 
+        f.id;
+    ";
+
+    // Sorguyu çalıştıralım
+    $stmt = $con->prepare($sql);
+    $stmt->execute();
+    
+    // Sonuçları alalım
+    $sonuclar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Sonuçları yazdıralım
+   
+    
+} catch (PDOException $e) {
+    echo "Bağlantı hatası: " . $e->getMessage();
+}
+
 ?>
 
     <!-- ============================================================================== -->
@@ -83,106 +118,28 @@ include('../SqlQueryFilm.php');
                                 </div>
 
                                 <div class="tum-zamanlar">
-
-                                    <div class="tumBox">
-                                        <div class="tumBoxLeft">
-                                            <a href="" class="tumBoxLeftImg">
-                                                <img src="assets/img/news/02.jpg" alt="">
-                                            </a>
-                                            <div class="col-gap">
-                                                <div>
-                                                    <a href="" class="movieTitle1">Recep İvedik 5</a>
-                                                </div>
-                                                <div>
-                                                    <p class="title">Fantastik, Komedi, Korku</p>
-                                                </div>
-                                                <div>
-                                                    <p><strong>Dağıtımcı</strong></p>
-                                                    <a href="" class="title">TME Films</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="tumBox">
-                                        <div class="tumBoxLeft">
-                                            <a href="" class="tumBoxLeftImg">
-                                                <img src="assets/img/news/02.jpg" alt="">
-                                            </a>
-                                            <div class="col-gap">
-                                                <div>
-                                                    <a href="" class="movieTitle1">Recep İvedik 5</a>
-                                                </div>
-                                                <div>
-                                                    <p class="title">Fantastik, Komedi, Korku</p>
-                                                </div>
-                                                <div>
-                                                    <p><strong>Dağıtımcı</strong></p>
-                                                    <a href="" class="title">TME Films</a>
+                                    <?php  foreach ($sonuclar as $satir) {?>
+                                        <div class="tumBox">
+                                            <div class="tumBoxLeft">
+                                                <a href="" class="tumBoxLeftImg">
+                                                    <img src="kapakfoto/<?php echo $satir['kapak_resmi']; ?>" alt="">
+                                                </a>
+                                                <div class="col-gap">
+                                                    <div>
+                                                        <a href="" class="movieTitle1"><?php echo $satir['film_adi']; ?></a>
+                                                    </div>
+                                                    <div>
+                                                        <p class="title"><?php echo $satir['filmturleri']; ?></p>
+                                                    </div>
+                                                    <div>
+                                                        <p><strong>Dağıtımcı</strong></p>
+                                                        <a href="" class="title"><?php echo $satir['dagitimlar']; ?></a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="tumBox">
-                                        <div class="tumBoxLeft">
-                                            <a href="" class="tumBoxLeftImg">
-                                                <img src="assets/img/news/02.jpg" alt="">
-                                            </a>
-                                            <div class="col-gap">
-                                                <div>
-                                                    <a href="" class="movieTitle1">Recep İvedik 5</a>
-                                                </div>
-                                                <div>
-                                                    <p class="title">Fantastik, Komedi, Korku</p>
-                                                </div>
-                                                <div>
-                                                    <p><strong>Dağıtımcı</strong></p>
-                                                    <a href="" class="title">TME Films</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="tumBox">
-                                        <div class="tumBoxLeft">
-                                            <a href="" class="tumBoxLeftImg">
-                                                <img src="assets/img/news/02.jpg" alt="">
-                                            </a>
-                                            <div class="col-gap">
-                                                <div>
-                                                    <a href="" class="movieTitle1">Recep İvedik 5</a>
-                                                </div>
-                                                <div>
-                                                    <p class="title">Fantastik, Komedi, Korku</p>
-                                                </div>
-                                                <div>
-                                                    <p><strong>Dağıtımcı</strong></p>
-                                                    <a href="" class="title">TME Films</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="tumBox">
-                                        <div class="tumBoxLeft">
-                                            <a href="" class="tumBoxLeftImg">
-                                                <img src="assets/img/news/02.jpg" alt="">
-                                            </a>
-                                            <div class="col-gap">
-                                                <div>
-                                                    <a href="" class="movieTitle1">Recep İvedik 5</a>
-                                                </div>
-                                                <div>
-                                                    <p class="title">Fantastik, Komedi, Korku</p>
-                                                </div>
-                                                <div>
-                                                    <p><strong>Dağıtımcı</strong></p>
-                                                    <a href="" class="title">TME Films</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <?php }  ?>     
+                                    
 
                                 </div>
                                 

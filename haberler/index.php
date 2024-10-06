@@ -32,26 +32,30 @@ include('../SqlQueryFilm.php');
         <div class="newsInside">
 
             <div class="newsLeft">
-                <?php foreach($haberlerGenel as $haber):?>
-                <a href="#" class="newsBox" data-id="<?php echo $haber['idhaber']; ?>">
-                    <div class="newsBoxImg">
-                        <img src="haberfoto/<?php echo $haber['haberfoto']?>" alt="">
-                    </div>
-                    <div>
-                        <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']);?></p>
-                        <h3><?php echo $haber['baslik'];?></h3>
-                    </div>
-                </a>
-                <?php endforeach;?>
+                <div id="newsContainer">
+                    <?php foreach ($haberlerGenel1 as $index => $haber): ?>
+                        <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBox" data-index="<?php echo $index; ?>">
+                            <div class="newsBoxImg">
+                                <img src="haberfoto/<?php echo $haber['haberfoto']?>" alt="">
+                            </div>
+                            <div>
+                                <p><i class="fa-solid fa-hourglass-half"></i>
+                                    <?php echo formatDateTime($haber['tarih']);?></p>
+                                <h3><?php echo $haber['baslik'];?></h3>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
 
                 <div class="pageBtn">
-                    <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
-                    <button class="pageBtns activePage">1</button>
-                    <button class="pageBtns activePage">2</button>
-                    <button class="pageBtns activePage">3</button>
-                    <button class="pageBtns activePage"><i class="fa-solid fa-angles-right"></i></button>
+                    <button class="pageBtns" id="prevBtn" disabled><i class="fa-solid fa-angles-left"></i></button>
+                    <span id="pageInfo">1 / <?php echo ceil(count($haberlerGenel1) / 5); ?></span>
+                    <button class="pageBtns" id="nextBtn"><i class="fa-solid fa-angles-right"></i></button>
                 </div>
             </div>
+
+
+
 
 
 
@@ -59,7 +63,7 @@ include('../SqlQueryFilm.php');
                 <h2><i class="fa-solid fa-newspaper"></i> Vizyona Girecekler</h2>
                 <?php
                     foreach($filmlerGenelYakin as $yakinFilmler):?>
-                <a href="" class="newsBoxHafta">
+                <a href="filmler/film-detay/<?php echo $yakinFilmler['seo_url']; ?>" class="newsBoxHafta">
                     <div class="haftaImg">
                         <img src="kapakfoto/<?php echo $yakinFilmler['kapak_resmi'];?>" alt="">
                     </div>
@@ -123,26 +127,47 @@ include('../SqlQueryFilm.php');
 </html>
 
 <script>
-document.querySelectorAll('.newsBox').forEach(box => {
-    box.addEventListener('click', function(event) {
-        event.preventDefault(); // Varsayılan bağlantı davranışını engelle
 
-        const idhaber = this.getAttribute('data-id'); // data-id değerini al
+let currentPage = 1; // Mevcut sayfa
+const itemsPerPage = 5; // Her sayfada gösterilecek haber sayısı
+const newsBoxes = document.querySelectorAll('.newsBox'); // Tüm haber kutularını seç
+const totalPages = Math.ceil(newsBoxes.length / itemsPerPage); // Toplam sayfa sayısını hesapla
 
-        // Form oluştur
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = 'haberler/haber-detay.php'; // POST isteği göndereceğimiz sayfa
+// İlk sayfayı göster
+showPage(currentPage);
 
-        // idhaber'ı form elemanı olarak ekle
-        const hiddenField = document.createElement('input');
-        hiddenField.type = 'hidden';
-        hiddenField.name = 'idhaber'; // Form elemanının ismi
-        hiddenField.value = idhaber; // Değerini ayarla
+// Sayfayı gösteren fonksiyon
+function showPage(page) {
+    const start = (page - 1) * itemsPerPage; // Başlangıç indexi
+    const end = start + itemsPerPage; // Bitiş indexi
 
-        form.appendChild(hiddenField); // Form elemanını forma ekle
-        document.body.appendChild(form); // Formu body'e ekle
-        form.submit(); // Formu gönder
+    // Tüm haber kutularını gizle
+    newsBoxes.forEach((box, index) => {
+        box.style.display = (index >= start && index < end) ? 'flex' : 'none';
     });
+
+    // Sayfa bilgilerini güncelle
+    document.getElementById('pageInfo').textContent = `${page} / ${totalPages}`;
+
+    // Buton durumlarını ayarla
+    document.getElementById('prevBtn').disabled = (page === 1);
+    document.getElementById('nextBtn').disabled = (page === totalPages);
+}
+
+// Önceki sayfa butonuna tıklama olayı
+document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+    }
 });
+
+// Sonraki sayfa butonuna tıklama olayı
+document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+    }
+});
+
 </script>

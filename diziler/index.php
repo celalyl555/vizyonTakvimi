@@ -35,7 +35,7 @@ include('../SqlQueryDizi.php');
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
                         <?php
                         if (!empty($enEskiDizi)): ?>
-                        <a href="#1" class="mainvizyonImg">
+                        <a href="diziler/dizi-detay/<?php echo $enEskiDizi['seo_url']; ?>" class="mainvizyonImg">
                             <img src="kapakfoto/<?php echo $enEskiDizi['kapak_resmi'];?>" alt="vizyon">
                             <div class="overlay1">
                             <span class="namevizyon">
@@ -56,7 +56,7 @@ include('../SqlQueryDizi.php');
                     </div>
                     <div class="vizyonRight">
                     <?php foreach ($dizilerVizyon as $dizi): ?>
-                        <a href="giderayak" class="vizyonBox">
+                        <a href="diziler/dizi-detay/<?php echo $dizi['seo_url']; ?>" class="vizyonBox">
                             <div class="vizyonBoxImg">
                                 <img src="kapakfoto/<?php echo $dizi['kapak_resmi'];?>" alt="">
                             </div>
@@ -87,7 +87,7 @@ include('../SqlQueryDizi.php');
 
                 <div class="newsLeft">
                 <?php foreach ($haberler as $haber) :?>
-                    <a href="haberler/haber-detay.php" class="newsBox">
+                    <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBox">
                         <div class="newsBoxImg">
                             <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="haberfoto/<?php echo $film['haberfoto']; ?>">
                         </div>
@@ -119,7 +119,7 @@ include('../SqlQueryDizi.php');
                             foreach ($filmVerileri as $film): 
                             ?>
                             <li>
-                                <a href="diziler/dizi-detay.php" class="aling-center">
+                                <a href="diziler/dizi-detay/<?php echo $film['seo_url']; ?>" class="aling-center">
                                     <span><?php echo $i++;?></span>
                                     <div class="infInside">
                                         <p><?php echo $film['film_adi'];?></p>

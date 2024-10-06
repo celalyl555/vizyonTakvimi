@@ -1,392 +1,444 @@
-<?php include('../header.php');?>
-    <!-- ============================================================================== -->
+<?php 
+include('../admin/conn.php');
+include('../header.php');
+include('../SqlQueryHaber.php');
+$seourl = isset($_GET['url']) ? $_GET['url'] : '';
+
+
+
+
+
+
+    // Veritabanından haber bilgilerini al
+    $sql = "SELECT id FROM filmler WHERE seo_url = :haberId";
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':haberId', $seourl);
     
-    <!-- Table Area Start -->
+    // Sorguyu çalıştır
+    $stmt->execute();
+    
+    // Sonuçları al
+    $haber = $stmt->fetch(PDO::FETCH_ASSOC);
+    $param =  $haber['id'];
+    include('../SqlGetFilm.php');
+  
+   
 
-    <section class="haftaSection">
+?>
+<!-- ============================================================================== -->
 
-        <div class="haftaMain">
+<!-- Table Area Start -->
 
-            <h2>Blade Runner 2049: Bıçak Sırtı</h2>
-            <p><i class="fa-regular fa-calendar color1"></i> 2017 <i class="fa-regular fa-clock color1"></i> 2s 44dk</p>
-            
+<section class="haftaSection">
+
+    <div class="haftaMain">
+
+        <h2><?php echo $filmler2['film_adi'];?></h2>
+        <p><i class="fa-regular fa-calendar color1"></i> <?php echo formatDate($filmler2['vizyon_tarihi']);?> <?php if (isset($filmler2['filmsure']) && $filmler2['filmsure'] > 0) {
+    echo '<i class="fa-regular fa-clock color1"></i> ' . dakikaToSaat($filmler2['filmsure']); } ?>
+        </p>
+
+    </div>
+
+</section>
+
+<!-- Table Area End -->
+
+<!-- ============================================================================== -->
+
+<!-- Main Area Start -->
+
+<main class="mt-0 mh-0">
+
+    <div class="container">
+
+        <!-- Sag resim alanı -->
+        <div class="galleryMovie">
+            <div class="image-container heroMovie" onclick="openModal(0)">
+                <img src="kapakfoto/<?php echo $filmler2['kapak_resmi']?>" class="heroMovie">
+            </div>
+
+            <?php
+// Örnek string ifadesi
+
+// Virgül ile ayır ve diziye ata
+$resimler = explode(', ', $filmler2['resimler']);
+
+// Görsel sınıflarını tanımla
+$classes = ['heroMovie1', 'img-radiusx', 'img-radius2x'];
+
+// İlk 3 resmi yazdır
+for ($i = 1; $i <= 3; $i++) {
+    echo '<div class="image-container ' . $classes[$i - 1] . '" onclick="openModal(' . $i . ')">';
+    echo '<img src="galeri/' . $resimler[$i - 1] . '" class="' . $classes[$i - 1] . '">';
+    
+    // Son resim için "Daha Fazla" metni ve simgesi ekle
+    if ($i == 3) {
+        echo '<div class="plusImg">';
+        echo '<p>Daha Fazla</p>';
+        echo '<i class="fa-solid fa-plus"></i>';
+        echo '</div>';
+    }
+    
+    echo '</div>';
+}
+?>
+
+
         </div>
 
-    </section>
+        <!-- Modal -->
+        <div id="imageModal" class="modal">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img class="modal-content" id="modalImg">
+            <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
+            <a class="next" onclick="changeSlide(1)">&#10095;</a>
 
-    <!-- Table Area End -->
-
-    <!-- ============================================================================== -->
-
-    <!-- Main Area Start -->
-
-    <main class="mt-0 mh-0">
-
-        <div class="container">
-
-            <!-- Sag resim alanı -->
-            <div class="galleryMovie">
-                <div class="image-container heroMovie" onclick="openModal(0)">
-                    <img src="assets/img/news/04.jpg" class="heroMovie">
-                </div>
-            
-                <div class="image-container heroMovie1" onclick="openModal(1)">
-                    <img src="assets/img/news/03.jpg" class="heroMovie1">
-                </div>
-            
-                <div class="image-container img-radiusx" onclick="openModal(2)">
-                    <img src="assets/img/news/03.jpg" class="img-radiusx">
-                </div>
-            
-                <div class="image-container img-radius2x" onclick="openModal(3)">
-                    <img src="assets/img/news/04.jpg" class="img-radius2x">
-                    <div class="plusImg">
-                        <p>Daha Fazla</p>
-                        <i class="fa-solid fa-plus"></i>
-                    </div>
-                </div>
+            <!-- Thumbnail images below the modal -->
+            <div class="thumbnail-container">
+                <img class="thumbnail" src="kapakfoto/<?php echo $filmler2['kapak_resmi']?>" draggable="false"
+                    onclick="currentSlide(0)">
+                <?php 
+                    for ($j = 0; $j < count($resimler); $j++) { // Dizi boyutu kadar döngü
+                        echo '<img class="thumbnail" src="galeri/' . $resimler[$j] . '" draggable="false" onclick="currentSlide(' . ($j + 1) . ')" />';
+                    }
+                ?>
             </div>
-            
-            <!-- Modal -->
-            <div id="imageModal" class="modal">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <img class="modal-content" id="modalImg">
-                <a class="prev" onclick="changeSlide(-1)">&#10094;</a>
-                <a class="next" onclick="changeSlide(1)">&#10095;</a>
-            
-                <!-- Thumbnail images below the modal -->
-                <div class="thumbnail-container">
-                    <img class="thumbnail" src="assets/img/news/04.jpg" draggable="false" onclick="currentSlide(0)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(1)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(2)">
-                    <img class="thumbnail" src="assets/img/news/04.jpg" draggable="false" onclick="currentSlide(3)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(4)">
-                    <img class="thumbnail" src="assets/img/news/04.jpg" draggable="false" onclick="currentSlide(5)">
-                    <img class="thumbnail" src="assets/img/news/01.jpg" draggable="false" onclick="currentSlide(6)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(7)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(8)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(9)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(10)">
-                    <img class="thumbnail" src="assets/img/news/03.jpg" draggable="false" onclick="currentSlide(11)">
-                </div>
-            </div>
-    
         </div>
 
-    </main>
+    </div>
 
-    <!-- Main Area End -->
+</main>
 
-    <!-- ============================================================================== -->
-     
-    <!-- News Area End -->
+<!-- Main Area End -->
 
-    <section class="pt-0">
+<!-- ============================================================================== -->
 
-        <div class="news">
+<!-- News Area End -->
 
-            <div class="newsInside">
+<section class="pt-0">
 
-                <div class="newsLeft">
-                    
-                    <div class="movieInfo">
-                        <div>
-                            <p class="titleMovie">Filmin Türü</p>
-                            <p>Bilim-Kurgu, 3 Boyutlu, IMAX</p>
-                        </div>
-                        <div>
-                            <p class="titleMovie">Yönetmen</p>
-                            <p><i class="fa-solid fa-clapperboard"></i> Denis Villeneuve</p>
-                        </div>
-                        <div>
-                            <p class="titleMovie">Senaryo</p>
-                            <p><i class="fa-solid fa-pen-nib"></i> Michael Green, Hampton Fencher</p>
-                        </div>
-                        <div>
-                            <p class="titleMovie">Oyuncular</p>
-                            <p><i class="fa-solid fa-users"></i> Harrison Ford, Ryan Gosling, Robin Wright</p>
-                        </div>
-                        <div class="row-btw">
-                            <div>
-                                <p class="titleMovie">Görüntü Yönetmeni</p>
-                                <p><i class="fa-solid fa-video"></i> Roger Deakins</p>
-                            </div>
-                            <div>
-                                <p class="titleMovie">Kurgu</p>
-                                <p><i class="fa-solid fa-circle-half-stroke"></i> Joe Walker</p>
-                            </div>
-                        </div>
-                        <div class="row-btw">
-                            <div>
-                                <p class="titleMovie">Vizyon Tarihi</p>
-                                <p><i class="fa-regular fa-calendar"></i> 6 Ekim 2017</p>
-                            </div>
-                            <div>
-                                <p class="titleMovie">Stüdyo</p>
-                                <p>Sony Pictures</p>
-                            </div>
-                        </div>
-                        <div class="row-btw">
-                            <div>
-                                <p class="titleMovie">Sinema Dağıtım</p>
-                                <p>Warner Bros. Türkiye</p>
-                            </div>
-                            <div>
-                                <p class="titleMovie">Ülke</p>
-                                <p>ABD</p>
-                            </div>
-                        </div>
-                        <div>
-                            <p class="titleMovie">Müzik</p>
-                            <p><i class="fa-solid fa-music"></i> Hans Zimmer, Benjamin Wallfisch</p>
-                        </div>
+    <div class="news">
+
+        <div class="newsInside">
+
+            <div class="newsLeft">
+
+                <div class="movieInfo">
+                    <?php if (!empty($filmler2['filmturleri'])): ?>
+                    <div>
+                        <p class="titleMovie">Filmin Türü</p>
+                        <p><?php echo $filmler2['filmturleri']; ?></p>
                     </div>
-
-                    <div class="newsTextArea mt-1">
-                        <h2><i class="fa-solid fa-video"></i> Filmin Konusu</h2>
-
-                        <p>Denis Villeneuve'ün yönetiği Blade Runner 2049, Ridley Scott'ın 1982 yapımı bilim-kurgu klasiğinin izini sürüyor. Film, üstü örtülü bir sırrı keşfetmesiyle 34 yıldır kayıp olan Rick Deckard'ı arayışa geçen K isimli bir blade runner'ın hikâyesini anlatıyor.</p>
-
-                        <p>Los Angeles Polis Departmanı'nda görev yapan Memur K, toplum yaşamını kaosa sokacak olan ve uzun zamandır saklı kalan bir sırrı açığa çıkartır. Bir felaketi önleyebilmesi için eski ödül avcısı Rick Deckard'ı bulup ondan bazı sorularına yanıt alması şarttır.</p>
-
-                        <h2><i class="fa-solid fa-user-tie"></i> Filmin Kadrosu</h2>
-
-                        <div class="search-containerx">
-                            <label for="search">Tüm Seanslar <br> <span class="cinema-count">(213 sinema)</span></label>
-                            <input type="text" id="search" oninput="filterCinemas()" placeholder="Ara...">
-                            <ul id="cinema-list" class="dropdown-list">
-                                <li>İstanbul Avrupa</li>
-                                <li>İstanbul Asya</li>
-                                <li>Başakşehir Cinetech Mall of İstanbul</li>
-                                <li>Bayrampaşa Forum İstanbul Cinenova</li>
-                                <li>Beylikdüzü Perla Vista Cinema Pink</li>
-                            </ul>
-                        </div>
-
-                        <div class="yearSelect responsDays">
-                            <a href="" class="col-center yearBtn active">
-                                <p>Per</p>
-                                <p>19 Eylül</p>
-                            </a>
-                            <a href="" class="col-center yearBtn activex">
-                                <p>Cum</p>
-                                <p>20 Eylül</p>
-                            </a>
-                            <a href="" class="col-center yearBtn activex">
-                                <p>Cmt</p>
-                                <p>21 Eylül</p>
-                            </a>
-                            <a href="" class="col-center yearBtn activex">
-                                <p>Paz</p>
-                                <p>22 Eylül</p>
-                            </a>
-                            <a href="" class="col-center yearBtn activex">
-                                <p>Pzt</p>
-                                <p>23 Eylül</p>
-                            </a>
-                            <a href="" class="col-center yearBtn activex">
-                                <p>Sal</p>
-                                <p>24 Eylül</p>
-                            </a>
-                            <a href="" class="col-center yearBtn activex">
-                                <p>Çar</p>
-                                <p>25 Eylül</p>
-                            </a>
-                        </div>
-
-                        <div class="cinema-container">
-                            <div class="cinema-item">
-                                <div class="cinema-header" onclick="toggleDetails(this)">
-                                    <div class="cinema-info">
-                                        <h2>Ataşehir Cinematica</h2>
-                                        <p>Atatürk Mah. Ertuğrul Gazi Sok. Metropol İstanbul AVM Bina No:22 Ataşehir/İstanbul</p>
-                                    </div>
-                                    <div class="toggle-icon"><i class="fa-solid fa-caret-down"></i></div>
-                                </div>
-                                <div class="cinema-details">
-                                    <p>Dijital (2D), Türkçe</p>
-                                    <div class="showtimes">
-                                        <button>11:15</button>
-                                        <button>13:45</button>
-                                        <button>16:15</button>
-                                        <button>19:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                        <button>21:30</button>
-                                    </div>
-                                </div>
-                            </div>
-                    
-                            <div class="cinema-item">
-                                <div class="cinema-header" onclick="toggleDetails(this)">
-                                    <div class="cinema-info">
-                                        <h2>Kadıköy Paribu Cineverse (Nautilus)</h2>
-                                        <p>Fatih Cad. No:1 Tepe Nautilus AVM Kadıköy/İstanbul</p>
-                                    </div>
-                                    <div class="toggle-icon"><i class="fa-solid fa-caret-down"></i></div>
-                                </div>
-                                <div class="cinema-details">
-                                    <p>Dijital (2D), Türkçe</p>
-                                    <div class="showtimes">
-                                        <button>11:15</button>
-                                        <button>19:30</button>
-                                        <button>21:30</button>
-                                    </div>
-                                </div>
-                            </div>
-                    
-                            <div class="cinema-item">
-                                <div class="cinema-header" onclick="toggleDetails(this)">
-                                    <div class="cinema-info">
-                                        <h2>Kartal Paribu Cineverse (Anatolium Marmara)</h2>
-                                        <p>Soğanlık Yeni Mah. Soğanlık D-100 Kuzey Yanyol Cad. No:72, 34865 Kartal/İstanbul</p>
-                                    </div>
-                                    <div class="toggle-icon"><i class="fa-solid fa-caret-down"></i></div>
-                                </div>
-                                <div class="cinema-details">
-                                    <p>Dijital (2D), Türkçe</p>
-                                    <div class="showtimes">
-                                        <button>16:15</button>
-                                        <button>19:30</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <?php endif; ?>
 
 
-                        <h2><i class="fa-solid fa-user-tie"></i> Filmin Kadrosu</h2>
 
-                        <div class="oyuncular">
 
-                            <a href="filmler/oyuncu-detay.php">
-                                <img src="assets/img/news/images1.jpg" alt="">
-                                <p class="titleMovie">Ryan Gosling</p>
-                            </a>
-                            <a href="filmler/oyuncu-detay.php">
-                                <img src="assets/img/news/images2.jpg" alt="">
-                                <p class="titleMovie">Harrison Ford</p>
-                            </a>
 
-                            <a href="filmler/oyuncu-detay.php">
-                                <img src="assets/img/news/images1.jpg" alt="">
-                                <p class="titleMovie">Ryan Gosling</p>
-                            </a>
-                            <a href="filmler/oyuncu-detay.php">
-                                <img src="assets/img/news/images2.jpg" alt="">
-                                <p class="titleMovie">Harrison Ford</p>
-                            </a>
 
-                            <a href="filmler/oyuncu-detay.php">
-                                <img src="assets/img/news/images1.jpg" alt="">
-                                <p class="titleMovie">Ryan Gosling</p>
-                            </a>
-                            <a href="filmler/oyuncu-detay.php">
-                                <img src="assets/img/news/images2.jpg" alt="">
-                                <p class="titleMovie">Harrison Ford</p>
-                            </a>
 
-                        </div>
 
-                    </div>
 
-                </div>
-
-                <div class="newsRight bgnone">
-
-                    <div class="movieInfo">
-                        <h3><i class="fa-solid fa-box"></i> Gişe Özeti</h3>
-                        <div class="tab-content w-100">
-                            <ul class="list">
-                                <li>
-                                    <div>
-                                        <div class="infInside">
-                                            <p class="titleMovie">SEYİRCİ</p>
-                                            <div class="rowIns">
-                                                <div>
-                                                    <p>İlk Hafta Sonu</p>
-                                                    <div class="rowIns2">
-                                                        <i class="fa-regular fa-user"></i>
-                                                        <p>32.457</p>
-                                                    </div>
-                                                </div>
-                                                <div class="endTxt">
-                                                    <p>Toplam</p>
-                                                    <div class="rowIns2">
-                                                        <i class="fa-regular fa-user"></i>
-                                                        <p>32.457</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
+                    <?php if (!empty($yonetmenler)) { ?>
+                    <div>
+                        <p class="titleMovie">Yönetmen</p>
+                        <p><i class="fa-solid fa-clapperboard"></i>
+                            <?php 
                                 
-                                <li>
-                                    <div>
-                                        <div class="infInside mt-1">
-                                            <p class="titleMovie">HASILAT</p>
-                                            <div class="rowIns">
-                                                <div>
-                                                    <p>İlk Hafta Sonu</p>
-                                                    <div class="rowIns2">
-                                                        <i class="fa-regular fa-user"></i>
-                                                        <p>25.839</p>
-                                                    </div>
+                                    $adSoyadlar = array_column($yonetmenler, 'adsoyad'); 
+                                    echo implode(', ', $adSoyadlar); ?> 
+
+                            
+       
+                        </p>
+                    </div>
+                    <?php  }  ?>
+
+
+
+                    <?php if (!empty($senaryolar)) { ?>
+                    <div>
+                        <p class="titleMovie">Senaryo</p>
+                        <p><i class="fa-solid fa-pen-nib"></i>
+                            <?php 
+          
+                $adSoyadlar = array_column($senaryolar, 'adsoyad'); // 'adsoyad' sütununu al
+                echo implode(', ', $adSoyadlar); // Senaryo yazarlarını virgülle ayırarak yazdır
+                ?>
+                        </p>
+                    </div>
+                    <?php } 
+                ?>
+
+                
+                    <div class="row-btw">
+                        <?php if (!empty($GörüntüYönetmeni)) {  ?>
+                        <div>
+                            <p class="titleMovie">Görüntü Yönetmeni</p>
+                            <p><i class="fa-solid fa-video"></i>
+                                <?php 
+                                        if (!empty($GörüntüYönetmeni)) { 
+                                            $adSoyadlar = array_column($GörüntüYönetmeni, 'adsoyad'); 
+                                            echo implode(', ', $adSoyadlar); 
+                                        } 
+                                ?>
+                            </p>
+                        </div>
+                        <?php } ?>
+
+                        <?php if (!empty($Kurgu)) {  ?>
+                        <div>
+                            <p class="titleMovie">Kurgu</p>
+                            <p><i class="fa-solid fa-circle-half-stroke"></i>
+                                <?php 
+                                    
+                                        $adSoyadlar = array_column($Kurgu, 'adsoyad'); // 'adsoyad' sütununu al
+                                        echo implode(', ', $adSoyadlar); // Kurgu adlarını virgülle ayırarak yazdır
+                                    
+                                ?>
+                            </p>
+                        </div>
+                        <?php } ?>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <?php  if (!empty($filmler2['vizyon_tarihi'])): ?>
+                    <div class="row-btw">
+                        <div>
+                            <p class="titleMovie">Vizyon Tarihi</p>
+                            <p><i class="fa-regular fa-calendar"></i>
+                                <?php echo formatDate($filmler2['vizyon_tarihi']); ?></p>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($filmler2['studyolar'])): ?>
+                        <div>
+                            <p class="titleMovie">Stüdyo</p>
+                            <p><?php echo $filmler2['studyolar']; ?></p>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($filmler2['dagitim'])): ?>
+                    <div class="row-btw">
+                        <div>
+                            <p class="titleMovie">Sinema Dağıtım</p>
+                            <p><?php echo $filmler2['dagitim']; ?></p>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if (!empty($filmler2['ulkeler'])): ?>
+                        <div>
+                            <p class="titleMovie">Ülke</p>
+                            <p><?php echo $filmler2['ulkeler']; ?></p>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($Müzik)): ?>
+                    <div>
+                        <p class="titleMovie">Müzik</p>
+                        <p><i class="fa-solid fa-circle-half-stroke"></i>
+                            <?php 
+                               
+                                     $adSoyadlar = array_column($Müzik, 'adsoyad'); // 'adsoyad' sütununu al
+                                     echo implode(', ', $adSoyadlar); // Kurgu adlarını virgülle ayırarak yazdır
+                                 
+                            ?>                      
+                        </p>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+
+                <div class="newsTextArea mt-1">
+                    <h2><i class="fa-solid fa-video"></i> Filmin Konusu</h2>
+                    <?php if (!empty($filmler2['film_konu'])): ?>
+                    <p><?php echo $filmler2['film_konu'];  ?></p>
+                    <?php endif; ?>
+
+                   
+                 <?php include('../salon.php');  ?>
+                
+
+
+                    <h2><i class="fa-solid fa-user-tie"></i> Filmin Kadrosu</h2>
+
+
+
+                    <div class="oyuncular">
+
+                        <?php   foreach ($Oyuncu as $oyuncu) {
+                           echo '<a href="kisiler/kisi-detay/' . $oyuncu['seo_url'] . '">';
+                           echo '<img src="foto/' . $oyuncu['resimyol'] . '" alt="">';
+                           echo '<p class="titleMovie">' . $oyuncu['adsoyad'] . '</p>';
+                           echo '</a>';
+                        }  ?>
+
+
+                    </div>
+
+
+
+
+
+
+
+
+                </div>
+
+            </div>
+
+            <div class="newsRight bgnone">
+
+                <div class="movieInfo">
+                    <h3><i class="fa-solid fa-box"></i> Gişe Özeti</h3>
+                    <div class="tab-content w-100">
+                        <ul class="list">
+                            <li>
+                                <div>
+                                    <div class="infInside">
+                                        <p class="titleMovie">SEYİRCİ</p>
+                                        <div class="rowIns">
+                                            <div>
+                                                <p>İlk Hafta Sonu</p>
+                                                <div class="rowIns2">
+                                                    <i class="fa-regular fa-user"></i>
+                                                    <p>32.457</p>
                                                 </div>
-                                                <div class="endTxt">
-                                                    <p>Toplam</p>
-                                                    <div class="rowIns2">
-                                                        <i class="fa-regular fa-user"></i>
-                                                        <p>1.339.216</p>
-                                                    </div>
+                                            </div>
+                                            <div class="endTxt">
+                                                <p>Toplam</p>
+                                                <div class="rowIns2">
+                                                    <i class="fa-regular fa-user"></i>
+                                                    <p>32.457</p>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                                </div>
+                            </li>
 
-                    <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
+                            <li>
+                                <div>
+                                    <div class="infInside mt-1">
+                                        <p class="titleMovie">HASILAT</p>
+                                        <div class="rowIns">
+                                            <div>
+                                                <p>İlk Hafta Sonu</p>
+                                                <div class="rowIns2">
+                                                    <i class="fa-regular fa-user"></i>
+                                                    <p>25.839</p>
+                                                </div>
+                                            </div>
+                                            <div class="endTxt">
+                                                <p>Toplam</p>
+                                                <div class="rowIns2">
+                                                    <i class="fa-regular fa-user"></i>
+                                                    <p>1.339.216</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            
+
+                <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
+                <?php
+                                foreach ($haberler as $haber) {
+                    echo '<a href="haberler/haber-detay/' . $haber['seo_url'] . '" class="newsBoxHafta">';
+                    echo '    <div class="haftaImg">';
+                    echo '        <img src="haberfoto/' . $haber['haberfoto'] . '" alt="">';
+                    echo '    </div>';
+                    echo '    <p>' . $haber['baslik'] . '</p>';
+                    echo '    <p class="date"><i class="fa-regular fa-clock"></i> ' . formatDateTime($haber['tarih']) . '</p>';
+                    echo '</a>';
+                }
+                ?>
+
+
             </div>
 
         </div>
-    </section>
 
-    <!-- News Area End -->
+    </div>
+</section>
 
-    <?php include('../footer.php');?>
+<!-- News Area End -->
+
+<?php
+    function formatDateTime($dateTimeString) {
+        // Ay isimlerini tanımla
+        $months = [
+            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+        ];
+    
+        // Tarih ve saati ayır
+        $dateTimeParts = explode(" ", $dateTimeString);
+        $dateParts = explode("-", $dateTimeParts[0]);
+        $timeParts = explode(":", $dateTimeParts[1]);
+    
+        $year = $dateParts[0];
+        $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+        $day = (int)$dateParts[2];
+    
+        $hour = (int)$timeParts[0];
+        $minute = (int)$timeParts[1];
+    
+        // Formatlanmış tarihi ve saati döndür
+        return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+    }
+    
+    function formatDate($dateString) {
+        // Ay isimlerini tanımla
+        $months = [
+            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+        ];
+    
+        // Tarih parçalarını ayır
+        $dateParts = explode("-", $dateString);
+        $year = $dateParts[0];
+        $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+        $day = (int)$dateParts[2];
+    
+        // Formatlanmış tarihi döndür
+        return $day . ' ' . $months[$month] . ' ' . $year;
+    }
+    
+ 
+function dakikaToSaat($dakika) {
+    // Saat ve dakika hesaplama
+    $saat = floor($dakika / 60); // Tam saat
+    $dk = $dakika % 60; // Kalan dakika
+
+    // Sonucu döndür
+    return sprintf("%2ds %02ddk", $saat, $dk);
+}
+
+
+
+    
+    include('../footer.php');?>
 </body>
+
 </html>

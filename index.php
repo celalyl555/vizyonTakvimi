@@ -14,35 +14,35 @@ include('SqlQueryFilm.php');
             <!-- Sol resim alanı -->
             <div class="gallery">
 
-                <a href="#" class="image-container hero">
+                <a href="haberler/haber-detay/<?php echo $haberlerGenel[0]['seo_url']; ?>" class="image-container hero">
                     <img src="haberfoto/<?php echo $haberlerGenel[0]['haberfoto']; ?>" class="hero">
                     <div class="overlay">
                         <span class="category"><?php echo $haberlerGenel[0]['baslik']; ?></span>
-                        <p><?php echo $haberlerGenel[0]['icerik']; ?></p>
+                       
                     </div>
                 </a>
         
-                <a href="#" class="image-container hero2 img-radius">
+                <a href="haberler/haber-detay/<?php echo $haberlerGenel[1]['seo_url']; ?>" class="image-container hero2 img-radius">
                     <img src="haberfoto/<?php echo $haberlerGenel[1]['haberfoto']; ?>" class="img-radius">
                     <div class="overlay">
                         <span class="category"><?php echo $haberlerGenel[1]['baslik']; ?></span>
-                        <p><?php echo $haberlerGenel[1]['icerik']; ?></p>
+                       
                     </div>
                 </a>
         
-                <a href="#" class="image-container img-radius3">
+                <a href="haberler/haber-detay/<?php echo $haberlerGenel[2]['seo_url']; ?>" class="image-container img-radius3">
                     <img src="haberfoto/<?php echo $haberlerGenel[2]['haberfoto']; ?>" class="img-radius3">
                     <div class="overlay">
                         <span class="category"><?php echo $haberlerGenel[2]['baslik']; ?></span>
-                        <p><?php echo $haberlerGenel[2]['icerik']; ?></p>
+                     
                     </div>
                 </a>
         
-                <a href="#" class="image-container img-radius2">
+                <a href="haberler/haber-detay/<?php echo $haberlerGenel[3]['seo_url']; ?>" class="image-container img-radius2">
                     <img src="haberfoto/<?php echo $haberlerGenel[3]['haberfoto']; ?>" class="img-radius2">
                     <div class="overlay">
                         <span class="category"><?php echo $haberlerGenel[3]['baslik']; ?></span>
-                        <p><?php echo $haberlerGenel[3]['icerik']; ?></p>
+                      
                     </div>
                 </a>
             </div>
@@ -65,7 +65,7 @@ include('SqlQueryFilm.php');
                             if ($sayacSeyirci > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
                         ?>
                         <li>
-                            <a href="">
+                            <a href="filmler/film-detay/<?php echo $film['seo_url']?>">
                                 <span><?php echo $sayacSeyirci++?></span>
                                 <div class="infInside">
                                     <p><?php echo $film['film_adi']?></p>
@@ -100,7 +100,7 @@ include('SqlQueryFilm.php');
                             if ($sayacHasilat > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
                         ?>
                         <li>
-                            <a href="">
+                            <a href="filmler/film-detay/<?php echo $film['seo_url']?>">
                                 <span> <?php echo $sayacHasilat++ ?></span>
                                 <div class="infInside">
                                     <p><?php echo $film['film_adi']?></p>
@@ -126,7 +126,7 @@ include('SqlQueryFilm.php');
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                <a href="hafta/haftalar.html" class="tumu">Tümü <i class="fa-solid fa-caret-right"></i></a>
+                <a href="hafta/haftalar.php" class="tumu">Tümü <i class="fa-solid fa-caret-right"></i></a>
             </div>
         </div>
 
@@ -159,7 +159,7 @@ include('SqlQueryFilm.php');
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
 
                         <?php if (!empty($enEskiFilm)): ?>
-                            <a href="#1" class="mainvizyonImg">
+                            <a href="filmler/film-detay/<?php echo $enEskiFilm['seo_url'];?>" class="mainvizyonImg">
                                 <img src="kapakfoto/<?php echo $enEskiFilm['kapak_resmi']; ?>" alt="vizyon"> <!-- İlgili film resmini kullan -->
                                 <div class="overlay1">
                                     <span class="namevizyon"><?php echo $enEskiFilm['film_adi']; ?></span>
@@ -171,7 +171,7 @@ include('SqlQueryFilm.php');
                     </div>
                     <div class="vizyonRight">
                         <?php foreach ($filmlerVizyon as $film): ?>
-                            <a href="<?php echo $film['id']; ?>" class="vizyonBox">
+                            <a href="filmler/film-detay/<?php echo $film['seo_url'];?>" class="vizyonBox">
                                 <div class="vizyonBoxImg">
                                     <img src="kapakfoto/<?php echo $film['kapak_resmi']; ?>" alt="<?php echo $film['id']; ?>">
                                 </div>
@@ -190,7 +190,7 @@ include('SqlQueryFilm.php');
                     <div class="vizyonLeft">
                         <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
                         <?php if (!empty($enYeniFilm)): ?>
-                            <a href="#11" class="mainvizyonImg">
+                            <a href="filmler/film-detay/<?php echo $enYeniFilm['seo_url'];?>" class="mainvizyonImg">
                                 <img src="kapakfoto/<?php echo $enYeniFilm['kapak_resmi'];?>" alt="vizyon">
                                 <div class="overlay1">
                                     <span class="namevizyon"><?php echo $enYeniFilm['film_adi'];  ?></span>
@@ -203,7 +203,7 @@ include('SqlQueryFilm.php');
                     </div>
                     <div class="vizyonRight">
                     <?php foreach ($filmlerYakin as $film): ?>
-                        <a href="<?php echo $film['id']; ?>" class="vizyonBox">
+                         <a href="filmler/film-detay/<?php echo $film['seo_url'];?>" class="vizyonBox">
                             <div class="vizyonBoxImg">
                                 <img src="kapakfoto/<?php echo $film['kapak_resmi']; ?>" alt="<?php echo $film['id']; ?>">
                             </div>
@@ -236,7 +236,7 @@ include('SqlQueryFilm.php');
                 <div class="newsLeft">
                     <!-- foreach 4 tane olacak en güncel 4 taneyi göster  -->
                     <?php foreach ($haberler as $haber) { ?>
-                        <a href="#<?= $haber['idhaber']; ?>" class="newsBox">
+                        <a href="haberler/haber-detay/<?= $haber['seo_url']; ?>" class="newsBox">
                             <div class="newsBoxImg">
                                 <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="haberfoto/<?php echo $film['haberfoto']; ?>" >
                             </div>
@@ -247,7 +247,7 @@ include('SqlQueryFilm.php');
                         </a>
                     <?php } ?>
                     <!-- kapanış -->
-                    <a href="" class="tumuBtn">Tüm Haberler <i class="fa-solid fa-right-long"></i></a>
+                    <a href="haberler" class="tumuBtn">Tüm Haberler <i class="fa-solid fa-right-long"></i></a>
                 </div>
                 <div class="newsRight">
                     <div class="seyirci">
@@ -260,10 +260,10 @@ include('SqlQueryFilm.php');
                         foreach ($filmVerileri as $film): 
                         ?>
                             <li>
-                                <a href="#" class="align-center">
+                                <a href="filmler/film-detay/<?php echo $film['seo_url'];?>" class="align-center">
                                     <span><?php  echo $i++; ?></span> <!-- Film ID'si -->
                                     <div class="infInside">
-                                        <p><?php echo $film['film_adi']; // Toplam kişi sayısı ?></p>
+                                        <p><?php echo $film['film_adi'];?></p>
                                     </div>
                                     <span><i class="fa-solid fa-caret-right"></i></span>
                                 </a>

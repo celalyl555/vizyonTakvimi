@@ -27,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Tarih kontrolü için sorgu
             $checkStmt = $con->prepare("SELECT COUNT(*) FROM filmveriler WHERE tarih = ? AND film_id = ? AND dagitim_id = ?");
 
+            // En büyük toplam hasılat ve toplam kişi değerlerini saklamak için değişkenler
+            $maxToplamHasilat = 0;
+            $maxToplamKisi = 0;
+
             // Veritabanı işlemine başlama (Transaction)
             $con->beginTransaction();
 
@@ -73,7 +77,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 }
 
                 // Her satır için SQL sorgusunu çalıştır
-                $stmt->execute([$filmId, $dagitimId, $tarih, $sinema, $perde, $kisi, $hasilat, $topkisi, $tophasilat,$statu]);
+                $stmt->execute([$filmId, $dagitimId, $tarih, $sinema, $perde, $kisi, $hasilat, $topkisi, $tophasilat, $statu]);
+
+                // En büyük değerleri güncelle
+                if ($tophasilat > $maxToplamHasilat) {
+                    $maxToplamHasilat = $tophasilat;
+                }
+                if ($topkisi > $maxToplamKisi) {
+                    $maxToplamKisi = $topkisi;
+                }
 
                 // Başarıyla kaydedilen satır hakkında bilgi ver
                 echo "Satır $row başarıyla kaydedildi.<br>";
@@ -82,7 +94,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Veritabanı işlemlerini tamamla (Commit)
             $con->commit();
 
-            echo 'Veriler başarıyla kaydedildi';
+            echo 'Veriler başarıyla kaydedildi.<br>';
+
+            // En büyük toplam hasılat ve toplam kişi değerlerini filmler tablosuna güncelle
+            if ($maxToplamHasilat > 0 || $maxToplamKisi > 0) {
+                $updateStmt = $con->prepare("UPDATE filmler SET topHasilat = ?, topKisi = ? WHERE id = ?");
+                $updateStmt->execute([$maxToplamHasilat, $maxToplamKisi, $filmId]);
+            }
+
         } catch (Exception $e) {
             // Hata durumunda işlemi geri al (Rollback)
             $con->rollBack();
@@ -95,3 +114,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 } else {
     echo 'Geçersiz istek';
 }
+?>

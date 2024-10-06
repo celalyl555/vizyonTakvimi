@@ -3,54 +3,34 @@
 session_start();
 // If the user is not logged in redirect to the login page...
 if (!isset($_SESSION['loggedin'])) {
-	header('Location: index');
-	exit;
+    header('Location: index');
+    exit;
 }
 
 include('conn.php');
-$stmt = $con->prepare('SELECT * FROM kategori');
-$stmt->execute();
-$kategoriListesi = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $con->prepare('SELECT * FROM filmturleri');
-$stmt->execute();
-$filmturuListesi = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-$stmt = $con->prepare('SELECT * FROM ulke');
-$stmt->execute();
-$ulkeListesi = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$stmt = $con->prepare('SELECT * FROM stüdyo');
-$stmt->execute();
-$studyoListesi = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$stmt = $con->prepare('SELECT * FROM sinemadagitim');
-$stmt->execute();
-$dagitimListesi = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-$stmt = $con->prepare('SELECT * FROM haberler');
-$stmt->execute();
-$haberler = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-
-
-
-
-
-
-if (isset($_GET['haberid'])) {
-    $idd = $_GET['haberid'];
-    $stmt = $con->prepare('SELECT * FROM haberler WHERE idhaber ='.$idd);
-    $stmt->execute();
-    $haber2 = $stmt->fetch(PDO::FETCH_ASSOC);
-
+// Tek bir sorgu ile tüm verileri almak için bir fonksiyon oluşturduk.
+function fetchAll($con, $query, $params = []) {
+    $stmt = $con->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+// Kategoriler, film türleri, ülkeler, stüdyolar, dağıtım ve haberler için verileri al
+$kategoriListesi = fetchAll($con, 'SELECT * FROM kategori');
+$filmturuListesi = fetchAll($con, 'SELECT * FROM filmturleri');
+$ulkeListesi = fetchAll($con, 'SELECT * FROM ulke');
+$studyoListesi = fetchAll($con, 'SELECT * FROM stüdyo');
+$dagitimListesi = fetchAll($con, 'SELECT * FROM sinemadagitim');
+$haberler = fetchAll($con, 'SELECT * FROM haberler ORDER BY idhaber DESC');
 
+// Belirtilen haber id'sine göre verileri almak için
+if (isset($_GET['haberid'])) {
+    $idd = $_GET['haberid'];
+    $haber2 = fetchAll($con, 'SELECT * FROM haberler WHERE idhaber = :haberid', ['haberid' => $idd])[0] ?? null;
+}
 
+// Oyuncular verisini almak için
 $sql = "
     SELECT o.idoyuncu, o.adsoyad, o.dogum, o.olum, o.resimyol, 
     GROUP_CONCAT(k.kategoriAd SEPARATOR ', ') AS roller,
@@ -60,19 +40,18 @@ $sql = "
     LEFT JOIN kategori k ON kc.kategori_id = k.idKategori
     GROUP BY o.idoyuncu
 ";
+$veriler = fetchAll($con, $sql);
 
-$stmt = $con->query($sql);
-$veriler = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-$sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi, f.kapak_resmi, f.statu, GROUP_CONCAT(ft.filmturu SEPARATOR ', ') AS filmturleri
-FROM filmler f
-JOIN film_filmturu fft ON f.id = fft.film_id
-JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
-GROUP BY f.id";
-
-$stmt = $con->query($sql);
-$filmler45 = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Filmleri ve dizileri ayırmak için
+$sql = "
+    SELECT f.film_adi, f.id, f.vizyon_tarihi, f.kapak_resmi, f.statu, 
+    GROUP_CONCAT(ft.filmturu SEPARATOR ', ') AS filmturleri
+    FROM filmler f
+    JOIN film_filmturu fft ON f.id = fft.film_id
+    JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
+    GROUP BY f.id desc
+";
+$filmler45 = fetchAll($con, $sql);
 $filmler = [];
 $diziler = [];
 
@@ -84,39 +63,38 @@ foreach ($filmler45 as $films) {
     }
 }
 
-// Şimdi $filmlerList filmler verilerini, $dizilerList diziler verilerini içerecek.
-
-
+// Film veya dizi detayını almak için
 if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
     // film_id veya diziid değerini al
-    $param = isset($_GET['filmid']) ? $_GET['filmid'] : (isset($_GET['diziid']) ? $_GET['diziid'] : null);
-    
-    try {
-        // SQL sorgusu
-        $sql = "SELECT f.film_adi, f.id, f.vizyon_tarihi,f.bitis_tarihi,f.filmsure, f.film_konu, f.kapak_resmi, 
-        COALESCE(GROUP_CONCAT(DISTINCT ft.filmturu SEPARATOR ', '), '') AS filmturleri, 
-        COALESCE(GROUP_CONCAT(DISTINCT s.studyoad SEPARATOR ', '), '') AS studyolar,
-        COALESCE(GROUP_CONCAT(DISTINCT sd.dagitimad SEPARATOR ', '), '') AS dagitim,
-        COALESCE(GROUP_CONCAT(DISTINCT sd.iddagitim SEPARATOR ', '), '') AS dagitim_id,  -- Burada GROUP_CONCAT ekledik
-        COALESCE(GROUP_CONCAT(DISTINCT u.country_name SEPARATOR ', '), '') AS ulkeler,
-        COALESCE(GROUP_CONCAT(DISTINCT g.resim_yolu SEPARATOR ', '), '') AS resimler,
-        COALESCE(GROUP_CONCAT(DISTINCT CONCAT(o.adsoyad, ' (', k.kategoriAd, ')') SEPARATOR ', '), '') AS oyuncular
-        FROM filmler f
-        JOIN film_filmturu fft ON f.id = fft.film_id
-        JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
-        LEFT JOIN film_dagitim fd ON f.id = fd.film_id
-        LEFT JOIN sinemadagitim sd ON fd.dagitim_id = sd.iddagitim
-        LEFT JOIN film_studyolar fs ON f.id = fs.film_id
-        LEFT JOIN stüdyo s ON fs.studyo_id = s.id
-        LEFT JOIN film_ulkeler fu ON f.id = fu.film_id
-        LEFT JOIN ulke u ON fu.ulke_id = u.id
-        LEFT JOIN film_galeri g ON f.id = g.film_id
-        LEFT JOIN oyuncuiliski ol ON f.id = ol.film_id
-        LEFT JOIN oyuncular o ON ol.oyuncu_id = o.idoyuncu
-        LEFT JOIN kategori k ON ol.kategori_id = k.idKategori
-        WHERE f.id = :film_id
-        GROUP BY f.id";
+    $param = $_GET['filmid'] ?? $_GET['diziid'] ?? null;
 
+    try {
+        // Film veya dizi detayları için SQL sorgusu
+        $sql = "
+            SELECT f.film_adi, f.id, f.vizyon_tarihi, f.bitis_tarihi, f.filmsure,f.topHasilat,f.topKisi, f.film_konu, f.kapak_resmi, 
+            COALESCE(GROUP_CONCAT(DISTINCT ft.filmturu SEPARATOR ', '), '') AS filmturleri, 
+            COALESCE(GROUP_CONCAT(DISTINCT s.studyoad SEPARATOR ', '), '') AS studyolar,
+            COALESCE(GROUP_CONCAT(DISTINCT sd.dagitimad SEPARATOR ', '), '') AS dagitim,
+            COALESCE(GROUP_CONCAT(DISTINCT sd.iddagitim SEPARATOR ', '), '') AS dagitim_id, 
+            COALESCE(GROUP_CONCAT(DISTINCT u.country_name SEPARATOR ', '), '') AS ulkeler,
+            COALESCE(GROUP_CONCAT(DISTINCT g.resim_yolu SEPARATOR ', '), '') AS resimler,
+            COALESCE(GROUP_CONCAT(DISTINCT CONCAT(o.adsoyad, ' (', k.kategoriAd, ')') SEPARATOR ', '), '') AS oyuncular
+            FROM filmler f
+            JOIN film_filmturu fft ON f.id = fft.film_id
+            JOIN filmturleri ft ON fft.filmturu_id = ft.idfilm
+            LEFT JOIN film_dagitim fd ON f.id = fd.film_id
+            LEFT JOIN sinemadagitim sd ON fd.dagitim_id = sd.iddagitim
+            LEFT JOIN film_studyolar fs ON f.id = fs.film_id
+            LEFT JOIN stüdyo s ON fs.studyo_id = s.id
+            LEFT JOIN film_ulkeler fu ON f.id = fu.film_id
+            LEFT JOIN ulke u ON fu.ulke_id = u.id
+            LEFT JOIN film_galeri g ON f.id = g.film_id
+            LEFT JOIN oyuncuiliski ol ON f.id = ol.film_id
+            LEFT JOIN oyuncular o ON ol.oyuncu_id = o.idoyuncu
+            LEFT JOIN kategori k ON ol.kategori_id = k.idKategori
+            WHERE f.id = :film_id
+            GROUP BY f.id desc
+        ";
 
         $stmt = $con->prepare($sql);
         $stmt->execute(['film_id' => $param]);
@@ -125,32 +103,26 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         // Eğer film verisi bulunamazsa hata mesajı göster
         if (!$filmler2) {
             echo "Film bulunamadı.";
-            
         }
 
         // Ekstra sorgular
-        $stmt = $con->prepare('SELECT * FROM filmveriler WHERE film_id = :film_id');
-        $stmt->execute(['film_id' => $param]);
-        $veriler2 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $stmt = $con->prepare('SELECT * FROM filmsalon WHERE film_id = :film_id');
-        $stmt->execute(['film_id' => $param]);
-        $salonlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $veriler2 = fetchAll($con, 'SELECT * FROM filmveriler WHERE film_id = :film_id', ['film_id' => $param]);
+        $salonlar = fetchAll($con, 'SELECT * FROM filmsalon WHERE film_id = :film_id', ['film_id' => $param]);
 
     } catch (PDOException $e) {
         // Hata mesajını yakala ve ekrana yazdır
         echo "Hata: " . $e->getMessage();
     }
 }
+
 // Oyuncular verisini işleme
+$oyuncular = [];
 if (isset($filmler2['oyuncular'])) {
     $oyuncuString = $filmler2['oyuncular'];
 
     // Eğer oyuncu verisi string ise, explode ile parçala
     if (is_string($oyuncuString)) {
         $oyuncular = explode(', ', $oyuncuString);
-    } else {
-        $oyuncular = $oyuncuString; // Zaten dizi ise doğrudan kullan
     }
 
     // Kategorilere göre oyuncuları ayırmak için dizi
@@ -172,21 +144,18 @@ if (isset($filmler2['oyuncular'])) {
             // Kategori dizisine oyuncuyu ekle
             if (isset($kategoriOyuncular[$kategori])) {
                 $kategoriOyuncular[$kategori][] = $oyuncuAd;
-            } else {
-                
             }
-        } 
+        }
     }
+}
 
-    
-} 
 // Eğer $kategoriOyuncular boşsa her bir kategoriye boş bir dizi ata
-$yonetmenler = isset($kategoriOyuncular['Yönetmen']) ? $kategoriOyuncular['Yönetmen'] : [];
-$senaryolar = isset($kategoriOyuncular['Senaryo Yazarı']) ? $kategoriOyuncular['Senaryo Yazarı'] : [];
-$GörüntüYönetmeni = isset($kategoriOyuncular['Görüntü Yönetmeni']) ? $kategoriOyuncular['Görüntü Yönetmeni'] : [];
-$Müzik = isset($kategoriOyuncular['Müzik']) ? $kategoriOyuncular['Müzik'] : [];
-$Kurgu = isset($kategoriOyuncular['Kurgu']) ? $kategoriOyuncular['Kurgu'] : [];
-$Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [];
+$yonetmenler = $kategoriOyuncular['Yönetmen'] ?? [];
+$senaryolar = $kategoriOyuncular['Senaryo Yazarı'] ?? [];
+$GörüntüYönetmeni = $kategoriOyuncular['Görüntü Yönetmeni'] ?? [];
+$Müzik = $kategoriOyuncular['Müzik'] ?? [];
+$Kurgu = $kategoriOyuncular['Kurgu'] ?? [];
+$Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
 ?>
 
 
@@ -197,7 +166,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    
+
     <link rel="shortcut icon" href="images/ico.png" id="favicon">
 
     <title>Vizyon Takvimi Admin</title>
@@ -418,9 +387,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                 <label for="sinemadagitim">Roller</label>
                                                 <div class="selected-tags">
                                                     <input type="text" id="sinemadagitim" name="sinemadagitim"
-                                                        class="tagInput form-control"
-                                                        placeholder="Seçilen Roller" readonly
-                                                        onclick="toggleDropdown(this)">
+                                                        class="tagInput form-control" placeholder="Seçilen Roller"
+                                                        readonly onclick="toggleDropdown(this)">
                                                 </div>
                                                 <div class="multiselect">
                                                     <div class="checkboxes">
@@ -1029,8 +997,15 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                             </div>
                                                         </div>
                                                     </div>
-
-
+                                                    <!-- Toplam Hasılat -->
+                                                    <div class="form-group">
+                                                        <label>Toplam Hasılat</label>
+                                                        <input type="number" name="topHasilat" class="form-control">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Toplam Seyirci</label>
+                                                        <input type="number" name="topSeyirci" class="form-control">
+                                                    </div>
                                                 </div>
                                                 <!-- Film Aciklamasi -->
                                                 <div class="col-12">
@@ -1773,8 +1748,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                         </table>
                     </div>
                     <div class="clearfix">
-                        <div class="hint-text"><b id="currentPageEntries6">1</b> arası <b
-                                id="totalEntries6"></b> kayıt gösteriliyor</div>
+                        <div class="hint-text"><b id="currentPageEntries6">1</b> arası <b id="totalEntries6"></b> kayıt
+                            gösteriliyor</div>
                         <ul class="pagination" id="pagination6">
                             <!-- Dinamik sayfalama burada olacak -->
                         </ul>
@@ -1852,8 +1827,8 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                     </div>
                     <div class="clearfix">
-                        <div class="hint-text"><b id="currentPageEntries7">1</b> arası <b
-                                id="totalEntries7"></b> kayıt gösteriliyor</div>
+                        <div class="hint-text"><b id="currentPageEntries7">1</b> arası <b id="totalEntries7"></b> kayıt
+                            gösteriliyor</div>
                         <ul class="pagination" id="pagination7">
                             <!-- Dinamik sayfalama burada olacak -->
                         </ul>
@@ -2289,6 +2264,16 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     </div>
                                 </div>
                             </div>
+                            <!-- Toplam Hasılat -->
+                            <div class="form-group">
+                                <label>Toplam Hasılat</label>
+                                <input type="number" name="topHasilatedit"   value="<?php echo $filmler2['topHasilat']; ?>" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Toplam Seyirci</label>
+                                <input type="number" name="topSeyirciedit"   value="<?php echo $filmler2['topKisi']; ?>" class="form-control">
+                            </div>
+
                         </div>
                         <!-- Film Aciklamasi -->
                         <div class="col-12">

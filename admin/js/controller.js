@@ -613,6 +613,7 @@ $(document).ready(function() {
           processData: false,  
           contentType: false,  
           success: function(response) {
+            alert(response);
             if(response==="1"){
               alert("Tüm Alanları Doldurunuz.")
             }else{

@@ -3,15 +3,19 @@ include('../admin/conn.php');
 include('../header.php');
 include('../SqlQueryHaber.php');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $haberId  = isset($_POST['idhaber']) ? $_POST['idhaber'] : null;
-}
+
+// seourl parametresini al
+$seourl = isset($_GET['url']) ? $_GET['url'] : '';
+
+
+
+
 
 try {
     // Veritabanından haber bilgilerini al
-    $sql = "SELECT * FROM haberler WHERE idhaber = :haberId";
+    $sql = "SELECT * FROM haberler WHERE seo_url = :haberId";
     $stmt = $con->prepare($sql);
-    $stmt->bindParam(':haberId', $haberId, PDO::PARAM_INT);
+    $stmt->bindParam(':haberId', $seourl);
     
     // Sorguyu çalıştır
     $stmt->execute();
@@ -60,7 +64,7 @@ try {
                 <div class="newsTextArea">
 
                     <h2><?php echo $haber['baslik'];  ?></h2>
-                    <p><i class="fa-regular fa-clock color1"></i> <?php echo $haber['tarih'];  ?></p>
+                    <p><i class="fa-regular fa-clock color1"></i> <?php echo formatDateTime($haber['tarih']);  ?></p>
 
                     <?php echo $haber['icerik'];  ?>
                 </div>
@@ -71,17 +75,19 @@ try {
                 <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
 
                 <div class="newsContainer">
-                    <?php foreach ($haberlerGenel as $haber): ?>
-                    <a href="#" class="newsBoxHafta" data-id="<?php echo $haber['idhaber']; ?>">
-                        <div class="haftaImg">
-                            <img src="haberfoto/<?php echo $haber['haberfoto']; ?>"
-                                alt="<?php echo htmlspecialchars($haber['baslik']); ?>">
-                        </div>
-                        <p><?php echo htmlspecialchars($haber['baslik']); ?></p>
-                        <p class="date"><i class="fa-regular fa-clock"></i>
-                            <?php echo formatDateTime($haber['tarih']); ?></p>
-                    </a>
-                    <?php endforeach; ?>
+                    <?php foreach ($haberlerGenel as $haber): 
+                        if($seourl!= $haber['seo_url']){?>
+                            <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBoxHafta" data-id="<?php echo $haber['idhaber']; ?>">
+                                <div class="haftaImg">
+                                    <img src="haberfoto/<?php echo $haber['haberfoto']; ?>"
+                                        alt="<?php echo htmlspecialchars($haber['baslik']); ?>">
+                                </div>
+                                <p><?php echo htmlspecialchars($haber['baslik']); ?></p>
+                                <p class="date"><i class="fa-regular fa-clock"></i>
+                                    <?php echo formatDateTime($haber['tarih']); ?></p>
+                            </a>
+
+                    <?php } endforeach; ?>
                 </div>
 
 
@@ -95,31 +101,8 @@ try {
     </div>
 </section>
 
-<!-- News Area End  -->
-<script>
-    document.querySelectorAll('.newsBoxHafta').forEach(box => {
-        box.addEventListener('click', function(event) {
-            event.preventDefault(); // Varsayılan bağlantı davranışını engelle
 
-            const idhaber = this.getAttribute('data-id'); // data-id değerini al
-            
-            // Form oluştur
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'haberler/haber-detay.php'; // POST isteği göndereceğimiz sayfa
 
-            // idhaber'ı form elemanı olarak ekle
-            const hiddenField = document.createElement('input');
-            hiddenField.type = 'hidden';
-            hiddenField.name = 'idhaber'; // Form elemanının ismi
-            hiddenField.value = idhaber; // Değerini ayarla
-
-            form.appendChild(hiddenField); // Form elemanını forma ekle
-            document.body.appendChild(form); // Formu body'e ekle
-            form.submit(); // Formu gönder
-        });
-    });
-</script>
 
 <?php 
 

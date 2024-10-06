@@ -7,7 +7,7 @@ $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
 
 #********************************************************************************
 
-$sqlHaberlerGenel = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
+$sqlHaberlerGenel = "SELECT * FROM haberler ORDER BY tarih DESC LIMIT 5"; // En yeni 4 haberi al
 $stmtHaberlerGenel = $con->query($sqlHaberlerGenel);
 $haberlerGenel = $stmtHaberlerGenel->fetchAll(PDO::FETCH_ASSOC);
 #haberler sql query bitiş

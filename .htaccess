@@ -1,6 +1,19 @@
 RewriteEngine On
+RewriteBase /vizyontakvimi/
 
-# .php uzantısını URL'den kaldır
+# Detay/index/ ile başlayan URL'leri detail/detay.php dosyasına yönlendirir
+RewriteRule ^haberler/haber-detay/(.*)$ haberler/haber-detay.php?url=$1 [L,QSA]
+
+RewriteRule ^filmler/film-detay/(.*)$ filmler/film-detay.php?url=$1 [L,QSA]
+RewriteRule ^diziler/dizi-detay/(.*)$ diziler/dizi-detay.php?url=$1 [L,QSA]
+RewriteRule ^kisiler/kisi-detay/(.*)$ kisiler/kisi-detay.php?url=$1 [L,QSA]
+
+# Genel kural: Alt klasörlerdeki PHP dosyalarının uzantısını kaldır
+RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME}.php -f
-RewriteRule ^(.*)$ $1.php [L]
+RewriteRule ^([^/]+)/([^/]+)/?$ $1/$2.php [L]
+
+# Ana dizindeki PHP dosyalarının uzantısını kaldır
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/]+)/?$ $1.php [L]
