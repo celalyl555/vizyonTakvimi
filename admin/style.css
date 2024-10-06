@@ -480,13 +480,13 @@ table.table .avatar {
 }   
 
 .card-img-top {
-    object-fit: cover;
+    object-fit: scale-down;
     height: 200px;
     width: 100%;
 }
 
 .card-img-top-1 {
-    object-fit: cover;
+    object-fit: scale-down;
     height: 400px;
     width: 100%;
 }
@@ -612,4 +612,31 @@ table.table .avatar {
 
 .fixtext th, .fixtext td {
     width: auto !important;
+}
+
+.bgdark {
+    background-color: #eeeeee !important;
+}
+
+.nowrap {
+    display: flex;
+    flex-wrap: nowrap !important;
+    width: 100%;
+    padding: 0px 20px;
+}
+
+@media (max-width: 480px) {
+    .login form input[type="password"], .login form input[type="text"] {
+        width: 100%;
+    }
+    .login {
+        width: 100%;
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-top: 100px;
+    }
+}
+
+.media {
+    display: block !important;
 }

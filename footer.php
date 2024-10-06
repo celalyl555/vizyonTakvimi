@@ -39,9 +39,9 @@
         </div>
         <div class="socialBox">
             <div class="appArea">
-                <h3><i class="fa-solid fa-mobile-screen-button"></i> Mobil Uygulama</h3>
-                <a href="" class="appBoxImg">
-                    <img src="assets/img/news/01.jpg" alt="">
+                <h3><i class="fa-solid fa-mobile-screen-button"></i> Mobil Uygulama <span>(Yakında Sizlerle)</span></h3>
+                <a href="index" class="appBoxImg">
+                    <img src="assets/img/logo/qr.png" alt="qr">
                 </a>
             </div>
         </div>

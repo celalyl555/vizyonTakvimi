@@ -1,4 +1,8 @@
-<?php include('../header.php');?>
+<?php 
+include('../admin/conn.php');
+include('../header.php');
+include('../SqlQueryFilm.php');
+?>
 
     <!-- ============================================================================== -->
     
@@ -191,50 +195,18 @@
                 </div>
 
                 <div class="newsRight bgnone">
-                    <div class="movieInfo">
-                        <h3><i class="fa-solid fa-gears"></i> Son Güncelemeler</h3>
-                        
-                        <div class="newUpdate">
-                            <div class="newUpdate gap5">
-                                <p class="title"><strong>yeni vizyon tarihi</strong></p>
-                                <a href="">My Hero Academia: Sıra Sende</a>
-                            </div>
-                            <div class="newUpdate gap5">
-                                <p><strong>Vizyon Tarihi</strong></p>
-                                <p class="newDate"><i class="fa-regular fa-calendar"></i> 11 Ekim 2024 <span>yeni</span></p>
-                                <p class="oldDate"><i class="fa-regular fa-calendar"></i> Yeni</p>
-                            </div>
+                    <h2><i class="fa-solid fa-newspaper"></i> Vizyona Girecekler</h2>
+                    <?php
+                        foreach($filmlerGenelYakin as $yakinFilmler):?>
+                    <a href="" class="newsBoxHafta">
+                        <div class="haftaImg">
+                            <img src="kapakfoto/<?php echo $yakinFilmler['kapak_resmi'];?>" alt="">
                         </div>
-
-                        <hr class="w-100">
-
-                        <div class="newUpdate">
-                            <div class="newUpdate gap5">
-                                <p class="title"><strong>isim değişikliği</strong></p>
-                                <a href="">Usta ile Margarita</a>
-                            </div>
-                            <div class="newUpdate gap5">
-                                <p><strong>Vizyon Tarihi</strong></p>
-                                <p class="newDate"><i class="fa-regular fa-calendar"></i> Usta ile Margarita <span>yeni</span></p>
-                                <p class="oldDate"><i class="fa-regular fa-calendar"></i> Usta ve Margarita</p>
-                            </div>
-                        </div>
-
-                        <hr class="w-100">
-
-                        <div class="newUpdate">
-                            <div class="newUpdate gap5">
-                                <p class="title"><strong>vizyon tarihi değişikliği</strong></p>
-                                <a href="">Ruh Azabı</a>
-                            </div>
-                            <div class="newUpdate gap5">
-                                <p><strong>Vizyon Tarihi</strong></p>
-                                <p class="newDate"><i class="fa-regular fa-calendar"></i> Ertelendi <span>yeni</span></p>
-                                <p class="oldDate"><i class="fa-regular fa-calendar"></i> 20 Eylül 2024</p>
-                            </div>
-                        </div>
-
-                    </div>
+                        <p><?php echo $yakinFilmler['film_adi'];?></p>
+                        <p class="date"><i
+                                class="fa-regular fa-clock"></i><?php echo formatDate($yakinFilmler['vizyon_tarihi']);?></p>
+                    </a>
+                    <?php endforeach;?>
                 </div>
             
             </div>
@@ -243,6 +215,47 @@
     </section>
 
     <!-- News Area End -->
+
+    <?php 
+    function formatDate($dateString) {
+        // Ay isimlerini tanımla
+        $months = [
+            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+        ];
+
+        // Tarih parçalarını ayır
+        $dateParts = explode("-", $dateString);
+        $year = $dateParts[0];
+        $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+        $day = (int)$dateParts[2];
+
+        // Formatlanmış tarihi döndür
+        return $day . ' ' . $months[$month] . ' ' . $year;
+    }
+
+    function formatDateTime($dateTimeString) {
+        // Ay isimlerini tanımla
+        $months = [
+            "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+            "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+        ];
+
+        // Tarih ve saati ayır
+        $dateTimeParts = explode(" ", $dateTimeString);
+        $dateParts = explode("-", $dateTimeParts[0]);
+        $timeParts = explode(":", $dateTimeParts[1]);
+
+        $year = $dateParts[0];
+        $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+        $day = (int)$dateParts[2];
+
+        $hour = (int)$timeParts[0];
+        $minute = (int)$timeParts[1];
+
+        // Formatlanmış tarihi ve saati döndür
+        return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+    }?>
 
     <?php include('../footer.php');?>
 

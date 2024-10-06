@@ -3,7 +3,7 @@
  #vizyonda yeni sql query başlangıç
     $sqlEnEskiDizi = "SELECT * FROM filmler 
     WHERE statu = 2 
-    AND vizyon_tarihi BETWEEN CURDATE() - INTERVAL 2 WEEK AND CURDATE()
+    AND vizyon_tarihi
     ORDER BY vizyon_tarihi ASC
     LIMIT 1";
     $stmtEnEskiDizi = $con->query($sqlEnEskiDizi);
@@ -11,7 +11,7 @@
 
     $sqlDizilerVizyon = "SELECT * FROM filmler 
     WHERE statu = 2 
-    AND vizyon_tarihi BETWEEN CURDATE() - INTERVAL 2 WEEK AND CURDATE() 
+    AND vizyon_tarihi
     AND id != :enEskiDizi
     ORDER BY vizyon_tarihi ASC 
     LIMIT 3"; 

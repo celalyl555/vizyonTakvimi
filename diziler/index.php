@@ -27,11 +27,6 @@ include('../SqlQueryDizi.php');
 
     <section>
         <div class="vizyon">
-
-            <div class="tabs2">
-                <button class="tablinks active" onclick="openTab2(event, 'vizyondaYeni')"><i class="fa-solid fa-ticket"></i> Vizyonda Yeni</button>
-                <button class="tablinks" onclick="openTab2(event, 'yakinda')"><i class="fa-solid fa-clock-rotate-left"></i> Yakında</button>
-            </div>
         
             <div id="vizyondaYeni" class="tabcontent">
             <!-- 2 hafta öncesine kadar -->
@@ -71,51 +66,6 @@ include('../SqlQueryDizi.php');
                     </div>
                 </div>
 
-            </div>
-        
-            <div id="yakinda" class="tabcontent" style="display:none;">
-                <div class="vizyonSlier">
-                    <div class="vizyonLeft">
-                        <button class="arrows left"><i class="fa-solid fa-caret-left"></i></button>
-                        <?php if (!empty($enYeniDizi)): ?>
-                        <a href="#11" class="mainvizyonImg">
-                            <img src="kapakfoto/<?php 
-                            if($enYeniDizi['kapak_resmi'] != null){
-                                echo $enYeniDizi['kapak_resmi'];
-                            }else{
-                                echo "";
-                            }
-                            ?>" alt="">
-                            <div class="overlay1">
-                            <span class="namevizyon">
-                                <?php 
-                                // Film adı boşsa veya null ise "boş" mesajını göster
-                                if (!empty($enYeniDizi['film_adi'])) {
-                                    echo $enYeniDizi['film_adi'];
-                                } else {
-                                    // echo 'yusuf doldur';
-                                }
-                                ?>
-                            </span>
-                            </div>
-                        </a>
-                        <?php endif; ?>
-                        <button class="arrows right"><i class="fa-solid fa-caret-right"></i></button>
-                    </div>
-                    <div class="vizyonRight">
-                    <?php foreach ($dizilerYakin as $dizi): ?>
-                        <a href="#giderayak" class="vizyonBox">
-                            <div class="vizyonBoxImg">
-                                <img src="kapakfoto/<?php echo $dizi['kapak_resmi']; ?>" alt="">
-                            </div>
-                            <div>
-                                <h3><?php echo $dizi['film_adi']; ?>" </h3>
-                                <p><?php echo formatDate($dizi['vizyon_tarihi']); ?>" </p>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                    </div>
-                </div>
             </div>
 
         </div>

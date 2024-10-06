@@ -196,7 +196,11 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+
+    
+    <link rel="shortcut icon" href="images/ico.png" id="favicon">
+
+    <title>Vizyon Takvimi Admin</title>
     <!-- CSS Dosyaları -->
     <link href="style.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/style.css"> <!-- Eğer bu stil dosyasına ihtiyacınız yoksa kaldırabilirsiniz. -->
@@ -2302,7 +2306,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                     <div class="row bg-white border bt-0 p-3 m-0">
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../kapakfoto/<?php echo $filmler2['kapak_resmi']  ?>"
                                     alt="">
                             </div>
@@ -2333,7 +2337,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 foreach ($resimler as $resim) {
                             ?>
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>"
                                     alt="">
                             </div>
@@ -2553,7 +2557,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                     </div>
                                                     <!-- Film Türü -->
                                                     <div class="form-group">
-                                                        <label>Film Türü</label>
+                                                        <label>Dizi Türü</label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen film türleri" readonly
@@ -2729,7 +2733,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                     </div>
                                                     <!-- Film Oyuncuları -->
                                                     <div class="form-group">
-                                                        <label>Film Oyuncuları</label>
+                                                        <label>Dizi Oyuncuları</label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen film oyuncuları" readonly
@@ -2762,7 +2766,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                                 <!-- Film Aciklamasi -->
                                                 <div class="col-12">
                                                     <div class="form-group">
-                                                        <label for="filmKonuu">Filmin Konusu</label>
+                                                        <label for="filmKonuu">Dizinin Konusu</label>
                                                         <textarea class="form-control textarea" rows="6" name="filmKonu"
                                                             id="filmKonu"></textarea>
                                                     </div>
@@ -2781,7 +2785,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                                                 <div class="multiple-uploader" id="multiple-uploader-dizi">
                                                     <div class="mup-msg">
-                                                        <span class="mup-main-msg">Film Galerisine Fotoğraf Eklemek için
+                                                        <span class="mup-main-msg">Dizi Galerisine Fotoğraf Eklemek için
                                                             Tıklayınız.</span>
                                                         <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
                                                             Yükleyiniz.</span>
@@ -3078,9 +3082,9 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     </div>
                                 </div>
                             </div>
-                            <!-- Film Türü -->
+                            <!-- Dizi Türü -->
                             <div class="form-group">
-                                <label>Film Türü</label>
+                                <label>Dizi Türü</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control" placeholder="Seçilen film türleri"
                                         value="<?php echo $filmler2['filmturleri'] ?>" readonly
@@ -3285,9 +3289,9 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                     </div>
                                 </div>
                             </div>
-                            <!-- Film Oyuncuları -->
+                            <!-- Dizi Oyuncuları -->
                             <div class="form-group">
-                                <label>Film Oyuncuları</label>
+                                <label>Dizi Oyuncuları</label>
                                 <div class="selected-tags">
                                     <input type="text" class="tagInput form-control"
                                         value="<?php echo htmlspecialchars(implode(', ', $Oyuncu)); ?>"
@@ -3324,7 +3328,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                         <!-- Film Aciklamasi -->
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="filmKonu">Filmin Konusu</label>
+                                <label for="filmKonu">Dizinin Konusu</label>
                                 <textarea class="form-control textarea" rows="6" name="filmkonu"
                                     id="filmKonu"><?php echo $filmler2['film_konu']  ?></textarea>
                             </div>
@@ -3337,7 +3341,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
 
                     <div class="row bg-white border bt-0 p-3 m-0">
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../kapakfoto/<?php echo $filmler2['kapak_resmi']  ?>"
                                     alt="">
                             </div>
@@ -3368,7 +3372,7 @@ $Oyuncu = isset($kategoriOyuncular['Aktör']) ? $kategoriOyuncular['Aktör'] : [
                                 foreach ($resimler as $resim) {
                             ?>
                         <div class="col-md-3 mb-4">
-                            <div class="card">
+                            <div class="card bgdark">
                                 <img class="card-img-top" src="../galeri/<?php echo htmlspecialchars($resim); ?>"
                                     alt="">
                             </div>

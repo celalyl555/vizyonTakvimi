@@ -12,13 +12,8 @@
             <p class="title">Filmlerin vizyon tarihleri</p>
 
             <div class="settingsBox">
-                <div class="settingsBox center-f">
-                    <button class="cfBtn active">Hepsi</button>
-                    <button class="cfBtn red">Yerli Film</button>
-                    <button class="cfBtn blue">Yabancı Film</button>
-                    <button class="cfBtn green">Animasyon</button>
-                    <button class="cfBtn yellow">3D Film</button>
-                    <button class="cfBtn purple">MPA</button>
+                <div class="settingsBox center-f start-f">
+                    <p>Filmlerin vizyon tarih aralığını seçebilirsiniz.</p>
                 </div>
                 <div class="settingsBox end-f">
                     <div>
@@ -62,7 +57,6 @@
                             <td></td>
                             <td>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
@@ -70,17 +64,14 @@
                             <td></td>
                             <td>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
@@ -116,7 +107,6 @@
                             <td></td>
                             <td>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
@@ -125,17 +115,14 @@
                             <td></td>
                             <td>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
                                 <div class="moviesTd">
-                                    <p class="categoryMovie">yerli</p>
                                     <a href="">İzliyorlar</a>
                                     <p class="titleDown blue">Halakoei Film</p>
                                 </div>
