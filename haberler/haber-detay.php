@@ -95,7 +95,7 @@ try {
     </div>
 </section>
 
-<!-- News Area End -->
+<!-- News Area End  -->
 <script>
     document.querySelectorAll('.newsBoxHafta').forEach(box => {
         box.addEventListener('click', function(event) {
