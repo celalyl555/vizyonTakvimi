@@ -69,7 +69,7 @@ include('../SqlQueryFilm.php');
                     </div>
                     <p><?php echo $yakinFilmler['film_adi'];?></p>
                     <p class="date"><i
-                            class="fa-regular fa-clock"></i><?php echo formatDate($yakinFilmler['vizyon_tarihi']);?></p>
+                            class="fa-regular fa-clock"></i> <?php echo formatDate($yakinFilmler['vizyon_tarihi']);?></p>
                 </a>
                 <?php endforeach;?>
             </div>

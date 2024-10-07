@@ -123,7 +123,7 @@ $end = $_GET['end'] ?? $nextFriday;
             <input type="date" id="end" name="end" required>
         </div>
         <div>
-            <button type="submit">Filtrele</button>
+            <button class="cfBtn active" type="submit">Filtrele</button>
         </div>
     </div>
 </form>

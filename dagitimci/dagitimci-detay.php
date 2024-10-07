@@ -12,14 +12,14 @@
 
 
             <div class="yearSelect mt-1">
-                <a href="" class="yearBtn active"><i class="fa-solid fa-angles-left"></i> 2023</a>
-                <select name="centerBtn" id="centerBtn">
+                <a href="" class="yearBtn activex"><i class="fa-solid fa-angles-left"></i> 2023</a>
+                <select name="centerBtn" id="centerBtn" class="centerBtn">
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>
                     <option value="2022">2022</option>
                     <option value="2021">2021</option>
                 </select>
-                <a href="" class="yearBtn active">2025 <i class="fa-solid fa-angles-right"></i></a>
+                <a href="" class="yearBtn activex">2025 <i class="fa-solid fa-angles-right"></i></a>
             </div>
         
             <div class="containerTable">

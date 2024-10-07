@@ -214,7 +214,7 @@ if ($date) {
             }
         }else{
             if($d==1){
-            echo "Filme ait sinama verileri yok. Daha sonra tekrar kontrol ediniz.";
+            echo "<p class='uyariTxt'>'Filme ait sinama verileri yok. Daha sonra tekrar kontrol ediniz.'</p>";
         }
         }
         

@@ -6,7 +6,7 @@ main {
     justify-content: center;
     align-items: center;
     position: relative;
-    margin-top: 130px;
+    margin-top: 70px;
 }
 
 .container {
@@ -147,7 +147,6 @@ main {
 }
 
 .list li:last-child a {
-    border-radius: 0 0 10px 10px;
     border-bottom: none;
 }
 

@@ -74,7 +74,6 @@ try {
             <div class="newsRight bgnone">
                 <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
 
-                <div class="newsContainer">
                     <?php foreach ($haberlerGenel as $haber): 
                         if($seourl!= $haber['seo_url']){?>
                             <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBoxHafta" data-id="<?php echo $haber['idhaber']; ?>">
@@ -88,10 +87,6 @@ try {
                             </a>
 
                     <?php } endforeach; ?>
-                </div>
-
-
-
 
 
             </div>
