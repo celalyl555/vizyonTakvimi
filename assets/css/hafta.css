@@ -451,6 +451,17 @@ td a:hover {
     color: var(--mainBold);
 }
 
+.titledagitim {
+    font-size: 16px;
+    color: var(--mainHover);
+}
+
+.gap-10 {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .pageBtn {
     width: 100%;
     display: flex;
