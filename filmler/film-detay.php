@@ -284,7 +284,12 @@ for ($i = 1; $i <= 3; $i++) {
                     <?php endif; ?>
 
 
-                    <?php include('salon.php');  ?>
+                    <?php 
+                    if( $salonSayisi>0){ include('salon.php');  }
+                   
+                    
+                    
+                    ?>
 
 
 

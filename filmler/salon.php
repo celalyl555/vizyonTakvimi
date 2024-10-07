@@ -34,7 +34,7 @@ for ($i = 0; $i < 7; $i++) {
 
 
 $salonlar = "";
-
+$d=0;
 // İlk olarak, id parametresi varsa sorguyu çalıştır
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     // Ana SQL sorgusu
@@ -54,8 +54,7 @@ if (isset($_GET['id']) && !empty($_GET['id'])) {
 
     // Tarih parametresi varsa kullan, yoksa bugünün tarihini al
     $tarih = isset($_GET['tarih']) && !empty($_GET['tarih']) ? $_GET['tarih'] : date('Y-m-d');
-echo "işlenen tarih : ". $tarih;
-echo "işlenen id : ". $tarih;
+ 
     // SQL sorgusuna tarih filtresini ekle
     $sql .= " AND :tarih BETWEEN s.bas_tarih AND s.bit_tarih";
     $params[':tarih'] = $tarih;
@@ -66,6 +65,7 @@ echo "işlenen id : ". $tarih;
 
     // Sonucu al
     $salonlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $d=1;
 } 
 
 // Eğer $row boşsa, city parametresi ile yeni bir sorgu yap
@@ -78,7 +78,7 @@ if (empty($salonlar) && isset($_GET['city']) && !empty($_GET['city'])) {
         WHERE f.seo_url = :seo_url
         AND s.sehir = :city
     ";
-
+   
     // Parametreler
     $params = [
         ':seo_url' => $seourl,
@@ -87,7 +87,7 @@ if (empty($salonlar) && isset($_GET['city']) && !empty($_GET['city'])) {
 
     // Tarih parametresi varsa kullan, yoksa bugünün tarihini al
     $tarih = isset($_GET['tarih']) && !empty($_GET['tarih']) ? $_GET['tarih'] : date('Y-m-d');
-
+    
     // SQL sorgusuna tarih filtresini ekle
     $sql .= " AND :tarih BETWEEN s.bas_tarih AND s.bit_tarih";
     $params[':tarih'] = $tarih;
@@ -98,6 +98,7 @@ if (empty($salonlar) && isset($_GET['city']) && !empty($_GET['city'])) {
 
     // Sonucu al
     $salonlar = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $d=1;
 }
 
    
@@ -143,19 +144,45 @@ if (empty($salonlar) && isset($_GET['city']) && !empty($_GET['city'])) {
 
 <div class="yearSelect responsDays">
     <?php 
-    $today = new DateTime();
-    foreach ($gunler as $key => $gun): ?>
-        <a href="filmler/film-detay/<?php echo $seourl;echo (isset($_GET['id']) && !empty($_GET['id'])) ? "?id=" . $_GET['id'] : (isset($_GET['city']) && !empty($_GET['city']) ? "?city=" . $_GET['city'] : "");
- ?>?tarih=<?php echo $today->format('Y-m-d'); ?>" class="col-center yearBtn <?php echo $key === 0 ? 'active' : 'activex'; ?>">
+    // Eğer tarih parametresi mevcutsa
+    if (isset($_GET['tarih'])) {
+        $tarih = $_GET['tarih'];
+        
+    }else{
+        $tarih= date('Y-m-d');
+    }
+// Tarihi DateTime nesnesine dönüştür
+$date = DateTime::createFromFormat('Y-m-d', $tarih);
+if ($date) {
+    $gunday = $date->format('d'); // Gün bilgisini al
+} 
+    $today = new DateTime(); // Bugünün tarihi
+    foreach ($gunler as $key => $gun): 
+        // Buton için tarih formatını ayarlıyoruz
+        $gunTarihi = $gun['tarih'];
+        
+        $gun2 = substr($gunTarihi, 0, 2);
+
+        $isActive = (trim($gunday) == trim($gun2)) ? 'active' : 'activex'; 
+    ?>
+      
+        <a href="filmler/film-detay/<?php echo $seourl; 
+            echo (isset($_GET['id']) && !empty($_GET['id'])) ? "?id=" . $_GET['id'] : (isset($_GET['city']) && !empty($_GET['city']) ? "?city=" . $_GET['city'] : ""); 
+        ?>&tarih=<?php echo $today->format('Y-m-d'); ?>" class="col-center yearBtn <?php echo $isActive; ?>">
             <p><?php echo $gun['gun']; ?></p>
-            <p><?php echo $gun['tarih']; ?></p>
+            <p><?php echo $gunTarihi; ?></p>
         </a>
     <?php 
-$today->modify('+1 day');
-endforeach; ?>
+        $today->modify('+1 day'); // Bugünü bir gün ileri al
+    endforeach; ?>
 </div>
 
-            <?php foreach ($salonlar as $salon){?>
+
+
+            <?php 
+            if(!empty($salonlar)){
+            
+            foreach ($salonlar as $salon){?>
                     <div class="cinema-container">
                         <div class="cinema-item">
                             <div class="cinema-header" onclick="toggleDetails(this)">
@@ -179,7 +206,21 @@ endforeach; ?>
                             </div>
                         </div>
                     </div>
-            <?php } function formatTime($time) {
+            <?php 
+            
+        
+        
+        
+            }
+        }else{
+            if($d==1){
+            echo "Filme ait sinama verileri yok. Daha sonra tekrar kontrol ediniz.";
+        }
+        }
+        
+        
+        
+       function formatTime($time) {
     // Geçerli bir zaman olup olmadığını kontrol et
     if (DateTime::createFromFormat('H:i:s', $time) !== false) {
         // Saat ve dakikayı ayır
