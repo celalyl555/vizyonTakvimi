@@ -153,9 +153,8 @@ include('../SqlQueryDizi.php');
                     <div class="haftaImg">
                         <img src="haberfoto/<?php echo $haber['haberfoto'];?>" alt="">
                     </div>
-                    <p><?php echo $haber['baslik'];?></p>
-                    <p class="date"><i
-                            class="fa-regular fa-clock"></i><?php echo formatDate($haber['tarih']);?></p>
+                    <p><?php echo $haber['baslik'];?></p> 
+                    <p class="date"> <i class="fa-regular fa-clock"></i> <?php echo formatDate($haber['tarih']);?></p>
                 </a>
                 <?php endforeach;?>
             </div>

@@ -12,7 +12,7 @@
             
             <div class="status f-start">
                 <div class="tabBtnBox">
-                    <a href="index.php" class="tabBtnBoxa active">Yıllara Göre</a>
+                    <a href="hafta/index.php" class="tabBtnBoxa active">Yıllara Göre</a>
                 </div>
                 <div class="tabBtnBox">
                     <a href="hafta/index-hafta.php" class="tabBtnBoxa">Haftalara Göre</a>
@@ -40,19 +40,19 @@
                 <div class="newsLeft">
 
                     <div class="yearSelect">
-                        <a href="" class="yearBtn active"><i class="fa-solid fa-angles-left"></i> 2023</a>
-                        <select name="centerBtn" id="centerBtn">
+                        <a href="" class="yearBtn activex"><i class="fa-solid fa-angles-left"></i> 2023</a>
+                        <select name="centerBtn" id="centerBtn" class="centerBtn">
                             <option value="2024">2024</option>
                             <option value="2023">2023</option>
                             <option value="2022">2022</option>
                             <option value="2021">2021</option>
                         </select>
-                        <a href="" class="yearBtn">2025 <i class="fa-solid fa-angles-right"></i></a>
+                        <a href="" class="yearBtn activex">2025 <i class="fa-solid fa-angles-right"></i></a>
                     </div>
 
                     <div class="containerAy">
                         <div class="tabs-hafta">
-                            <button class="tab-button-hafta active" data-tab="seyirci">Seyirci</button>
+                            <button class="tab-button-hafta activex" data-tab="seyirci">Seyirci</button>
                             <button class="tab-button-hafta" data-tab="hasilat">Hasılat</button>
                         </div>
                         <div class="tab-content-hafta" id="seyirci">

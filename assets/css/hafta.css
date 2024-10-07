@@ -204,12 +204,12 @@ td a:hover {
 }
 
 .yearBtn.active {
-    color: var(--mainBold);
-    transition: 0.3s;
-    cursor: pointer;
-    touch-action: auto;
-    pointer-events: all;
-    opacity: 1;
+    color: var(--mainBold) !important;
+    transition: 0.3s !important;
+    cursor: pointer !important;
+    touch-action: auto !important;
+    pointer-events: all !important;
+    opacity: 1 !important;
 }
 .yearBtn.active:hover {
     text-decoration: underline;
@@ -238,7 +238,7 @@ td a:hover {
     opacity: 0.6;
 }
 
-#centerBtn {
+.centerBtn {
     border: none;
     outline: none;
     color: var(--mainBold);
@@ -248,7 +248,7 @@ td a:hover {
     cursor: pointer;
     transition: 0.3s;
 }
-#centerBtn:hover {
+.centerBtn:hover {
     text-decoration: underline;
 }
 
@@ -417,7 +417,7 @@ td a:hover {
     align-items: center;
     gap: 20px;
     padding-right: 30px;
-    margin-bottom: 20px;
+    margin: 10px 0px;
 }
 
 .tumBoxLeft {
@@ -428,12 +428,22 @@ td a:hover {
     gap: 10px;
 }
 
+.tumBoxLeft a.title:hover {
+    color: var(--mainBold);
+}
+
+.movieTitle1:hover {
+    color: var(--mainBold);
+    text-decoration: underline;
+}
+
 .tumBoxLeftImg {
     width: 100px;
     height: 100px;
     border-radius: 8px;
     overflow: hidden;
 }
+
 .tumBoxLeftImg img {
     width: 100%;
     height: 100%;
@@ -791,6 +801,10 @@ td a:hover {
     width: 100%;
 }
 
+.filmContainer2 {
+    margin-bottom: 30px;
+}
+
 .takvimHeader {
     display: flex;
     flex-direction: row;
@@ -798,6 +812,7 @@ td a:hover {
     justify-content: flex-start;
     align-items: start;
     gap: 10px;
+    margin-bottom: 20px;
 }
 .takvimHeader i {
     height: 100%;
@@ -903,6 +918,15 @@ td a:hover {
     background: linear-gradient(180deg, #f1f9ff 0%, #E5E5E5 100%);
 }
 
+.settingsBox div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
 .center-f {
     justify-content: center;
     padding: 0;
@@ -935,30 +959,14 @@ td a:hover {
     font-size: 14px;
 }
 
-.cfBtn:hover {
-    background: var(--gray);
-    color: var(--white) !important;
-}
-
 .cfBtn.active {
     background: var(--gray);
     color: var(--white);
 }
 
-.cfBtn.red {
-    color: #fc5a5a;
-}
-.cfBtn.blue {
-    color: #5a65fc;
-}
-.cfBtn.green {
-    color: #7c7a01;
-}
-.cfBtn.yellow {
-    color: #017c07;
-}
-.cfBtn.purple {
-    color: #6e017c;
+.cfBtn.active:hover {
+    background-color: var(--main);
+    color: var(--black) !important;
 }
 
 .end-f label {
@@ -988,7 +996,7 @@ td a:hover {
 .oyuncuBoxImg {
     width: 30%;
     min-width: 150px;
-    height: 200px;
+    height: 300px;
     overflow: hidden;
     border-radius: 8px;
 }
@@ -1332,7 +1340,7 @@ td a:hover {
     }
     .oyuncuBoxImg {
         width: 100%;
-        height: 250px;
+        height: 350px;
     }
     .w-70 {
         width: 100%;
@@ -1391,5 +1399,13 @@ td a:hover {
     .responsDays {
         overflow-y: hidden;
         overflow-x: auto;
+    }
+}
+
+@media (max-width: 550px) {
+    .mobile-wrapSelect {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: start;
     }
 }

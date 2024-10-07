@@ -66,32 +66,32 @@ try {
             <div class="newsLeft">
 
             <div class="yearSelect">
-    <a href="javascript:void(0);" class="yearBtn" id="prevYear"><i class="fa-solid fa-angles-left"></i> <span id="prevYearText"></span></a>
-    <select name="centerBtn" id="yearSelect"></select>
-    <a href="javascript:void(0);" class="yearBtn" id="nextYear"><span id="nextYearText"></span> <i class="fa-solid fa-angles-right"></i></a>
+    <a href="javascript:void(0);" class="yearBtn activex" id="prevYear"><i class="fa-solid fa-angles-left"></i> <span id="prevYearText"></span></a>
+    <select name="centerBtn" id="yearSelect" class="centerBtn"></select>
+    <a href="javascript:void(0);" class="yearBtn activex" id="nextYear"><span id="nextYearText"></span> <i class="fa-solid fa-angles-right"></i></a>
 </div>
 
 
-<div class="yearSelect">
-    <a href="javascript:void(0);" class="yearBtn " data-month="0">Oca</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="1">Şub</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="2">Mar</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="3">Nis</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="4">May</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="5">Haz</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="6">Tem</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="7">Ağu</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="8">Eyl</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="9">Eki</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="10">Kas</a>
-    <a href="javascript:void(0);" class="yearBtn" data-month="11">Ara</a>
+<div class="yearSelect mobile-wrapSelect">
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="0">Oca</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="1">Şub</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="2">Mar</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="3">Nis</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="4">May</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="5">Haz</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="6">Tem</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="7">Ağu</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="8">Eyl</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="9">Eki</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="10">Kas</a>
+    <a href="javascript:void(0);" class="yearBtn activex" data-month="11">Ara</a>
 </div>
 
 
-<div class="yearSelect">
+<div class="yearSelect mobile-wrapSelect">
     <p>Dağıtımcılar :</p>
     <?php
-       echo '<select name="centerBtn" id="centerBtn">';
+       echo '<select name="centerBtn" id="centerBtn" class="centerBtn">';
        echo '<option value="Tüm Dağıtımcılar" selected>Tüm Dağıtımcılar</option>';
        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
            echo '<option value="' . htmlspecialchars($row['dagitimad']) . '">' . htmlspecialchars($row['dagitimad']) . '</option>';
@@ -429,9 +429,9 @@ document.querySelectorAll('.yearBtn').forEach(button => {
 function updateActiveMonthButton(activeButton) {
     const monthButtons = document.querySelectorAll('.yearBtn');
     monthButtons.forEach(button => {
-        button.classList.remove('activex'); // Tüm butonlardan 'activex' sınıfını kaldır
+        button.classList.remove('active'); // Tüm butonlardan 'activex' sınıfını kaldır
     });
-    activeButton.classList.add('activex'); // Aktif butona 'activex' sınıfını ekle
+    activeButton.classList.add('active'); // Aktif butona 'activex' sınıfını ekle
 }
 
 // İlk yüklemede mevcut ay ve yıl için Cuma günlerini göster

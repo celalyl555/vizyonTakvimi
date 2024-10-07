@@ -13,7 +13,7 @@
             
             <div class="status f-start">
                 <div class="tabBtnBox">
-                    <a href="index.php" class="tabBtnBoxa">Yıllara Göre</a>
+                    <a href="hafta/index.php" class="tabBtnBoxa">Yıllara Göre</a>
                 </div>
                 <div class="tabBtnBox">
                     <a href="index-hafta.php" class="tabBtnBoxa active">Haftalara Göre</a>
@@ -41,14 +41,14 @@
                 <div class="newsLeft">
 
                     <div class="yearSelect">
-                        <a href="" class="yearBtn active"><i class="fa-solid fa-angles-left"></i> 36</a>
-                        <select name="centerBtn" id="centerBtn">
+                        <a href="" class="yearBtn activex"><i class="fa-solid fa-angles-left"></i> 36</a>
+                        <select name="centerBtn" id="centerBtn" class="centerBtn">
                             <option value="37">37</option>
                             <option value="36">36</option>
                             <option value="35">35</option>
                             <option value="34">34</option>
                         </select>
-                        <a href="" class="yearBtn">38 <i class="fa-solid fa-angles-right"></i></a>
+                        <a href="" class="yearBtn activex">38 <i class="fa-solid fa-angles-right"></i></a>
                     </div>
 
                     <div class="containerAy">
