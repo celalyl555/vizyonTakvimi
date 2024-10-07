@@ -807,7 +807,9 @@ section {
     justify-content: flex-start;
     align-items: start;
 }
-
+.yearSelect a {
+    pointer-events: auto; /* Tıklanabilirliği kontrol edin */
+}
 .movieName {
     width: 100%;
 }
