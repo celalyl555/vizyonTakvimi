@@ -233,7 +233,6 @@ td a:hover {
 }
 
 .yearBtn {
-    cursor: not-allowed;
     touch-action: none;
     pointer-events: none;
     opacity: 0.6;

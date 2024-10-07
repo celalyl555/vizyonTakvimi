@@ -5,6 +5,25 @@ include('../SqlQueryHaber.php');
 $seourl = isset($_GET['url']) ? $_GET['url'] : '';
 
 
+try {
+    // 'filmler' ve 'filmsalon' tablolarını birleştirerek verileri al
+    $sql = "
+        SELECT f.id AS film_id, f.seo_url, s.*
+        FROM filmler f
+        JOIN filmsalon s ON f.id = s.film_id
+        WHERE f.seo_url = :seo_url
+    ";
+
+    $stmt = $con->prepare($sql);
+    $stmt->bindParam(':seo_url', $seourl);
+    $stmt->execute();
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $salonSayisi = count($rows);
+ 
+    
+} catch (PDOException $e) {
+    echo "Sorgu hatası: " . $e->getMessage();
+}
 
 
 
@@ -132,14 +151,6 @@ for ($i = 1; $i <= 3; $i++) {
                     </div>
                     <?php endif; ?>
 
-
-
-
-
-
-
-
-
                     <?php if (!empty($yonetmenler)) { ?>
                     <div>
                         <p class="titleMovie">Yönetmen</p>
@@ -147,10 +158,10 @@ for ($i = 1; $i <= 3; $i++) {
                             <?php 
                                 
                                     $adSoyadlar = array_column($yonetmenler, 'adsoyad'); 
-                                    echo implode(', ', $adSoyadlar); ?> 
+                                    echo implode(', ', $adSoyadlar); ?>
 
-                            
-       
+
+
                         </p>
                     </div>
                     <?php  }  ?>
@@ -171,7 +182,7 @@ for ($i = 1; $i <= 3; $i++) {
                     <?php } 
                 ?>
 
-                
+
                     <div class="row-btw">
                         <?php if (!empty($GörüntüYönetmeni)) {  ?>
                         <div>
@@ -259,7 +270,7 @@ for ($i = 1; $i <= 3; $i++) {
                                      $adSoyadlar = array_column($Müzik, 'adsoyad'); // 'adsoyad' sütununu al
                                      echo implode(', ', $adSoyadlar); // Kurgu adlarını virgülle ayırarak yazdır
                                  
-                            ?>                      
+                            ?>
                         </p>
                     </div>
                     <?php endif; ?>
@@ -272,9 +283,9 @@ for ($i = 1; $i <= 3; $i++) {
                     <p><?php echo $filmler2['film_konu'];  ?></p>
                     <?php endif; ?>
 
-                   
-                 <?php include('../salon.php');  ?>
-                
+
+                    <?php include('salon.php');  ?>
+
 
 
                     <h2><i class="fa-solid fa-user-tie"></i> Filmin Kadrosu</h2>

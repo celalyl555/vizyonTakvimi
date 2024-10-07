@@ -154,7 +154,7 @@ include('../SqlQueryFilm.php');
 
 
             <div class="newsLeft">
-                <?php  foreach ($haberler2 as $haber) { ?>
+                <?php  foreach ($haberler as $haber) { ?>
                 <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBox newsItem">
                     <div class="newsBoxImg">
                         <img src="haberfoto/<?php echo $haber['haberfoto']; ?>"
@@ -185,7 +185,7 @@ include('../SqlQueryFilm.php');
                         <li>
                             <?php 
                                 $i = 1; // Sayaç başlatılıyor
-                                foreach ($filmVerileri as $film): 
+                                foreach ($encokizlenenfilmler as $film): 
                                 ?>
                             <a href="filmler/film-detay/<?php echo $film['seo_url']; ?>" class="aling-center">
                                 <span><?php  echo $i++; ?></span>

@@ -257,7 +257,7 @@ include('SqlQueryFilm.php');
                         <ul class="list">
                         <?php 
                         $i = 1;
-                        foreach ($filmVerileri as $film): 
+                        foreach ($encokizlenenfilmler as $film): 
                         ?>
                             <li>
                                 <a href="filmler/film-detay/<?php echo $film['seo_url'];?>" class="align-center">

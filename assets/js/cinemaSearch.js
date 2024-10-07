@@ -10,13 +10,36 @@ document.getElementById('search').addEventListener('click', function() {
     }
 });
 
-// Dropdown'dan seçim yapılınca input alanına yaz ve dropdown'ı gizle
 document.getElementById('cinema-list').addEventListener('click', function(e) {
     if (e.target.tagName === 'LI') {
-        document.getElementById('search').value = e.target.textContent; // Seçilen değeri input alanına yazdır
+        var selectedCinema = e.target.textContent; // Seçilen değeri input alanına yazdır
+        var cinemaId = e.target.getAttribute('data-id'); // Seçilen sinemanın ID'sini al
+
+        document.getElementById('search').value = selectedCinema; // Seçilen değeri input alanına yaz
         this.style.display = 'none'; // Dropdown'ı gizle
+
+        // Mevcut URL'yi al
+        var currentUrl = window.location.href;
+        var url = new URL(currentUrl);
+
+        // URL'deki mevcut id ve city parametrelerini kaldır
+        url.searchParams.delete('id');
+        url.searchParams.delete('city');
+
+        // Eğer sinema adı mı yoksa şehir mi seçildiğini belirle
+        if (cinemaId.match(/^\d+$/)) {
+            // ID sayısal ise sinema seçilmiştir, id parametresini ekle
+            url.searchParams.append('id', cinemaId);
+        } else {
+            // ID sayısal değilse şehir seçilmiştir, city parametresini ekle
+            url.searchParams.append('city', cinemaId);
+        }
+
+        // Yeni URL'yi güncelle ve sayfayı yenile
+        window.location.href = url.toString();
     }
 });
+
 
 // Dropdown dışında bir yere tıklanırsa dropdown'ı kapat
 document.addEventListener('click', function(event) {

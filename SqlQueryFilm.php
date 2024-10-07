@@ -98,4 +98,12 @@ $filmler11 = $stmtFilmler->fetchAll(PDO::FETCH_ASSOC);
     $filmVerileri = $stmtFilmVerileri->fetchAll(PDO::FETCH_ASSOC);
 #film verileri max kişi sql query başlangıç
 
+
+
+$sqlFilmler= "SELECT * FROM filmler  WHERE statu = 1 ORDER BY topHasilat DESC LIMIT 20";
+$stmtFilmler= $con->query($sqlFilmler);
+$encokizlenenfilmler = $stmtFilmler->fetchAll(PDO::FETCH_ASSOC);
+
+
+
 ?>

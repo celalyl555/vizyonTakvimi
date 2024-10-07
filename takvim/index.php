@@ -65,48 +65,43 @@ try {
 
             <div class="newsLeft">
 
-                <div class="yearSelect">
-                    <a href="javascript:void(0);" class="yearBtn" id="prevYear"><i class="fa-solid fa-angles-left"></i>
-                        2023</a>
-                    <select name="centerBtn" id="yearSelect">
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                    </select>
-                    <a href="javascript:void(0);" class="yearBtn" id="nextYear">2025 <i
-                            class="fa-solid fa-angles-right"></i></a>
-                </div>
-                <div class="yearSelect">
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="0">Oca</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="1">Şub</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="2">Mar</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="3">Nis</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="4">May</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="5">Haz</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="6">Tem</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="7">Ağu</a>
-                    <a href="javascript:void(0);" class="yearBtn active" data-month="8">Eyl</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="9">Eki</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="10">Kas</a>
-                    <a href="javascript:void(0);" class="yearBtn activex" data-month="11">Ara</a>
-                </div>
+            <div class="yearSelect">
+    <a href="javascript:void(0);" class="yearBtn" id="prevYear"><i class="fa-solid fa-angles-left"></i> <span id="prevYearText"></span></a>
+    <select name="centerBtn" id="yearSelect"></select>
+    <a href="javascript:void(0);" class="yearBtn" id="nextYear"><span id="nextYearText"></span> <i class="fa-solid fa-angles-right"></i></a>
+</div>
 
-                <div class="yearSelect">
-                    <p>Dağıtımcılar :</p>
-                    <?php
-                       echo '<select name="centerBtn" id="centerBtn">';
-                       echo '<option value="Tüm Dağıtımcılar" selected>Tüm Dağıtımcılar</option>';
-                   
-                       // Verileri döngü ile option etiketlerine yazdır
-                       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                           echo '<option value="' . htmlspecialchars($row['iddagitim']) . '">' . htmlspecialchars($row['dagitimad']) . '</option>';
-                       }
-                   
-                       echo '</select>';
-                  
-                       ?>
-                </div>
+
+<div class="yearSelect">
+    <a href="javascript:void(0);" class="yearBtn " data-month="0">Oca</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="1">Şub</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="2">Mar</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="3">Nis</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="4">May</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="5">Haz</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="6">Tem</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="7">Ağu</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="8">Eyl</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="9">Eki</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="10">Kas</a>
+    <a href="javascript:void(0);" class="yearBtn" data-month="11">Ara</a>
+</div>
+
+
+<div class="yearSelect">
+    <p>Dağıtımcılar :</p>
+    <?php
+       echo '<select name="centerBtn" id="centerBtn">';
+       echo '<option value="Tüm Dağıtımcılar" selected>Tüm Dağıtımcılar</option>';
+       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+           echo '<option value="' . htmlspecialchars($row['dagitimad']) . '">' . htmlspecialchars($row['dagitimad']) . '</option>';
+       }
+       echo '</select>';
+    ?>
+</div>
+
+
+
                 <div id="filmData" data-filmler='<?php echo htmlspecialchars(json_encode($sonuclar), ENT_QUOTES, 'UTF-8'); ?>'></div>
 
                 <div class="containerAy mt-1">
@@ -224,8 +219,91 @@ try {
 
 </html>
 
+
+
 <script>
-// Filmleri JSON formatında al
+function filterFilms() {
+    const selectedDistributor = document.getElementById('centerBtn').value; // Seçilen dağıtımcıyı al
+    const films = document.querySelectorAll('.tumBox'); 
+    
+
+    films.forEach(function(film) {
+        // Her film kutusunun dağıtımcı bilgisine eriş
+        const filmDistributor = film.getAttribute('data-distributor'); 
+        console.log(filmDistributor);
+
+        if (selectedDistributor === "Tüm Dağıtımcılar") {
+            // Eğer "Tüm Dağıtımcılar" seçilmişse tüm filmleri göster
+            film.style.display = 'block';
+        } else {
+            // Aksi takdirde, seçilen dağıtımcı ile uyuşmuyorsa gizle
+            if (filmDistributor === selectedDistributor) {
+                film.style.display = 'block'; // Eğer eşleşiyorsa göster
+            } else {
+                film.style.display = 'none'; // Eşleşmiyorsa gizle
+            }
+        }
+    });
+
+   
+    checkFilmContainers();
+}
+function checkFilmContainers() {
+    const filmContainers = document.querySelectorAll('.filmContainer2'); // Tüm filmContainer2 öğelerini seç
+
+    filmContainers.forEach(function(container) {
+        const boxes = container.querySelectorAll('.tumBox'); // Her container içindeki tumBox öğelerini seç
+        let allHidden = true; // Başlangıçta tüm kutuların gizli olduğunu varsayıyoruz
+
+        boxes.forEach(function(box) {
+            if (box.style.display !== 'none') {
+                allHidden = false; // Eğer en az bir kutu görünürse, allHidden'i false yap
+            }
+        });
+
+        // Eğer tüm kutular gizli ise, filmContainer2'yi gizle
+        if (allHidden) {
+            container.style.display = 'none';
+        } else {
+            container.style.display = 'block'; // Eğer en az bir kutu görünürse, filmContainer2'yi göster
+        }
+    });
+}
+
+// Bu fonksiyonu, film kutularını filtreleyen fonksiyondan sonra çağırabilirsiniz.
+
+ // Film container'ları kontrol et
+
+document.getElementById('centerBtn').addEventListener('change', function() {
+    filterFilms(); // Seçim değiştiğinde fonksiyonu çağır
+});
+
+</script>
+
+
+
+
+
+
+<script>
+// Mevcut ay ve yıl değişkenlerini saklayın
+let selectedMonth = new Date().getMonth(); // Varsayılan olarak mevcut ayı al
+let selectedYear = new Date().getFullYear(); // Varsayılan olarak mevcut yılı al
+const currentDate = new Date();
+window.onload = function() {
+   // Mevcut tarihi al
+    selectedYear = currentDate.getFullYear(); // Mevcut yılı al
+    selectedMonth = currentDate.getMonth(); // Mevcut ayı al
+
+    // Yıl seçim kutusunu güncelle
+    document.getElementById('yearSelect').value = selectedYear;
+
+    // Mevcut ay için takvimi güncelle
+    calculateFridays(selectedYear, selectedMonth);
+    updateYearButtons(selectedYear); // Yıl butonlarını güncelle
+    updateActiveMonthButton(document.querySelector(`.yearBtn[data-month="${selectedMonth}"]`)); // Aktif butonu güncelle
+};
+
 const filmDataElement = document.getElementById('filmData');
 const filmData = JSON.parse(filmDataElement.getAttribute('data-filmler'));
 
@@ -245,48 +323,78 @@ function calculateFridays(year, month) {
 
     // Haftaları ve tarihleri göster
     let infoHTML = '';
-
+    let d=0;
+    let s=0;
     fridays.forEach(friday => {
-        let weekNumber = getWeekNumber(friday);
-        infoHTML += `
-        <div class="takvimHeader">
-            <i class="fa-regular fa-calendar"></i>
-            <div id="weekInfo">
-                <h3>${friday.getDate()} ${fridayToTurkishMonth(friday.getMonth())} Cuma</h3>
-                <p class="title">${year} yılı ${weekNumber}. hafta</p>
-            </div>
-        </div>`;
+    let hasFilmData = false; // Film olup olmadığını takip etmek için
+    let tempHTML = ''; // Geçici HTML değişkeni
 
-        // Film verilerini kontrol et ve ekle
-        filmData.forEach(film => {
-            const filmVizyonTarihi = new Date(film.vizyon_tarihi); // Vizyon tarihini al
-            if (filmVizyonTarihi >= friday && filmVizyonTarihi < new Date(friday.getTime() + 86400000)) { // 1 gün içinde
-                infoHTML += `
-                <div class="tumBox">
-                    <div class="tumBoxLeft">
-                        <a href="filmler/film-detay/${film.seo_url}" class="tumBoxLeftImg">
-                            <img src="kapakfoto/${film.kapak_resmi}" alt="">
-                        </a>
-                        <div class="col-gap">
-                            <div>
-                                <a href="filmler/film-detay/${film.seo_url}" class="movieTitle1">${film.film_adi}</a>
-                            </div>
-                            <div>
-                                <p class="title">${film.filmturleri}</p>
-                            </div>
-                            <div>
-                                <p><strong>Dağıtımcı</strong></p>
-                                <a href="" class="title">${film.dagitimlar}</a>
-                            </div>
+    // Film verilerini kontrol et ve geçici HTML'ye ekle
+    filmData.forEach(film => {
+        const filmVizyonTarihi = new Date(film.vizyon_tarihi); // Vizyon tarihini al
+        const filmYear = filmVizyonTarihi.getFullYear();
+        const filmMonth = filmVizyonTarihi.getMonth();
+        const filmDay = filmVizyonTarihi.getDate();
+
+        // Filmin vizyon tarihi bu Cuma gününden önceki hafta içinde mi
+        if (filmYear === year && filmMonth === month && isSameWeek(friday, filmVizyonTarihi)) {
+            hasFilmData = true; // Film bulundu
+
+            tempHTML += `
+            <div class="tumBox filmclass-` + s + ` " data-distributor="${film.dagitimlar}">
+                <div class="tumBoxLeft">
+                    <a href="filmler/film-detay/${film.seo_url}" class="tumBoxLeftImg">
+                        <img src="kapakfoto/${film.kapak_resmi}" alt="">
+                    </a>
+                    <div class="col-gap">
+                        <div>
+                            <a href="filmler/film-detay/${film.seo_url}" class="movieTitle1">${film.film_adi}</a>
+                        </div>
+                        <div>
+                            <p class="title">${film.filmturleri}</p>
+                        </div>
+                        <div>
+                            <p><strong>Dağıtımcı</strong></p>
+                            <a href="" class="title">${film.dagitimlar}</a>
                         </div>
                     </div>
-                </div>`;
-            }
-        });
+                </div>
+            </div>`;
+        }
     });
 
+    // Eğer film verisi varsa takvimHeader ve ilgili film bilgilerini ekle
+    if (hasFilmData) {
+        infoHTML += `
+        <div class="filmContainer2 ">
+            <div class="takvimHeader">
+                <i class="fa-regular fa-calendar"></i>
+                <div id="weekInfo">
+                    <h3>${friday.getDate()} ${fridayToTurkishMonth(friday.getMonth())} Cuma</h3>
+                    <p class="title">${year} yılı ${getWeekNumber(friday)}. hafta</p>
+                </div>
+            </div>`;
+
+        infoHTML += tempHTML; // Film verilerini ekle
+        infoHTML += `</div>`; // Kapsayıcı divi kapat
+        d = 1;
+    }
+    s++;
+});
+
+  if(d===0){
+    infoHTML="Film verisi bulunamadı.";
+  }
     // Haftaların bilgilerini göster
     document.getElementById('weekInfoContainer').innerHTML = infoHTML;
+
+    filterFilms();
+}
+
+// Haftaların aynı olup olmadığını kontrol eden fonksiyon
+function isSameWeek(friday, filmDate) {
+    const diff = (friday - filmDate) / (1000 * 60 * 60 * 24);
+    return diff >= 0 && diff < 7;
 }
 
 // Diğer fonksiyonlar
@@ -301,25 +409,83 @@ function fridayToTurkishMonth(month) {
     return months[month];
 }
 
-// Ay butonlarına tıklama olayı ekle
+// Yıl seçim kutusunu güncelle
+document.getElementById('yearSelect').addEventListener('change', function() {
+    selectedYear = parseInt(this.value); // Seçilen yılı güncelle
+    calculateFridays(selectedYear, selectedMonth); // Seçilen yıl ve mevcut ay için takvimi güncelle
+    updateYearButtons(selectedYear); // Yıl butonlarını güncelle
+});
+
+// Ay butonuna tıklanınca takvimi güncelle
 document.querySelectorAll('.yearBtn').forEach(button => {
     button.addEventListener('click', function() {
-        const month = parseInt(this.dataset.month);
-        const year = new Date().getFullYear(); // Mevcut yılı kullan
-        calculateFridays(year, month); // İlgili ayı hesapla
-        updateActiveButton(this); // Aktif butonu güncelle
+        selectedMonth = parseInt(this.dataset.month); // Seçilen ayı güncelle
+        calculateFridays(selectedYear, selectedMonth); // İlgili ayı hesapla
+        updateActiveMonthButton(this); // Aktif butonu güncelle
     });
 });
 
-// Aktif butonu güncelleyen fonksiyon
-function updateActiveButton(activeButton) {
-    document.querySelectorAll('.yearBtn').forEach(button => {
-        button.classList.remove('active'); // Tüm butonların aktif sınıfını kaldır
+// Ay butonlarının aktif durumunu güncelleyen fonksiyon
+function updateActiveMonthButton(activeButton) {
+    const monthButtons = document.querySelectorAll('.yearBtn');
+    monthButtons.forEach(button => {
+        button.classList.remove('activex'); // Tüm butonlardan 'activex' sınıfını kaldır
     });
-    activeButton.classList.add('active'); // Tıklanan butona aktif sınıfı ekle
+    activeButton.classList.add('activex'); // Aktif butona 'activex' sınıfını ekle
 }
 
 // İlk yüklemede mevcut ay ve yıl için Cuma günlerini göster
+calculateFridays(selectedYear, selectedMonth);
+
+// Önceki yıl butonuna tıklanınca yıl seçimini geri al
+document.getElementById('prevYear').addEventListener('click', function() {
+    selectedMonth = currentDate.getMonth(); 
+    console.log(selectedMonth);
+    selectedYear--; // Yılı bir azalt
+    document.getElementById('yearSelect').value = selectedYear; // Yıl seçim kutusunu güncelle
+    calculateFridays(selectedYear, selectedMonth); // Yeni yılı hesapla
+    updateYearButtons(selectedYear);  // Yıl butonlarını güncelle
+    updateActiveMonthButton(document.querySelector(`.yearBtn[data-month="${selectedMonth}"]`));
+});
+
+// Sonraki yıl butonuna tıklanınca yıl seçimini ileri al
+document.getElementById('nextYear').addEventListener('click', function() {
+    selectedMonth = currentDate.getMonth(); 
+    selectedYear++; // Yılı bir artır
+    document.getElementById('yearSelect').value = selectedYear; // Yıl seçim kutusunu güncelle
+    calculateFridays(selectedYear, selectedMonth); // Yeni yılı hesapla
+    updateYearButtons(selectedYear);  // Yıl butonlarını güncelle
+    updateActiveMonthButton(document.querySelector(`.yearBtn[data-month="${selectedMonth}"]`));
+});
+
+// Yılları ve takvimi başlat
+populateYears();
 calculateFridays(new Date().getFullYear(), new Date().getMonth());
 
+function populateYears() {
+    const currentYear = new Date().getFullYear();
+    const selectYear = document.getElementById('yearSelect');
+
+    // 5 yıl geriye ve 5 yıl ileriye kadar olan yılları ekle
+    for (let i = currentYear - 6; i <= currentYear + 10; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        if (i === currentYear) {
+            option.selected = true;  // Mevcut yıl varsayılan olarak seçili
+        }
+        selectYear.appendChild(option);
+    }
+
+    // Mevcut yıl seçili olduğunda sol ve sağ yıl butonlarını güncelle
+    updateYearButtons(currentYear);
+}
+
+function updateYearButtons(selectedYear) {
+    document.getElementById('prevYearText').innerText = selectedYear - 1;
+    document.getElementById('nextYearText').innerText = selectedYear + 1;
+}
 </script>
+
+
+

@@ -70,7 +70,44 @@ include('../SqlQueryDizi.php');
 
         </div>
     </section>
+    <section>
 
+<div class="news">
+
+    <h2><i class="fa-solid fa-couch"></i> Diziler</h2>
+
+    <div class="newsInside">
+
+        <div class="newsMovie">
+
+            <?php  foreach ($filmler11 as $film) { ?>
+            <a href="filmler/film-detay/<?php echo $film['seo_url']; ?>" class="newsBox newsBoxMovie">
+                <div class="newsBoxImg">
+                    <img src="kapakfoto/<?php echo $film['kapak_resmi']; ?>"
+                        alt="kapakfoto/<?php echo $film['kapak_resmi']; ?>">
+                </div>
+                <div class="movieName">
+                    <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDate($film['vizyon_tarihi']); ?>
+                    </p>
+                    <h3><?php echo $film['film_adi']; ?></h3>
+                </div>
+            </a>
+
+            <?php } ?>
+            <div class="pageBtn">
+                <button class="pageBtns" id="prevBtn" disabled><i class="fa-solid fa-angles-left"></i></button>
+                <span id="pageInfo">1 / <?php echo ceil(count($filmler11) / 8); ?></span> <!-- 8 veriye göre -->
+                <button class="pageBtns" id="nextBtn"><i class="fa-solid fa-angles-right"></i></button>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+</div>
+</section>
     <!-- vizyon Area End -->
 
     <!-- ============================================================================== -->
@@ -85,58 +122,51 @@ include('../SqlQueryDizi.php');
 
             <div class="newsInside">
 
-                <div class="newsLeft">
-                <?php foreach ($haberler as $haber) :?>
-                    <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="haberfoto/<?php echo $film['haberfoto']; ?>">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']); ?></p>
-                            <h3><?php echo $haber['baslik']; ?></h3>
-                        </div>
-                    </a>
-                <?php endforeach; ?>
-                    
-                    <div class="pageBtn">
-                        <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
-                        <button class="pageBtns activePage">1</button>
-                        <button class="pageBtns activePage">2</button>
-                        <button class="pageBtns activePage">3</button>
-                        <button class="pageBtns activePage"><i class="fa-solid fa-angles-right"></i></button>
+                  <div class="newsLeft">
+                <?php  foreach ($haberler3 as $haber) { ?>
+                <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBox newsItem">
+                    <div class="newsBoxImg">
+                        <img src="haberfoto/<?php echo $haber['haberfoto']; ?>"
+                            alt="haberfoto/<?php echo $haber['haberfoto']; ?>">
                     </div>
-                    
+                    <div>
+                        <p><i class="fa-solid fa-hourglass-half"></i> <?php echo formatDateTime($haber['tarih']); ?></p>
+                        <h3><?php echo $haber['baslik']; ?></h3>
+                    </div>
+                </a>
+
+                <?php } ?>
+                <div class="pageBtnn">
+                    <button class="pageBtns" id="newsPrevBtn" disabled><i
+                            class="fa-solid fa-angles-left"></i></button>
+                    <span id="newsPageInfo">1 / <?php echo ceil(count($haberler2) / 4); ?></span> <!-- 4 veriye göre -->
+                    <button class="pageBtns" id="newsNextBtn"><i class="fa-solid fa-angles-right"></i></button>
                 </div>
 
-                <div class="newsRight">
-                    <div class="seyirci">
-                        <div class="dateArea1">
-                            <h3><i class="fa-solid fa-stopwatch"></i> En Çok İzlenenler</h3>
-                        </div>
-                        <ul class="list">
-                            <?php 
-                            $i = 1; // Sayaç başlatılıyor
-                            foreach ($filmVerileri as $film): 
-                            ?>
-                            <li>
-                                <a href="diziler/dizi-detay/<?php echo $film['seo_url']; ?>" class="aling-center">
-                                    <span><?php echo $i++;?></span>
-                                    <div class="infInside">
-                                        <p><?php echo $film['film_adi'];?></p>
-                                    </div>
-                                    <span><i class="fa-solid fa-caret-right"></i></span>
-                                </a>
-                            </li>
-                            <?php endforeach; ?>
-                        </ul>                    
+            </div>
+                
+                <div class="newsRight bgnone">
+                <h2><i class="fa-solid fa-newspaper"></i> Popüler Haberler</h2>
+                <?php
+                    foreach($haberler2 as $haber):?>
+                <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBoxHafta">
+                    <div class="haftaImg">
+                        <img src="haberfoto/<?php echo $haber['haberfoto'];?>" alt="">
                     </div>
-                </div>
-            
+                    <p><?php echo $haber['baslik'];?></p>
+                    <p class="date"><i
+                            class="fa-regular fa-clock"></i><?php echo formatDate($haber['tarih']);?></p>
+                </a>
+                <?php endforeach;?>
+            </div>
+
+               
             </div>
 
         </div>
     </section>
 
+   
     <!-- News Area End -->
     <?php 
     function formatDate($dateString) {
@@ -180,5 +210,94 @@ include('../SqlQueryDizi.php');
     }?>
     <?php include('../footer.php');?>
 
+    <script>
+let currentPage = 1; // Mevcut sayfa
+const itemsPerPage = 8; // Her sayfada gösterilecek film sayısı
+const newsBoxes = document.querySelectorAll('.newsBoxMovie'); // Tüm film kutularını seç
+const totalPages = Math.ceil(newsBoxes.length / itemsPerPage); // Toplam sayfa sayısını hesapla
+
+// İlk sayfayı göster
+showPage(currentPage);
+
+// Sayfayı gösteren fonksiyon
+function showPage(page) {
+    const start = (page - 1) * itemsPerPage; // Başlangıç indexi
+    const end = start + itemsPerPage; // Bitiş indexi
+
+    // Tüm film kutularını gizle
+    newsBoxes.forEach((box, index) => {
+        box.style.display = (index >= start && index < end) ? 'flex' : 'none';
+    });
+
+    // Sayfa bilgilerini güncelle (sayfa numaralandırma göstermek istiyorsanız)
+    document.getElementById('pageInfo').textContent = `${page} / ${totalPages}`;
+
+    // Buton durumlarını ayarla
+    document.getElementById('prevBtn').disabled = (page === 1);
+    document.getElementById('nextBtn').disabled = (page === totalPages);
+}
+
+// Önceki sayfa butonuna tıklama olayı
+document.getElementById('prevBtn').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        showPage(currentPage);
+    }
+});
+
+// Sonraki sayfa butonuna tıklama olayı
+document.getElementById('nextBtn').addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        showPage(currentPage);
+    }
+});
+</script>
+
+
+
+<script>
+let currentNewsPage = 1; // Mevcut sayfa
+const newsItemsPerPage = 4; // Her sayfada gösterilecek haber sayısı
+const newsItems = document.querySelectorAll('.newsItem'); // Tüm haber kutularını seç
+const totalNewsPages = Math.ceil(newsItems.length / newsItemsPerPage); // Toplam sayfa sayısını hesapla
+
+// İlk sayfayı göster
+showNewsPage(currentNewsPage);
+
+// Sayfayı gösteren fonksiyon
+function showNewsPage(page) {
+    const start = (page - 1) * newsItemsPerPage; // Başlangıç indexi
+    const end = start + newsItemsPerPage; // Bitiş indexi
+
+    // Tüm haber kutularını gizle
+    newsItems.forEach((item, index) => {
+        item.style.display = (index >= start && index < end) ? 'flex' : 'none';
+    });
+
+    // Sayfa bilgilerini güncelle (sayfa numarasını ve toplam sayfayı göster)
+    document.getElementById('newsPageInfo').textContent = `${page} / ${totalNewsPages}`;
+
+    // Buton durumlarını ayarla (1. sayfada geri butonu devre dışı, son sayfada ileri butonu devre dışı)
+    document.getElementById('newsPrevBtn').disabled = (page === 1);
+    document.getElementById('newsNextBtn').disabled = (page === totalNewsPages);
+}
+
+// Önceki sayfa butonuna tıklama olayı
+document.getElementById('newsPrevBtn').addEventListener('click', () => {
+    if (currentNewsPage > 1) {
+        currentNewsPage--;
+        showNewsPage(currentNewsPage);
+    }
+});
+
+// Sonraki sayfa butonuna tıklama olayı
+document.getElementById('newsNextBtn').addEventListener('click', () => {
+    if (currentNewsPage < totalNewsPages) {
+        currentNewsPage++;
+        showNewsPage(currentNewsPage);
+    }
+});
+</script>
 </body>
 </html>

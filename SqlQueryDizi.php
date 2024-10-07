@@ -47,12 +47,17 @@
 #yakında sql query bitiş
 
 #********************************************************************************
+$sqlHaberler = "SELECT * FROM haberler WHERE statu = 2 ORDER BY tarih DESC "; // En yeni 4 haberi al
+$stmtHaberler = $con->query($sqlHaberler);
+$haberler3 = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
 #haberler sql query başlangıç
     $sqlHaberler = "SELECT * FROM haberler WHERE statu = 2 ORDER BY tarih DESC LIMIT 4"; // En yeni 4 haberi al
     $stmtHaberler = $con->query($sqlHaberler);
     $haberler = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
 #haberler sql query bitiş
-
+$sqlHaberler = "SELECT * FROM haberler WHERE statu = 1 ORDER BY tarih DESC LIMIT 3"; // En yeni 4 haberi al
+$stmtHaberler = $con->query($sqlHaberler);
+$haberler2 = $stmtHaberler->fetchAll(PDO::FETCH_ASSOC);
 #*********************************************************************************
 #film verileri max kişi sql query başlangıç
     $sqlFilmVerileri = "SELECT f.*, fi.film_adi
@@ -71,5 +76,7 @@
     $stmtFilmVerileri = $con->query($sqlFilmVerileri);
     $filmVerileri = $stmtFilmVerileri->fetchAll(PDO::FETCH_ASSOC);
 #film verileri max kişi sql query başlangıç
-
+$sqlFilmler= "SELECT * FROM filmler  WHERE statu = 2 ORDER BY vizyon_tarihi DESC";
+$stmtFilmler= $con->query($sqlFilmler);
+$filmler11 = $stmtFilmler->fetchAll(PDO::FETCH_ASSOC);
 ?>
