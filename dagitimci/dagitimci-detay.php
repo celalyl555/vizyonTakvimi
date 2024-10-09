@@ -12,6 +12,7 @@ $seourl = isset($_GET['url']) ? $_GET['url'] : '';
 // Tarih Ayarlamaları Kodu Bitti
 include('../SqlQueryDagitimDetay.php');
 include('../header.php');
+
 ?>
     <!-- ============================================================================== -->
     
@@ -66,12 +67,12 @@ include('../header.php');
                         <tr>
                             <td>
                                 <div class="nameBox">
-                                    <img class="tableImg" src="assets/img/news/04.jpg" alt="">
+                                    <img class="tableImg" src="kapakfoto/<?php echo $filmListe['kapak_resmi']; ?>" alt="">
                                     <div>
                                         <a href="" title="<?php echo $filmListe['film_adi']; ?>">
                                             <?php echo $filmListe['film_adi']; ?>
                                         </a><br>
-                                        <small>6 Eylül 2024</small>
+                                        <small><?php echo formatDate($filmListe['vizyon_tarihi']); ?></small>
                                     </div>
                                 </div>
                             </td>
@@ -80,11 +81,14 @@ include('../header.php');
                             <!-- Haftaları buraya yazıyoruz (kac_hafta_cuma) -->
                             <td><?php echo isset($filmListe['kac_hafta_cuma']) ? $filmListe['kac_hafta_cuma'] : 'Veri Yok'; ?></td>
                             
-                            <!-- Sinema verisi buraya yazılıyor -->
-                            <td><?php echo isset($lokasyonData['']) ? $lokasyonData['toplam_sinema'] : 'Veri Yok'; ?></td>
+                            <!-- En büyük sinema sayısı buraya yazılıyor -->
+                            <td><?php echo isset($anahtarKilitDizi[$filmListe['film_id']]) ? $anahtarKilitDizi[$filmListe['film_id']] : 'Veri Yok'; ?></td>
+
+                            <!-- Toplam hasilat buraya yazılıyor -->
+                            <td>₺<?php echo isset($filmListe['toplam_hasilat']) ? number_format($filmListe['toplam_hasilat'], 2, ',', '.') : 'Veri Yok'; ?></td>
                             
-                            <td>₺10.071.952</td>
-                            <td>50.203</td>
+                            <!-- Toplam kişi sayısı buraya yazılıyor -->
+                            <td><?php echo isset($filmListe['toplam_kisi']) ? $filmListe['toplam_kisi'] : 'Veri Yok'; ?></td>
                         </tr>
                     <?php endforeach; ?>
 
@@ -99,7 +103,25 @@ include('../header.php');
     <!-- Table Area End -->
 
     <!-- ============================================================================== -->
+<?php
+ function formatDate($dateString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
 
+    // Tarih parçalarını ayır
+    $dateParts = explode("-", $dateString);
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    // Formatlanmış tarihi döndür
+    return $day . ' ' . $months[$month] . ' ' . $year;
+}
+
+?>
     <?php include('../footer.php');?>
 
 </body>
