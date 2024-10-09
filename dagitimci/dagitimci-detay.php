@@ -7,10 +7,12 @@ $minYear = 2000;
 
 $previousYear = ($selectedYear > $minYear) ? $selectedYear - 1 : $minYear;
 $nextYear = $selectedYear < $currentYear ? $selectedYear + 1 : $currentYear;
+
 $seourl = isset($_GET['url']) ? $_GET['url'] : '';
 // Tarih Ayarlamaları Kodu Bitti
-
-include('../header.php');?>
+include('../SqlQueryDagitimDetay.php');
+include('../header.php');
+?>
     <!-- ============================================================================== -->
     
     <!-- Table Area Start -->
@@ -19,13 +21,13 @@ include('../header.php');?>
 
         <div class="haftaMain">
 
-            <h2><i class="fa-solid fa-box-open"></i> UIP Türkiye</h2>
-            <p class="title">UIP Türkiye Dağıtımcılığını Yaptığı Filmler</p>
+            <h2><i class="fa-solid fa-box-open"></i> <?php echo $dagitimAd['dagitimad']?> </h2>
+            <p class="title"><?php echo $dagitimAd['dagitimad']?> Dağıtımcılığını Yaptığı Filmler</p>
 
   <!-- Tarih Ayarlamaları Kodu -->
 
 
-  <div class="yearSelect"> 
+                <div class="yearSelect"> 
                     <a href="dagitimci/dagitimci-detay/<?php echo $seourl; ?>?year=<?= $previousYear; ?>"
                         class="yearBtn <?= ($selectedYear == $minYear) ? 'disabled' : 'activex'; ?>">
                         <i class="fa-solid fa-angles-left"></i> <?= $previousYear; ?>
@@ -60,46 +62,17 @@ include('../header.php');?>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><div class="nameBox"><img class="tableImg" src="assets/img/news/04.jpg" alt=""><div> <a href="" title="Blade Runner : 2049">Blade Runner : 2049</a><br><small>6 Eylül 2024</small></div></div></td>
-                            <td>Disney</td>
-                            <td>1</td>
-                            <td>320</td>
-                            <td>₺10.071.952</td>
-                            <td>50.203</td>
-                        </tr>
-                        <tr>
-                            <td><div class="nameBox"><img class="tableImg" src="assets/img/mainImg/01.jpg" alt=""><div> <a href="" title="Deadpool & Wolverine">Deadpool & Wolverine</a><br><small>24 Temmuz 2024</small></div></div></td>
-                            <td>Disney</td>
-                            <td>7</td>
-                            <td>321</td>
-                            <td>₺240.916.350</td>
-                            <td>1.355.599</td>
-                        </tr>
-                        <tr>
-                            <td><div class="nameBox"><img class="tableImg" src="assets/img/news/02.jpg" alt=""><div> <a href="" title="Ters Yüz 2">Ters Yüz 2</a><br><small>14 Haziran 2024</small></div></div></td>
-                            <td>Disney</td>
-                            <td>13</td>
-                            <td>322</td>
-                            <td>₺381.752.103</td>
-                            <td>2.307.488</td>
-                        </tr>
-                        <tr>
-                            <td><div class="nameBox"><img class="tableImg" src="assets/img/news/02.jpg" alt=""><div> <a href="" title="Çılgın Hırsız 4">Çılgın Hırsız 4</a><br><small>5 Temmuz 2024</small></div></div></td>
-                            <td>Disney</td>
-                            <td>10</td>
-                            <td>320</td>
-                            <td>₺160.800.661</td>
-                            <td>981.508</td>
-                        </tr>
-                        <tr>
-                            <td><div class="nameBox"><img class="tableImg" src="assets/img/news/01.jpg" alt=""><div> <a href="" title="Cambaz">Cambaz</a><br><small>6 Eylül 2024</small></div></div></td>
-                            <td>Disney</td>
-                            <td>1</td>
-                            <td>195</td>
-                            <td>₺3.763.836</td>
-                            <td>20.347</td>
-                        </tr>
+                        <?php foreach ($dagitimListesi as $filmListe):?>
+                            <tr>
+                                <td><div class="nameBox"><img class="tableImg" src="assets/img/news/04.jpg" alt="">
+                                <div> <a href="" title="Blade Runner : 2049"><?php echo $filmListe['film_adi']; ?></a><br><small>6 Eylül 2024</small></div></div></td>
+                                <td><?php echo $filmListe['studyoad']; ?></td>
+                                <td><?php echo isset($haftaSayilari[$filmListe['film_id']]) ? $haftaSayilari[$filmListe['film_id']] : 'Veri Yok'; ?></td>
+                                <td><?php echo isset($lokasyonData['toplam_sinema']) ? $lokasyonData['toplam_sinema'] : 'Veri Yok'; ?></td>
+                                <td>₺10.071.952</td>
+                                <td>50.203</td>
+                            </tr>
+                        <?php endforeach;?>
                     </tbody>
                 </table>
             </div>
