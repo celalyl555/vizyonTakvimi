@@ -8,6 +8,8 @@ RewriteRule ^filmler/film-detay/(.*)$ filmler/film-detay.php?url=$1 [L,QSA]
 RewriteRule ^diziler/dizi-detay/(.*)$ diziler/dizi-detay.php?url=$1 [L,QSA]
 RewriteRule ^kisiler/kisi-detay/(.*)$ kisiler/kisi-detay.php?url=$1 [L,QSA]
 RewriteRule ^dagitimci/dagitimci-detay/(.*)$ dagitimci/dagitimci-detay.php?url=$1 [L,QSA]
+RewriteRule ^hafta/haftalar/(.*)$ hafta/haftalar.php?url=$1 [L,QSA]
+
 
 # Genel kural: Alt klasörlerdeki PHP dosyalarının uzantısını kaldır
 RewriteCond %{REQUEST_FILENAME} !-f

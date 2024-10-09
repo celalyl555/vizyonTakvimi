@@ -1,6 +1,8 @@
 <?php 
 include('../header.php');
-include('../admin/conn.php');
+include('../admin/conn.php');  
+include('../SqlQueryHaber.php');  
+
 //Tarih Ayarlamaları Kodu Başlangıç
 $currentYear = date('Y'); 
 $selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear; 
@@ -37,7 +39,7 @@ try {
         GROUP BY
             hafta
         ORDER BY
-            hafta DESC
+            hafta asc
     ");
 
     // Yıl parametresini bağlama
@@ -45,11 +47,9 @@ try {
     $stmt->execute();
     $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    print_r($filmler);
 
-    // Anahtar-kilit modeli için dizi oluşturma
     $haftaVerileri = [];
-    
+
     foreach ($filmler as $film) {
         $hafta = $film['hafta'];
         
@@ -60,10 +60,12 @@ try {
                 'toplam_hasilat' => 0,
                 'film_sayisi' => 0,
                 'max_toplamKisi' => 0,
-                'max_toplamHasilat' => 0
+                'max_toplamHasilat' => 0,
+                'kisi_degisimi' => null,
+                'hasilat_degisimi' => null
             ];
         }
-
+    
         // Haftalık toplamları güncelle
         $haftaVerileri[$hafta]['toplam_kisi'] += $film['toplam_kisi'];
         $haftaVerileri[$hafta]['toplam_hasilat'] += $film['toplam_hasilat'];
@@ -71,11 +73,31 @@ try {
         $haftaVerileri[$hafta]['max_toplamKisi'] += $film['max_toplamKisi'];
         $haftaVerileri[$hafta]['max_toplamHasilat'] += $film['max_toplamHasilat'];
     }
-
-    // Her hafta için verileri ekrana yazdırma
-    foreach ($haftaVerileri as $hafta => $veri) {
-        echo "Hafta: $hafta - Toplam Kişi: " . $veri['toplam_kisi'] . ", Toplam Hasılat: " . $veri['toplam_hasilat'] . ", Film Sayısı: " . $veri['film_sayisi'] . ", Max Toplam Kişi: " . $veri['max_toplamKisi'] . ", Max Toplam Hasılat: " . $veri['max_toplamHasilat'] . "\n";
+    
+    // Değişim oranını hesapla
+    $oncekiHafta = null;
+    
+    foreach ($haftaVerileri as $hafta => $veriler) {
+        if ($oncekiHafta !== null) {
+            // Kişi sayısındaki değişim oranı
+            if ($haftaVerileri[$oncekiHafta]['toplam_kisi'] > 0) {
+                $haftaVerileri[$hafta]['kisi_degisimi'] = (($veriler['toplam_kisi'] - $haftaVerileri[$oncekiHafta]['toplam_kisi']) / $haftaVerileri[$oncekiHafta]['toplam_kisi']) * 100;
+            }
+    
+            // Hasılat değişim oranı
+            if ($haftaVerileri[$oncekiHafta]['toplam_hasilat'] > 0) {
+                $haftaVerileri[$hafta]['hasilat_degisimi'] = (($veriler['toplam_hasilat'] - $haftaVerileri[$oncekiHafta]['toplam_hasilat']) / $haftaVerileri[$oncekiHafta]['toplam_hasilat']) * 100;
+            }
+        }
+    
+        // Bir sonraki kıyaslama için önceki haftayı güncelle
+        if ($veriler['toplam_kisi'] > 0 || $veriler['toplam_hasilat'] > 0) {
+            $oncekiHafta = $hafta;
+        }
     }
+    
+     
+    
 
 } catch (PDOException $e) {
     echo "Sorgu hatası: " . $e->getMessage();
@@ -84,47 +106,47 @@ try {
 
 
 ?>
-    <!-- ============================================================================== -->
-    
-    <!-- Table Area Start -->
+<!-- ============================================================================== -->
 
-    <section class="haftaSection">
+<!-- Table Area Start -->
 
-        <div class="haftaMain">
+<section class="haftaSection">
 
-            <h2><i class="fa-solid fa-box-open"></i> Haftalık Film Verileri</h2>
-            <p>Haftalara Göre Toplam Seyirci ve Hasılat Sayıları</p>
-            
-            <div class="status f-start">
-                <div class="tabBtnBox">
-                    <a href="hafta/index" class="tabBtnBoxa active">Yıllara Göre</a>
-                </div>
-                <div class="tabBtnBox">
-                    <a href="hafta/index-hafta" class="tabBtnBoxa">Haftalara Göre</a>
-                </div>
+    <div class="haftaMain">
+
+        <h2><i class="fa-solid fa-box-open"></i> Haftalık Film Verileri</h2>
+        <p>Haftalara Göre Toplam Seyirci ve Hasılat Sayıları</p>
+
+        <div class="status f-start">
+            <div class="tabBtnBox">
+                <a href="hafta/index" class="tabBtnBoxa active">Yıllara Göre</a>
             </div>
-            
+            <div class="tabBtnBox">
+                <a href="hafta/index-hafta" class="tabBtnBoxa">Haftalara Göre</a>
+            </div>
         </div>
 
-    </section>
+    </div>
 
-    <!-- Table Area End -->
+</section>
 
-    <!-- ============================================================================== -->
+<!-- Table Area End -->
 
-    <!-- ============================================================================== -->
-     
-    <!-- News Area End -->
+<!-- ============================================================================== -->
 
-    <section class="pt-0">
+<!-- ============================================================================== -->
 
-        <div class="news">
+<!-- News Area End -->
 
-            <div class="newsInside">
+<section class="pt-0">
 
-                <div class="newsLeft">
+    <div class="news">
 
-                      <!-- Tarih Ayarlamaları Kodu -->
+        <div class="newsInside">
+
+            <div class="newsLeft">
+
+                <!-- Tarih Ayarlamaları Kodu -->
 
 
                 <div class="yearSelect">
@@ -149,11 +171,11 @@ try {
 
                 <!-- Tarih Ayarlamaları Kodu bitti-->
 
-                    <div class="containerAy">
-                        
-                        
-                               
-                        <?php
+                <div class="containerAy">
+
+
+
+                    <?php
 date_default_timezone_set('Europe/Istanbul');
 
 // Türkçe ay isimleri
@@ -198,138 +220,124 @@ $weeksData = generateMonthsWeeks(isset($_GET['year']) ? $_GET['year'] : null);
 
 // HTML çıktısını göster
 ?>
-<div class="haftaMain">
-     
-
-    <div class="status f-start">
-        <div class="tabBtnBox">
-            <a href="hafta/index" class="tabBtnBoxa active">Yıllara Göre</a>
-        </div>
-        <div class="tabBtnBox">
-            <a href="hafta/index-hafta" class="tabBtnBoxa">Haftalara Göre</a>
-        </div>
-    </div>
-
-    <?php foreach ($weeksData as $month => $weeks): ?>
-        <div class="month" >
-            <h3><i class='fa-solid fa-calendar-week'></i> <?php echo $month; ?></h3>
-            <table class="mt-0">
-                <thead>
-                    <tr>
-                        <th>Hafta</th>
-                        <th>Tüm Filmler Seyirci</th>
-                        <th>Tüm Filmler Hasılat</th>
-                        <th>Film</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($weeks as $week): 
-                         $veri = $haftaVerileri[$week['week_number']];
-                        ?>
 
 
+                   
+                                <?php foreach ($weeksData as $month => $weeks): ?>
+                                <div class="month">
+                                    <h3><i class='fa-solid fa-calendar-week'></i> <?php echo $month; ?></h3>
+                                    <table class="mt-0">
+                                        <thead>
+                                            <tr>
+                                                <th>Hafta</th>
+                                                <th>Tüm Filmler Seyirci</th>
+                                                <th>Tüm Filmler Hasılat</th>
+                                                <th>Film</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($weeks as $week): 
+                                                $veri = $haftaVerileri[$week['week_number']];
+                         ?>
+                                                <tr>
+                                                <td>
+                                                    <a href="hafta/haftalar/<?php echo $week['week_number']."-".$selectedYear ?>" class="clicka">
+                                                        <?php echo $week['week_number']; ?>. Hafta <br>
+                                                        <?php echo $week['start'] . ' - ' . $week['end'] . ' ' . $week['month']; ?>
+                                                    </a>
+                                                </td>
 
-                        <tr>
-                            <td>
-                                <a href="haftalar.php" class="clicka">
-                                    <?php echo $week['week_number']; ?>. Hafta <br>
-                                    <?php echo $week['start'] . ' - ' . $week['end'] . ' ' . $week['month']; ?>
-                                </a>
-                            </td>
-                          
-                            <td>
-                            <?php if (isset($veri['toplam_kisi']) && !empty($veri['toplam_kisi'])): ?>
-    <span class="decrease">
-        <i class="fa-solid fa-down-long"></i> %6.6
-    </span>
-    <?php echo $veri['toplam_kisi']; ?>
-<?php else: ?>
-    -
-<?php endif; ?>
-                            </td>
-                            
-                            <td><?php if (isset($veri['toplam_hasilat']) && !empty($veri['toplam_hasilat'])): ?>
-    <span class="decrease">
-        <i class="fa-solid fa-down-long"></i> %6.6
-    </span>
-    <?php echo $veri['toplam_hasilat']; ?>
-<?php else: ?>
-    -
-<?php endif; ?>
-                            <td><?php if (isset($veri['film_sayisi']) && !empty($veri['film_sayisi'])): ?>
-  
-    <?php echo $veri['film_sayisi']; ?>
-<?php else: ?>
-    -
-<?php endif; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php endforeach; ?>
-</div>
+                                                <td>
+                                                    <?php if (isset($veri['toplam_kisi']) && !empty($veri['toplam_kisi'])): ?>
+                                                    <?php 
+                                             $degisimi = $veri['kisi_degisimi'] !== null ? $veri['kisi_degisimi'] : null;
+                                             if ($degisimi !== null) {
+                                                 if ($degisimi > 0) {
+                                                     echo '<span class="asc"><i class="fa-solid fa-up-long"></i> ' . number_format($degisimi, 2) . '%</span>';
+                                                 } elseif ($degisimi < 0) {
+                                                     echo '<span class="decrease"><i class="fa-solid fa-down-long"></i> ' . number_format(abs($degisimi), 2) . '%</span>';
+                                                 }
+                                             }
+                                            ?>
+                                                    <?php echo number_format($veri['toplam_kisi'], 0, ',', '.'); ?>
+                                                    <?php else: ?>
+                                                    -
+                                                    <?php endif; ?>
+                                                </td>
 
+                                                <td>
+                                                    <?php if (isset($veri['toplam_hasilat']) && !empty($veri['toplam_hasilat'])): ?>
+                                                    <?php 
+                                             $degisimi = $veri['hasilat_degisimi'] !== null ? $veri['hasilat_degisimi'] : null;
+                                             if ($degisimi !== null) {
+                                                 if ($degisimi > 0) {
+                                                     echo '<span class="asc"><i class="fa-solid fa-up-long"></i> ' . number_format($degisimi, 2) . '%</span>';
+                                                 } elseif ($degisimi < 0) {
+                                                     echo '<span class="decrease"><i class="fa-solid fa-down-long"></i> ' . number_format(abs($degisimi), 2) . '%</span>';
+                                                 }
+                                             }
+                                         ?>
+                                                    <?php echo number_format($veri['toplam_hasilat'], 2, ',', '.') . " ₺" ; ?>
+                                                    <?php else: ?>
+                                                    -
+                                                    <?php endif; ?>
+                                                </td>
 
+                                                <td>
+                                                    <?php if (isset($veri['film_sayisi']) && !empty($veri['film_sayisi'])): ?>
+                                                    <?php echo $veri['film_sayisi']; ?>
+                                                    <?php else: ?>
+                                                    -
+                                                    <?php endif; ?>
+                                                </td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <?php endforeach; ?>
 
-                            
-                        </div>
-
-
-
-
-                      
                     </div>
-                    
                 </div>
+
 
                 <div class="newsRight bgnone">
                     <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
-                    <a href="" class="newsBoxHafta">
+                    <?php foreach($haberler3 as $haber){  ?>
+                    <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBoxHafta">
                         <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
+                            <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="">
                         </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
+                        <p><?php echo $haber['baslik']; ?></p>
+                        <p class="date"><i class="fa-regular fa-clock"></i> <?php echo formatDate($haber['tarih']); ?></p>
                     </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Üçlemenin finalini yapan Venom: Son Dans'tan yeni fragman yayınlandı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
+                    <?php } ?>
                 </div>
-            
+
             </div>
 
         </div>
-    </section>
+</section>
 
-    <!-- News Area End -->
+<!-- News Area End -->
 
-    <?php 
+<?php 
+ function formatDate($dateString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
+
+    // Tarih parçalarını ayır
+    $dateParts = explode("-", $dateString);
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
+
+    // Formatlanmış tarihi döndür
+    return $day . ' ' . $months[$month] . ' ' . $year;
+}
     function ayIsmi($ayNumarasi) {
         // Ay isimleri dizisi (1'den 12'ye kadar)
         $aylar = [
@@ -396,7 +404,7 @@ $weeksData = generateMonthsWeeks(isset($_GET['year']) ? $_GET['year'] : null);
                         'week_number' => $weekStart->format('W'), // Yılın kaçıncı haftası
                         'start' => $weekStart->format('d'), // Hafta başlangıç günü
                         'end' => $weekEnd->format('d'), // Hafta bitiş günü
-                        'month' => $monthsShort[(int)$weekStart->format('m')], // Ay kısaltması
+                        'month' => $monthsShort[(int)$weekEnd->format('m')], // Ay kısaltması
                     ];
                 }
                 $monthStartDate->modify('+1 day'); // Bir gün ileri git
@@ -422,4 +430,5 @@ $weeksData = generateMonthsWeeks(isset($_GET['year']) ? $_GET['year'] : null);
     include('../footer.php');?>
 
 </body>
+
 </html>

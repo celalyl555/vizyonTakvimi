@@ -173,6 +173,15 @@ td a:hover {
     border-bottom: 3px solid var(--main);
 }
 
+.tabBtnBoxHeader {
+    font-size: 22px;
+    font-weight: bold;
+    padding: 5px 0px;
+    width: max-content;
+    transition: 0.3s;
+    color: var(--mainBold);
+}
+
 .tableHeader {
     width: 100%;
     text-align: center;
