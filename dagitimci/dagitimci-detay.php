@@ -62,17 +62,32 @@ include('../header.php');
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($dagitimListesi as $filmListe):?>
-                            <tr>
-                                <td><div class="nameBox"><img class="tableImg" src="assets/img/news/04.jpg" alt="">
-                                <div> <a href="" title="Blade Runner : 2049"><?php echo $filmListe['film_adi']; ?></a><br><small>6 Eylül 2024</small></div></div></td>
-                                <td><?php echo $filmListe['studyoad']; ?></td>
-                                <td><?php echo isset($haftaSayilari[$filmListe['film_id']]) ? $haftaSayilari[$filmListe['film_id']] : 'Veri Yok'; ?></td>
-                                <td><?php echo isset($lokasyonData['toplam_sinema']) ? $lokasyonData['toplam_sinema'] : 'Veri Yok'; ?></td>
-                                <td>₺10.071.952</td>
-                                <td>50.203</td>
-                            </tr>
-                        <?php endforeach;?>
+                    <?php foreach ($filmHaftaListesi as $filmListe): ?>
+                        <tr>
+                            <td>
+                                <div class="nameBox">
+                                    <img class="tableImg" src="assets/img/news/04.jpg" alt="">
+                                    <div>
+                                        <a href="" title="<?php echo $filmListe['film_adi']; ?>">
+                                            <?php echo $filmListe['film_adi']; ?>
+                                        </a><br>
+                                        <small>6 Eylül 2024</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><?php echo $filmListe['studyoad']; ?></td>
+                            
+                            <!-- Haftaları buraya yazıyoruz (kac_hafta_cuma) -->
+                            <td><?php echo isset($filmListe['kac_hafta_cuma']) ? $filmListe['kac_hafta_cuma'] : 'Veri Yok'; ?></td>
+                            
+                            <!-- Sinema verisi buraya yazılıyor -->
+                            <td><?php echo isset($lokasyonData['']) ? $lokasyonData['toplam_sinema'] : 'Veri Yok'; ?></td>
+                            
+                            <td>₺10.071.952</td>
+                            <td>50.203</td>
+                        </tr>
+                    <?php endforeach; ?>
+
                     </tbody>
                 </table>
             </div>
