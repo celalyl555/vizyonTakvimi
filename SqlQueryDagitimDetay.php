@@ -8,6 +8,7 @@ $sqlFilmHaftalari = "SELECT
     f.film_adi, 
     f.vizyon_tarihi,  -- Vizyon tarihi ekleniyor
     f.kapak_resmi,  -- Kapak resmi ekleniyor
+    f.seo_url AS filmseo,
     sd.seo_url, 
     s.studyoad, 
     COUNT(DISTINCT YEARWEEK(fv.tarih, 5)) AS kac_hafta_cuma,
@@ -70,6 +71,7 @@ $toplamSinema = $stmtToplamSinema->fetchAll(PDO::FETCH_ASSOC);
 
 // Anahtar-kilit modeli oluşturma
 $anahtarKilitDizi = [];
+ 
 foreach ($toplamSinema as $row) {
     $anahtarKilitDizi[$row['film_id']] = $row['toplam_max_sinema'];
 }

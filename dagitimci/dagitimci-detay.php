@@ -28,7 +28,7 @@ include('../header.php');
   <!-- Tarih Ayarlamaları Kodu -->
 
 
-                <div class="yearSelect"> 
+                <div class="yearSelect"> <!-- c -->
                     <a href="dagitimci/dagitimci-detay/<?php echo $seourl; ?>?year=<?= $previousYear; ?>"
                         class="yearBtn <?= ($selectedYear == $minYear) ? 'disabled' : 'activex'; ?>">
                         <i class="fa-solid fa-angles-left"></i> <?= $previousYear; ?>
@@ -69,7 +69,7 @@ include('../header.php');
                                 <div class="nameBox">
                                     <img class="tableImg" src="kapakfoto/<?php echo $filmListe['kapak_resmi']; ?>" alt="">
                                     <div>
-                                        <a href="" title="<?php echo $filmListe['film_adi']; ?>">
+                                        <a href="filmler/film-detay/<?php echo $filmListe['filmseo']; ?>" title="<?php echo $filmListe['film_adi']; ?>">
                                             <?php echo $filmListe['film_adi']; ?>
                                         </a><br>
                                         <small><?php echo formatDate($filmListe['vizyon_tarihi']); ?></small>
@@ -79,16 +79,16 @@ include('../header.php');
                             <td><?php echo $filmListe['studyoad']; ?></td>
                             
                             <!-- Haftaları buraya yazıyoruz (kac_hafta_cuma) -->
-                            <td><?php echo isset($filmListe['kac_hafta_cuma']) ? $filmListe['kac_hafta_cuma'] : 'Veri Yok'; ?></td>
+                            <td><?php echo isset($filmListe['kac_hafta_cuma']) ? $filmListe['kac_hafta_cuma'] : '-'; ?></td>
                             
                             <!-- En büyük sinema sayısı buraya yazılıyor -->
-                            <td><?php echo isset($anahtarKilitDizi[$filmListe['film_id']]) ? $anahtarKilitDizi[$filmListe['film_id']] : 'Veri Yok'; ?></td>
+                            <td><?php echo isset($anahtarKilitDizi[$filmListe['film_id']]) ? $anahtarKilitDizi[$filmListe['film_id']] : '-'; ?></td>
 
                             <!-- Toplam hasilat buraya yazılıyor -->
-                            <td>₺<?php echo isset($filmListe['toplam_hasilat']) ? number_format($filmListe['toplam_hasilat'], 2, ',', '.') : 'Veri Yok'; ?></td>
+                            <td>₺<?php echo isset($filmListe['toplam_hasilat']) ? number_format($filmListe['toplam_hasilat'], 2, ',', '.') : '-'; ?></td>
                             
                             <!-- Toplam kişi sayısı buraya yazılıyor -->
-                            <td><?php echo isset($filmListe['toplam_kisi']) ? $filmListe['toplam_kisi'] : 'Veri Yok'; ?></td>
+                            <td><?php echo isset($filmListe['toplam_kisi']) ? number_format($filmListe['toplam_kisi'], 0, ',', '.') : '-'; ?></td>
                         </tr>
                     <?php endforeach; ?>
 
