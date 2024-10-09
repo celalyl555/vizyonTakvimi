@@ -118,14 +118,14 @@ try {
                                         <div class="gap-10">
                                             <a
                                                 href="filmler/film-detay/<?php echo $kisiler['seo_url']; ?>"><?php echo $kisiler['film_adi']; ?></a>
-                                            <a href="" class="titledagitim"><?php echo $kisiler['dagitimlar']; ?></a>
+                                            <a href="dagitimci/dagitimci-detay/<?php echo $kisiler['seo_url']; ?>" class="titledagitim"><?php echo $kisiler['dagitimlar']; ?></a>
                                             <p><i class="fa-regular fa-clock"></i>
                                                 <?php echo formatDate($kisiler['vizyon_tarihi']); ?></p>
                                         </div>
                                     </div>
                                     <div>
                                         <p class="title1">Rekor</p>
-                                        <p><strong><?php echo $kisiler['topKisi']; ?><i class="fa-solid fa-user-group"></i></strong></p>
+                                        <p><strong><?php echo number_format($kisiler['topKisi'], 0, ',', '.'); ?><i class="fa-solid fa-user-group"></i></strong></p>
                                     </div>
                                 </div>
 
@@ -187,7 +187,7 @@ try {
                                     </div>
                                     <div>
                                         <p class="title1">Rekor</p>
-                                        <p><strong><?php  echo $filmkisi['topKisi'] ; ?><i class="fa-solid fa-user-group"></i></strong></p>
+                                        <p><strong><?php  echo number_format($filmkisi['topKisi'], 0, ',', '.'); ?><i class="fa-solid fa-user-group"></i></strong></p>
                                     </div>
                                 </div>
 

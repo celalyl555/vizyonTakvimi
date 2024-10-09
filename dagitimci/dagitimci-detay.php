@@ -1,4 +1,16 @@
-<?php include('../header.php');?>
+<?php
+
+//Tarih Ayarlamaları Kodu Başlangıç
+$currentYear = date('Y'); 
+$selectedYear = isset($_GET['year']) ? $_GET['year'] : $currentYear; 
+$minYear = 2000;
+
+$previousYear = ($selectedYear > $minYear) ? $selectedYear - 1 : $minYear;
+$nextYear = $selectedYear < $currentYear ? $selectedYear + 1 : $currentYear;
+$seourl = isset($_GET['url']) ? $_GET['url'] : '';
+// Tarih Ayarlamaları Kodu Bitti
+
+include('../header.php');?>
     <!-- ============================================================================== -->
     
     <!-- Table Area Start -->
@@ -10,17 +22,30 @@
             <h2><i class="fa-solid fa-box-open"></i> UIP Türkiye</h2>
             <p class="title">UIP Türkiye Dağıtımcılığını Yaptığı Filmler</p>
 
+  <!-- Tarih Ayarlamaları Kodu -->
 
-            <div class="yearSelect mt-1">
-                <a href="" class="yearBtn activex"><i class="fa-solid fa-angles-left"></i> 2023</a>
-                <select name="centerBtn" id="centerBtn" class="centerBtn">
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                    <option value="2022">2022</option>
-                    <option value="2021">2021</option>
-                </select>
-                <a href="" class="yearBtn activex">2025 <i class="fa-solid fa-angles-right"></i></a>
-            </div>
+
+  <div class="yearSelect"> 
+                    <a href="dagitimci/dagitimci-detay/<?php echo $seourl; ?>?year=<?= $previousYear; ?>"
+                        class="yearBtn <?= ($selectedYear == $minYear) ? 'disabled' : 'activex'; ?>">
+                        <i class="fa-solid fa-angles-left"></i> <?= $previousYear; ?>
+                    </a>
+
+                    <select name="centerBtn" id="centerBtn" class="centerBtn"
+                        onchange="window.location.href='dagitimci/dagitimci-detay/<?php echo $seourl; ?>?year=' + this.value;">
+                        <?php for ($year = $currentYear; $year >= $minYear; $year--): ?>
+                        <option value="<?= $year; ?>" <?= ($year == $selectedYear) ? 'selected' : ''; ?>><?= $year; ?>
+                        </option>
+                        <?php endfor; ?>
+                    </select>
+
+                    <a href="dagitimci/dagitimci-detay/<?php echo $seourl; ?>?year=<?= $nextYear; ?>"
+                        class="yearBtn <?= ($selectedYear >= $currentYear) ? 'disabled' : 'activex'; ?>">
+                        <?= $nextYear; ?> <i class="fa-solid fa-angles-right"></i>
+                    </a>
+                </div>
+
+                <!-- Tarih Ayarlamaları Kodu bitti-->
         
             <div class="containerTable">
                 <table id="movie-table">
