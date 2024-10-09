@@ -13,39 +13,73 @@ $nextYear = $selectedYear < $currentYear ? $selectedYear + 1 : $currentYear;
 try {
     $stmt = $con->prepare("
         SELECT
-            hafta,
+            WEEK(tarih, 5) AS hafta,
             SUM(max_toplamKisi) AS toplam_kisi,
-            SUM(max_toplamHasilat) AS toplam_hasilat
+            SUM(max_toplamHasilat) AS toplam_hasilat,
+            max_toplamHasilat,
+            max_toplamKisi,
+            COUNT(DISTINCT film_id) AS film_sayisi  
         FROM (
             SELECT
-                YEARWEEK(tarih, 5) AS hafta,
-                MAX(toplamKisi) AS max_toplamKisi,  -- Her film için maksimum kişi sayısı
-                MAX(toplamHasilat) AS max_toplamHasilat -- Her film için maksimum hasılat
+                tarih,
+                WEEK(tarih, 5) AS hafta,
+                MAX(toplamKisi) AS max_toplamKisi,
+                MAX(toplamHasilat) AS max_toplamHasilat,
+                film_id
             FROM
                 filmveriler
             WHERE 
-                DAYOFWEEK(tarih) = 5 OR DAYOFWEEK(tarih) = 4
+                (DAYOFWEEK(tarih) = 5 OR DAYOFWEEK(tarih) = 4)
+                AND YEAR(tarih) = :selectedYear
             GROUP BY
-                hafta, film_id  -- Film ID'sine göre grupla
+                hafta, film_id
         ) AS filmHafta
         GROUP BY
-            hafta  -- Haftaya göre gruplandır
+            hafta
         ORDER BY
             hafta DESC
     ");
 
+    // Yıl parametresini bağlama
+    $stmt->bindParam(':selectedYear', $selectedYear, PDO::PARAM_INT);
     $stmt->execute();
     $filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Sonuçları ekrana yazdırma
+    print_r($filmler);
+
+    // Anahtar-kilit modeli için dizi oluşturma
+    $haftaVerileri = [];
+    
     foreach ($filmler as $film) {
-        echo "Hafta: " . $film['hafta'] . " - Toplam Kişi: " . $film['toplam_kisi'] . " - Toplam Hasılat: " . $film['toplam_hasilat'] . "<br>";
+        $hafta = $film['hafta'];
+        
+        // Eğer bu hafta için veri yoksa, diziyi oluştur
+        if (!isset($haftaVerileri[$hafta])) {
+            $haftaVerileri[$hafta] = [
+                'toplam_kisi' => 0,
+                'toplam_hasilat' => 0,
+                'film_sayisi' => 0,
+                'max_toplamKisi' => 0,
+                'max_toplamHasilat' => 0
+            ];
+        }
+
+        // Haftalık toplamları güncelle
+        $haftaVerileri[$hafta]['toplam_kisi'] += $film['toplam_kisi'];
+        $haftaVerileri[$hafta]['toplam_hasilat'] += $film['toplam_hasilat'];
+        $haftaVerileri[$hafta]['film_sayisi'] += $film['film_sayisi'];
+        $haftaVerileri[$hafta]['max_toplamKisi'] += $film['max_toplamKisi'];
+        $haftaVerileri[$hafta]['max_toplamHasilat'] += $film['max_toplamHasilat'];
+    }
+
+    // Her hafta için verileri ekrana yazdırma
+    foreach ($haftaVerileri as $hafta => $veri) {
+        echo "Hafta: $hafta - Toplam Kişi: " . $veri['toplam_kisi'] . ", Toplam Hasılat: " . $veri['toplam_hasilat'] . ", Film Sayısı: " . $veri['film_sayisi'] . ", Max Toplam Kişi: " . $veri['max_toplamKisi'] . ", Max Toplam Hasılat: " . $veri['max_toplamHasilat'] . "\n";
     }
 
 } catch (PDOException $e) {
     echo "Sorgu hatası: " . $e->getMessage();
 }
-
 
 
 
@@ -183,15 +217,18 @@ $weeksData = generateMonthsWeeks(isset($_GET['year']) ? $_GET['year'] : null);
                 <thead>
                     <tr>
                         <th>Hafta</th>
-                        <th>İlk 10 Film Seyirci</th>
                         <th>Tüm Filmler Seyirci</th>
-                        <th>İlk 10 Film Hasılat</th>
                         <th>Tüm Filmler Hasılat</th>
                         <th>Film</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($weeks as $week): ?>
+                    <?php foreach ($weeks as $week): 
+                         $veri = $haftaVerileri[$week['week_number']];
+                        ?>
+
+
+
                         <tr>
                             <td>
                                 <a href="haftalar.php" class="clicka">
@@ -199,15 +236,32 @@ $weeksData = generateMonthsWeeks(isset($_GET['year']) ? $_GET['year'] : null);
                                     <?php echo $week['start'] . ' - ' . $week['end'] . ' ' . $week['month']; ?>
                                 </a>
                             </td>
+                          
                             <td>
-                                <span class="asc"><i class="fa-solid fa-up-long"></i> %21.6</span> 202.152
+                            <?php if (isset($veri['toplam_kisi']) && !empty($veri['toplam_kisi'])): ?>
+    <span class="decrease">
+        <i class="fa-solid fa-down-long"></i> %6.6
+    </span>
+    <?php echo $veri['toplam_kisi']; ?>
+<?php else: ?>
+    -
+<?php endif; ?>
                             </td>
-                            <td>
-                                <span class="asc"><i class="fa-solid fa-up-long"></i> %16.8</span> 239.578
-                            </td>
-                            <td><span class="decrease"><i class="fa-solid fa-down-long"></i> %9.0</span> 257.693</td>
-                            <td><span class="decrease"><i class="fa-solid fa-down-long"></i> %6.6</span> 288.081</td>
-                            <td><?php echo rand(1, 100); ?></td>
+                            
+                            <td><?php if (isset($veri['toplam_hasilat']) && !empty($veri['toplam_hasilat'])): ?>
+    <span class="decrease">
+        <i class="fa-solid fa-down-long"></i> %6.6
+    </span>
+    <?php echo $veri['toplam_hasilat']; ?>
+<?php else: ?>
+    -
+<?php endif; ?>
+                            <td><?php if (isset($veri['film_sayisi']) && !empty($veri['film_sayisi'])): ?>
+  
+    <?php echo $veri['film_sayisi']; ?>
+<?php else: ?>
+    -
+<?php endif; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
