@@ -43,11 +43,10 @@ try {
     $toplamHasilat = 0; // toplamhasilat için başlangıç değeri
     $toplamKisi = 0;    // toplamkisi için başlangıç değeri
     
+    $büyükDeğerhasilat =0; 
+    $büyükKisi=0;
+    
     foreach ($results as $result) {
-        // Her bir result için tarih ve diğer bilgileri ekrana yazdır
-        echo "Tarih: " . $result['tarih'] . " | Hasilat: " . $result['toplamhasilat'] . " | Kisi: " . $result['toplamkisi'] . "<br>";
-        
-        // toplamhasilat sütunundaki en büyük değeri bul
         if ($result['toplamhasilat'] > $toplamHasilat) {
             $toplamHasilat = $result['toplamhasilat'];
         }
@@ -58,20 +57,51 @@ try {
         }
     }
     
-    // En büyük değerleri ekrana yazdır
-    echo "En büyük Hasilat: " . $toplamHasilat . "<br>";
-    echo "En büyük Kisi: " . $toplamKisi . "<br>";
+    
 
     usort($results, function($a, $b) {
         return strtotime($a['tarih']) - strtotime($b['tarih']);
     });
     
-    print_r($result);
+    $cumartesitophasilat=0;
+    $cumartesitopkisi=0;
+    $pazartophasilat=0;
+    $pazartopkisi=0;
+    foreach ($results as $result){
+        $datetime = new DateTime($result['tarih']);
+        $gun = $datetime->format('w');
+        if ($gun == 6) {
+            $cumartesitophasilat=$result['toplamhasilat'];
+            $cumartesitopkisi=$result['toplamkisi'];
+            break;
+        }  
+    }
+    foreach ($results as $result){
+        $datetime = new DateTime($result['tarih']);
 
+        $gun = $datetime->format('w');
 
+        if ($gun == 0) {
+            $pazartophasilat=$result['toplamhasilat'];
+            $pazartopkisi=$result['toplamkisi'];
+            break;
+        }  
+    }
 
+ 
+    if ($cumartesitophasilat > $pazartophasilat) {
+        $büyükDeğerhasilat = $cumartesitophasilat;
+    } else {
+        $büyükDeğerhasilat = $pazartophasilat;
+    }
+   
+    if ($pazartopkisi > $cumartesitopkisi) {
+        $büyükKisi = $pazartopkisi;
+    } else {
+        $büyükKisi = $cumartesitopkisi;
+    }
 
-
+    echo $büyükKisi."    .". $büyükDeğerhasilat;
 
 
 
@@ -378,7 +408,10 @@ for ($i = 1; $i <= 3; $i++) {
             </div>
 
             <div class="newsRight bgnone">
-
+            <?php
+// Değerlerin kontrolü
+if (!empty($büyükKisi) || !empty($toplamKisi) || !empty($büyükDeğerhasilat) || !empty($toplamHasilat)) {
+    ?>
                 <div class="movieInfo">
                     <h3><i class="fa-solid fa-box"></i> Gişe Özeti</h3>
                     <div class="tab-content w-100">
@@ -392,14 +425,16 @@ for ($i = 1; $i <= 3; $i++) {
                                                 <p>İlk Hafta Sonu</p>
                                                 <div class="rowIns2">
                                                     <i class="fa-regular fa-user"></i>
-                                                    <p>32.457</p>
+                                                    <p><?php echo $büyükKisi ? number_format($büyükKisi, 0, ',', '.') : '-'; ?>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="endTxt">
                                                 <p>Toplam</p>
                                                 <div class="rowIns2">
                                                     <i class="fa-regular fa-user"></i>
-                                                    <p>32.457</p>
+                                                    <p><?php echo $toplamKisi ? number_format($toplamKisi, 0, ',', '.') : '-'; ?>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -415,15 +450,17 @@ for ($i = 1; $i <= 3; $i++) {
                                             <div>
                                                 <p>İlk Hafta Sonu</p>
                                                 <div class="rowIns2">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <p>25.839</p>
+                                                    <i class="fa-solid fa-money-bill"></i>
+                                                    <p><?php echo $büyükDeğerhasilat ?  number_format($büyükDeğerhasilat, 2, ',', '.').' ₺ '  : '-'; ?>
+                                                    </p>
                                                 </div>
                                             </div>
                                             <div class="endTxt">
                                                 <p>Toplam</p>
                                                 <div class="rowIns2">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <p>1.339.216</p>
+                                                    <i class="fa-solid fa-money-bill"></i>
+                                                    <p><?php echo $toplamHasilat ?  number_format($toplamHasilat, 2, ',', '.').' ₺ ' : '-'; ?>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
@@ -431,9 +468,10 @@ for ($i = 1; $i <= 3; $i++) {
                                 </div>
                             </li>
                         </ul>
+
                     </div>
                 </div>
-
+                <?php } ?>
                 <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
                 <?php
                                 foreach ($haberler as $haber) {
