@@ -128,7 +128,7 @@ for ($i = 1; $i <= 3; $i++) {
                 <div class="movieInfo">
                     <?php if (!empty($filmler2['filmturleri'])): ?>
                     <div>
-                        <p class="titleMovie">Filmin Türü</p>
+                        <p class="titleMovie">Dizinin Türü</p>
                         <p><?php echo $filmler2['filmturleri']; ?></p>
                     </div>
                     <?php endif; ?>
@@ -268,7 +268,7 @@ for ($i = 1; $i <= 3; $i++) {
 
 
                 <div class="newsTextArea mt-1">
-                    <h2><i class="fa-solid fa-video"></i> Filmin Konusu</h2>
+                    <h2><i class="fa-solid fa-couch"></i> Dizinin Konusu</h2>
                     <?php if (!empty($filmler2['film_konu'])): ?>
                     <p><?php echo $filmler2['film_konu'];  ?></p>
                     <?php endif; ?>
@@ -278,7 +278,7 @@ for ($i = 1; $i <= 3; $i++) {
                 
 
 
-                    <h2><i class="fa-solid fa-user-tie"></i> Filmin Kadrosu</h2>
+                    <h2><i class="fa-solid fa-user-tie"></i> Dizinin Kadrosu</h2>
 
 
 

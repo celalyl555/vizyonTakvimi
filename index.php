@@ -260,7 +260,7 @@ $tar = $basday . " - " . $bitday . " " . $turkishMonth . " " . $yil;
             <div>
                 <p>Hafta Sonu</p>
                 <div class="rowIns2">
-                <i class="fa-solid fa-money-bill"></i>
+                <i class="fa-solid fa-box"></i>
                     <p>
                         <?php 
                             echo isset($film['haftasonu_tophasilat']) 
@@ -273,7 +273,7 @@ $tar = $basday . " - " . $bitday . " " . $turkishMonth . " " . $yil;
             <div class="endTxt">
                 <p>Toplam</p>
                 <div class="rowIns2">
-                <i class="fa-solid fa-money-bill"></i>
+                <i class="fa-solid fa-box"></i>
                     <p>
                         <?php 
                             echo isset($film['hafta_hasilat']) 

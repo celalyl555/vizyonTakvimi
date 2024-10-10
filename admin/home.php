@@ -184,6 +184,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/35.0.1/classic/ckeditor.js"></script>
 
@@ -244,7 +246,140 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
 
         <!-- Page Content  -->
         <div id="content" class="p-4 p-md-5 pt-5">
-            <div id="content1" class="content pl-5">DASHBOARD</div>
+            <div id="content1" class="content pl-5">
+            <div class="app-main">
+    <div class="main-header-line">
+      <h1>Vizyon Takvimi</h1>
+    </div>
+    <div class="chart-row three">
+      <div class="chart-container-wrapper">
+        <div class="chart-container">
+          <div class="chart-info-wrapper">
+            <h2>Toplam Film Sayısı</h2>
+            <span>154</span>
+          </div>
+          <div class="chart-svg">
+            <i class="fa-solid fa-film"></i>
+          </div>
+        </div>
+      </div>
+      <div class="chart-container-wrapper">
+        <div class="chart-container">
+          <div class="chart-info-wrapper">
+            <h2>Toplam Dizi Sayısı</h2>
+            <span>54</span>
+          </div>
+          <div class="chart-svg">
+            <i class="fa-solid fa-couch"></i>
+          </div>
+        </div>
+      </div>
+      <div class="chart-container-wrapper">
+        <div class="chart-container">
+          <div class="chart-info-wrapper">
+            <h2>Toplam Haber Sayısı</h2>
+            <span>25</span>
+          </div>
+           <div class="chart-svg">
+            <i class="fa-solid fa-newspaper"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="chart-row two">
+      <div class="chart-container-wrapper big">
+        <div class="chart-container">
+          <div class="chart-container-header">
+            <h2>Filmlerin Toplam Hasılatı</h2>
+            <span>1 yıl</span>
+          </div>
+          <!-- Chart.js içerisinde tablo verileri tabloyu oradan düzenle -->
+          <div class="line-chart">
+            <canvas id="chart"></canvas>
+          </div>
+          <div class="chart-data-details">
+            <div class="chart-details-header"></div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-container-wrapper small">
+        <div class="chart-container applicants">
+          <div class="chart-container-header">
+            <h2>Vizyona Girecekler</h2>
+            <span>2 Hafta</span>
+          </div>
+          <!-- foreach Bura başla -->
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <!-- foreach Burda bitir -->
+        <!-- aşadakiler gereksiz -->
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <div class="applicant-line">
+            <img src="images/bg_1.jpg" alt="profile">
+            <div class="applicant-info">
+              <span><strong>Filmin Adı</strong></span>
+              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+            </div>
+          </div>
+          <!-- gereksizden buraya kadar sil -->
+        </div>
+      </div>
+    </div>
+  </div>
+            </div>
 
 
             <div id="content2" class="content" style="display: none;">
@@ -3945,7 +4080,8 @@ $(document).ready(function () {
     });
     </script>
 
-
+<script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js'></script>
+<script src="js/charts.js"></script>
 
 </body>
 
