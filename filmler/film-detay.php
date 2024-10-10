@@ -20,6 +20,63 @@ try {
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $salonSayisi = count($rows);
  
+    $sql = "
+    SELECT 
+        fv2.tarih,
+        fv2.toplamhasilat,
+        fv2.toplamkisi
+    FROM 
+        filmler f
+    JOIN 
+        filmveriler fv2 ON f.id = fv2.film_id
+    WHERE 
+        f.seo_url = :seourl
+    ORDER BY 
+        fv2.tarih ASC
+    ";
+    
+    $stmt = $con->prepare($sql);
+    $stmt->execute(['seourl' => $seourl]);
+    
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $toplamHasilat = 0; // toplamhasilat için başlangıç değeri
+    $toplamKisi = 0;    // toplamkisi için başlangıç değeri
+    
+    foreach ($results as $result) {
+        // Her bir result için tarih ve diğer bilgileri ekrana yazdır
+        echo "Tarih: " . $result['tarih'] . " | Hasilat: " . $result['toplamhasilat'] . " | Kisi: " . $result['toplamkisi'] . "<br>";
+        
+        // toplamhasilat sütunundaki en büyük değeri bul
+        if ($result['toplamhasilat'] > $toplamHasilat) {
+            $toplamHasilat = $result['toplamhasilat'];
+        }
+        
+        // toplamkisi sütunundaki en büyük değeri bul
+        if ($result['toplamkisi'] > $toplamKisi) {
+            $toplamKisi = $result['toplamkisi'];
+        }
+    }
+    
+    // En büyük değerleri ekrana yazdır
+    echo "En büyük Hasilat: " . $toplamHasilat . "<br>";
+    echo "En büyük Kisi: " . $toplamKisi . "<br>";
+
+    usort($results, function($a, $b) {
+        return strtotime($a['tarih']) - strtotime($b['tarih']);
+    });
+    
+    print_r($result);
+
+
+
+
+
+
+
+
+
+
     
 } catch (PDOException $e) {
     echo "Sorgu hatası: " . $e->getMessage();

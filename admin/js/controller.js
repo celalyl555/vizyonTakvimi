@@ -381,71 +381,10 @@ $(document).ready(function() {
           });
         });
       
-        // Film kayıt
-        $(document).ready(function () {
-          $('#filmForm').on('submit', function (e) {
-              e.preventDefault(); // Formun varsayılan submit işlemini durdurur.
-      
-              // Form verilerini toplama
-              var formData = new FormData(this);
-              // Multi-select alanlarındaki seçilen değerleri toplama
-              $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
-                  formData.append($(this).attr('id'), $(this).val());
-              });
-              formData.append('statu', 1);
-              $.ajax({
-                url: "controller/filmAdd.php", // PHP dosyasının yolu
-                type: "POST",
-                data: formData,
-                contentType: false, 
-                processData: false, 
-                success: function(response){
-                  alert(response);
-                    if(response.trim()==="" || response.trim===null){
-                      localStorage.setItem("uri", 'content3');
-                      location.reload();
-                    }
-                  
-                },
-                error: function(jqXHR, textStatus, errorThrown){
-                    alert("Bir hata oluştu: " + textStatus + " " + errorThrown);
-                }
-               });
-          }); 
-      });  
+        
       
  // Dizi  kayıt
- $(document).ready(function () {
-  $('#diziForm').on('submit', function (e) {
-      e.preventDefault(); // Formun varsayılan submit işlemini durdurur.
-
-      // Form verilerini toplama
-      var formData = new FormData(this);
-      // Multi-select alanlarındaki seçilen değerleri toplama
-      $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
-          formData.append($(this).attr('id'), $(this).val());
-      });
-      formData.append('statu', 2);
-      $.ajax({
-        url: "controller/filmAdd.php", // PHP dosyasının yolu
-        type: "POST",
-        data: formData,
-        contentType: false, 
-        processData: false, 
-        success: function(response){
-          alert(response);
-            if(response.trim()==="" || response.trim===null){
-              localStorage.setItem("uri", 'content4');
-              location.reload();
-            }
-          
-        },
-        error: function(jqXHR, textStatus, errorThrown){
-            alert("Bir hata oluştu: " + textStatus + " " + errorThrown);
-        }
-       });
-  }); 
-});  
+ 
 
    // Film Güncelleme
 
@@ -630,7 +569,7 @@ $(document).ready(function() {
 });
 
  // haber Sil
-
+     
  $(document).ready(function() {
   $('#haberSil').click(function(e) {
     e.preventDefault(); // Sayfanın yeniden yüklenmesini engeller
@@ -656,7 +595,36 @@ $(document).ready(function() {
   });
 });
 
+    
+$(document).ready(function() {
+  $('#veriSil').click(function(e) {
+    e.preventDefault(); // Sayfanın yeniden yüklenmesini engeller
+    const urlParams = new URLSearchParams(window.location.search);
 
+    var filmid = urlParams.get('filmid');
+    var veriid= $('#kategoriid').val();
+    alert(filmid);
+    $.ajax({
+      url: 'controller/veridelete.php',
+      type: 'POST',
+      data: { 
+        veriid: veriid,
+        filmid: filmid,
+       },
+      success: function(response) {
+   
+        // Başarılı olursa yapılacak işlemler
+          alert(response);
+          localStorage.setItem("uri", 'content6');
+          location.reload();
+      },
+      error: function(xhr, status, error) {
+        // Hata olursa yapılacak işlemler
+        console.log('Hata: ' + error);
+      }
+    });
+  });
+});
 
 // excel ekel
 
@@ -762,3 +730,31 @@ $(document).ready(function() {
 });
 
 
+
+$(document).ready(function() {
+  $('#submitForm32').on('click', function() {
+      // Formdan verileri al
+      var formData = new FormData($('#uploadFormveri')[0]);
+
+      // AJAX isteği yap
+      $.ajax({
+          url: 'controller/veriadd.php',
+          type: 'POST',
+          data: formData,
+          contentType: false,
+          processData: false,
+          success: function(response) {
+              // Sunucudan dönen yanıt
+              alert(response);
+              // Modalı kapat veya gerekli işlemleri yap
+              $('#uploadFormveri')[0].reset(); // Formu sıfırlamak için
+              // Eğer modal açıksa, kapatmak için
+              $('#myModal').modal('hide'); // 'myModal' sizin modal ID'niz olmalı
+          },
+          error: function(xhr, status, error) {
+              // Hata durumunda yapılacak işlemler
+              alert("Bir hata oluştu: " + error);
+          }
+      });
+  });
+});

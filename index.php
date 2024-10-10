@@ -4,7 +4,145 @@ include('header.php');
 include('admin/conn.php');
 include('generate_vapid.php');
 include('SqlQueryFilm.php');
+
+$hafta = date('W', strtotime('last Friday'));
+$yil = date('Y');
+
+// Haftanın başlangıcını ve bitişini hesapla
+$haftaBaslangic = new DateTime();
+$haftaBaslangic->setISODate($yil, $hafta+1, 5); // Haftanın son günü (Cuma)
+$haftaBaslangic->modify('-1 days'); // Haftanın son günü (Cuma)
+$haftaBitis = clone $haftaBaslangic;
+$haftaBitis->modify('-6 days'); // Haftanın ilk günü (Cumartesi bir hafta öncesi)
+
+// Cumartesi ve pazar günleri için tarih aralığı oluştur
+$cumartesi = new DateTime();
+$cumartesi->setISODate($yil, $hafta, 6); // Cumartesi
+$pazar = new DateTime();
+$pazar->setISODate($yil, $hafta, 7); // Pazar
+
+// Tarih formatlarını ayarla
+$endDateFormatted = $haftaBaslangic->format('Y-m-d');
+$startDateFormatted = $haftaBitis->format('Y-m-d');
+$cumartesiFormatted = $cumartesi->format('Y-m-d');
+$pazarFormatted = $pazar->format('Y-m-d');
+
+echo $startDateFormatted."<br>";
+echo $endDateFormatted."<br>";
+echo $cumartesiFormatted."<br>";
+echo $pazarFormatted."<br>";
+
+// Veritabanından yıllık verileri çek
+$sql = "
+    SELECT
+        fv.film_id,
+        MAX(fv.max_toplamHasilat) AS hafta_hasilat,
+        MAX(fv.max_toplamKisi) AS hafta_seyirci,
+        MAX(fv.sinema) AS salon_sayisi,
+        FLOOR(vizyon.toplam_hafta / 7) AS hafta_vizyon,
+        MAX(fv.max_toplamHasilat) AS toplam_hasilat,
+        MAX(fv.max_toplamKisi) AS toplam_seyirci,
+        f.*,  
+        sd.*,
+        f.seo_url AS f_seo_url,
+        (SELECT MAX(toplamKisi) FROM filmveriler WHERE tarih BETWEEN :cumartesi AND :pazar AND film_id = fv.film_id) AS haftasonu_topkisi,
+        (SELECT MAX(toplamHasilat) FROM filmveriler WHERE tarih BETWEEN :cumartesi AND :pazar AND film_id = fv.film_id) AS haftasonu_tophasilat
+    FROM (
+        SELECT
+            tarih,
+            WEEK(tarih, 5) AS hafta,
+            MAX(toplamKisi) AS max_toplamKisi,
+            MAX(toplamHasilat) AS max_toplamHasilat,
+            MAX(sinema) AS sinema,
+            film_id
+        FROM
+            filmveriler
+        WHERE 
+            tarih BETWEEN :startDate AND :endDate
+        GROUP BY
+            tarih, film_id
+    ) AS fv
+    LEFT JOIN (
+        SELECT
+            film_id,
+            COUNT(film_id) AS toplam_hafta
+        FROM
+            filmveriler
+        GROUP BY
+            film_id
+    ) AS vizyon ON fv.film_id = vizyon.film_id
+    LEFT JOIN filmler f ON fv.film_id = f.id
+    LEFT JOIN film_dagitim fd ON fv.film_id = fd.film_id
+    LEFT JOIN sinemadagitim sd ON fd.dagitim_id = sd.iddagitim
+    GROUP BY
+        fv.film_id
+    ORDER BY
+        fv.hafta ASC
+";
+
+// Sorguyu hazırlama ve parametreleri bağlama
+$stmt = $con->prepare($sql);
+$stmt->bindParam(':startDate', $startDateFormatted);
+$stmt->bindParam(':endDate', $endDateFormatted);
+$stmt->bindParam(':cumartesi', $cumartesiFormatted);
+$stmt->bindParam(':pazar', $pazarFormatted);
+
+// Sorguyu çalıştır
+$stmt->execute();
+$filmler = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$topSeyirci = 0;
+$topHasilat = 0;
+$topFilm = 0;
+$haftasonuTopKisi = 0;
+$haftasonuTopHasilat = 0;
+
+foreach($filmler as $film){
+    $topHasilat += $film['hafta_hasilat'];
+    $topSeyirci += $film['hafta_seyirci'];
+    $haftasonuTopKisi += $film['haftasonu_topkisi'];
+    $haftasonuTopHasilat += $film['haftasonu_tophasilat'];
+    $topFilm++;
+}
+
+// Haftasonu seyirci ve hasılat sonuçlarını ekrana yazdır
+echo "Haftasonu Toplam Seyirci: " . $haftasonuTopKisi . "<br>";
+echo "Haftasonu Toplam Hasılat: " . $haftasonuTopHasilat . "<br>";
+
+
+// Ay isimlerini İngilizceden Türkçeye çevirme
+$englishMonth = date('M'); // Bulunduğumuz ayın İngilizce kısa adını alır
+
+// İngilizce ayların Türkçe karşılıkları
+$months = [
+    'Jan' => 'Ocak',
+    'Feb' => 'Şubat',
+    'Mar' => 'Mart',
+    'Apr' => 'Nisan',
+    'May' => 'Mayıs',
+    'Jun' => 'Haziran',
+    'Jul' => 'Temmuz',
+    'Aug' => 'Ağustos',
+    'Sep' => 'Eylül',
+    'Oct' => 'Ekim',
+    'Nov' => 'Kasım',
+    'Dec' => 'Aralık'
+];
+
+// Türkçe karşılığını bulmak
+$turkishMonth = $months[$englishMonth];
+
+// Başlangıç ve bitiş günlerini ayarla
+$basday = date('d', strtotime($startDateFormatted)); // Başlangıç günü
+$bitday = date('d', strtotime($endDateFormatted)); // Bitiş günü
+$yil = date('Y', strtotime($startDateFormatted)); // Yıl
+
+// Tarihi oluşturuyoruz
+$tar = $basday . " - " . $bitday . " " . $turkishMonth . " " . $yil;
+
+
 ?>
+
     <!-- ============================================================================== -->
     <!-- Main Area  Start -->
 
@@ -50,7 +188,7 @@ include('SqlQueryFilm.php');
             <!-- Sağ sekmeli alan -->
             <div class="tab-section">
                 <div class="dateArea">
-                    <p><i class="fa-regular fa-calendar"></i> 06-08 Eylül 2024</p>
+                    <p><i class="fa-regular fa-calendar"></i> <?php echo $tar;  ?></p> 
                 </div>
                 <div class="tabs">
                     <button class="tab-button active" onclick="openTab1(event, 'seyirci')">Seyirci</button>
@@ -61,32 +199,46 @@ include('SqlQueryFilm.php');
                     <ul class="list">
                         <?php 
                         $sayacSeyirci = 1;
-                        foreach ($filmVerileri as $film):
+                        foreach ($filmler as $film):
                             if ($sayacSeyirci > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
                         ?>
                         <li>
-                            <a href="filmler/film-detay/<?php echo $film['seo_url']?>">
-                                <span><?php echo $sayacSeyirci++?></span>
-                                <div class="infInside">
-                                    <p><?php echo $film['film_adi']?></p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>32.457</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p><?php echo $film['toplamkisi']?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+                        <a href="filmler/film-detay/<?php echo $film['f_seo_url']?>">
+    <span><?php echo $sayacSeyirci++?></span>
+    <div class="infInside">
+        <p><?php echo isset($film['film_adi']) ? $film['film_adi'] : '-'; ?></p>
+        <div class="rowIns">
+            <div>
+                <p>Hafta Sonu</p>
+                <div class="rowIns2">
+                    <i class="fa-regular fa-user"></i> 
+                    <p>
+                        <?php 
+                            echo isset($film['haftasonu_topkisi']) 
+                                ? number_format($film['haftasonu_topkisi'], 0, ',', '.') 
+                                : '-'; 
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="endTxt">
+                <p>Toplam</p>
+                <div class="rowIns2">
+                    <i class="fa-regular fa-user"></i>
+                    <p>
+                        <?php 
+                            echo isset($film['hafta_seyirci']) 
+                                ? number_format($film['hafta_seyirci'], 0, ',', '.') 
+                                : '-'; 
+                        ?>
+                    </p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</a>
+
                         </li>
                         <?php endforeach; ?>
                     </ul>                    
@@ -96,37 +248,51 @@ include('SqlQueryFilm.php');
                     <ul class="list">
                         <?php 
                         $sayacHasilat = 1;
-                        foreach ($filmVerileri as $film):
+                        foreach ($filmler as $film):
                             if ($sayacHasilat > 5) break; // Sadece ilk 5 kaydı göstermek için döngüyü kır
                         ?>
                         <li>
-                            <a href="filmler/film-detay/<?php echo $film['seo_url']?>">
-                                <span> <?php echo $sayacHasilat++ ?></span>
-                                <div class="infInside">
-                                    <p><?php echo $film['film_adi']?></p>
-                                    <div class="rowIns">
-                                        <div>
-                                            <p>Hafta Sonu</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p>32.457</p>
-                                            </div>
-                                        </div>
-                                        <div class="endTxt">
-                                            <p>Toplam</p>
-                                            <div class="rowIns2">
-                                                <i class="fa-regular fa-user"></i>
-                                                <p><?php echo $film['toplamhasilat']?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
+                        <a href="filmler/film-detay/<?php echo $film['f_seo_url']?>">
+    <span><?php echo $sayacHasilat++ ?></span>
+    <div class="infInside">
+        <p><?php echo isset($film['film_adi']) ? $film['film_adi'] : '-'; ?></p>
+        <div class="rowIns">
+            <div>
+                <p>Hafta Sonu</p>
+                <div class="rowIns2">
+                <i class="fa-solid fa-money-bill"></i>
+                    <p>
+                        <?php 
+                            echo isset($film['haftasonu_tophasilat']) 
+                                ? number_format($film['haftasonu_tophasilat'], 2, ',', '.') . ' ₺' 
+                                : '-'; 
+                        ?>
+                    </p>
+                </div>
+            </div>
+            <div class="endTxt">
+                <p>Toplam</p>
+                <div class="rowIns2">
+                <i class="fa-solid fa-money-bill"></i>
+                    <p>
+                        <?php 
+                            echo isset($film['hafta_hasilat']) 
+                                ? number_format($film['hafta_hasilat'], 2, ',', '.') . ' ₺' 
+                                : '-'; 
+                        ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</a>
+
                         </li>
                         <?php endforeach; ?>
+                     
                     </ul>
                 </div>
-                <a href="hafta/haftalar.php" class="tumu">Tümü <i class="fa-solid fa-caret-right"></i></a>
+                <a href="hafta/haftalar/<?php echo $hafta.'-'.$yil; ?>" class="tumu">Tümü <i class="fa-solid fa-caret-right"></i></a>
             </div>
         </div>
 

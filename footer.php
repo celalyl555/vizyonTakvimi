@@ -6,16 +6,16 @@
 
     <ul class="linkUl">
         <li>
-            <a href="kurumsal/reklam-verin.html">Reklam Verin</a>
+            <a href="kurumsal/reklam-verin">Reklam Verin</a>
         </li>
         <li>
-            <a href="kurumsal/icerik-izni.html">İçerik İzni</a>
+            <a href="kurumsal/icerik-izni">İçerik İzni</a>
         </li>
         <li>
-            <a href="kurumsal/Hakkimizda.html">Hakkımızda</a>
+            <a href="kurumsal/Hakkimizda">Hakkımızda</a>
         </li>
         <li>
-            <a href="kurumsal/iletisim.html">İletişim</a>
+            <a href="kurumsal/iletisim">İletişim</a>
         </li>
     </ul>
 

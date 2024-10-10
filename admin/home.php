@@ -18,10 +18,10 @@ function fetchAll($con, $query, $params = []) {
 
 // Kategoriler, film türleri, ülkeler, stüdyolar, dağıtım ve haberler için verileri al
 $kategoriListesi = fetchAll($con, 'SELECT * FROM kategori');
-$filmturuListesi = fetchAll($con, 'SELECT * FROM filmturleri');
+$filmturuListesi = fetchAll($con, 'SELECT * FROM filmturleri ORDER BY idfilm DESC');
 $ulkeListesi = fetchAll($con, 'SELECT * FROM ulke');
-$studyoListesi = fetchAll($con, 'SELECT * FROM stüdyo');
-$dagitimListesi = fetchAll($con, 'SELECT * FROM sinemadagitim');
+$studyoListesi = fetchAll($con, 'SELECT * FROM stüdyo ORDER BY id DESC');
+$dagitimListesi = fetchAll($con, 'SELECT * FROM sinemadagitim ORDER BY iddagitim DESC');
 $haberler = fetchAll($con, 'SELECT * FROM haberler ORDER BY idhaber DESC');
 
 // Belirtilen haber id'sine göre verileri almak için
@@ -38,7 +38,7 @@ $sql = "
     FROM oyuncular o
     LEFT JOIN kayit_kategori kc ON o.idoyuncu = kc.kayit_id
     LEFT JOIN kategori k ON kc.kategori_id = k.idKategori
-    GROUP BY o.idoyuncu
+    GROUP BY o.idoyuncu desc;
 ";
 $veriler = fetchAll($con, $sql);
 
@@ -99,11 +99,6 @@ if (isset($_GET['filmid']) || isset($_GET['diziid'])) {
         $stmt = $con->prepare($sql);
         $stmt->execute(['film_id' => $param]);
         $filmler2 = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Eğer film verisi bulunamazsa hata mesajı göster
-        if (!$filmler2) {
-            echo "Film bulunamadı.";
-        }
 
         // Ekstra sorgular
         $veriler2 = fetchAll($con, 'SELECT * FROM filmveriler WHERE film_id = :film_id', ['film_id' => $param]);
@@ -706,12 +701,14 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                 <div class="col-md-6">
                                                     <!-- İlk sütun -->
                                                     <div class="form-group">
-                                                        <label>Film Adı</label>
+                                                        <label>Film Adı <span style="color: red;">*</span>
+                                                        </label>
                                                         <input type="text" name="filmadi" class="form-control">
                                                     </div>
                                                     <!-- Vizyon Tarihi -->
                                                     <div class="form-group">
-                                                        <label>Vizyon Tarihi</label>
+                                                        <label>Vizyon Tarihi <span style="color: red;">*</span>
+                                                        </label>
                                                         <input type="date" name="vizyonTarihi" class="form-control">
                                                     </div>
                                                     <!--Film  -->
@@ -726,7 +723,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
 
                                                     <!-- Sinema Dağıtım -->
                                                     <div class="form-group">
-                                                        <label for="sinemadagitim">Sinema Dağıtım</label>
+                                                        <label for="sinemadagitim">Sinema Dağıtım <span style="color: red;">*</span>
+                                                        </label>
                                                         <div class="selected-tags">
                                                             <input type="text" id="sinemadagitim" name="sinemadagitim"
                                                                 class="tagInput form-control"
@@ -749,7 +747,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                     </div>
                                                     <!-- Stüdyo -->
                                                     <div class="form-group">
-                                                        <label>Stüdyo</label>
+                                                        <label>Stüdyo <span style="color: red;">*</span>
+                                                        </label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen stüdyolar" readonly
@@ -772,7 +771,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
 
                                                     <!-- ülke -->
                                                     <div class="form-group">
-                                                        <label>Ülke</label>
+                                                        <label>Ülke <span style="color: red;">*</span>
+                                                        </label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen ülkeler" readonly
@@ -794,7 +794,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                     </div>
                                                     <!-- Film Türü -->
                                                     <div class="form-group">
-                                                        <label>Film Türü</label>
+                                                        <label>Film Türü <span style="color: red;">*</span>
+                                                        </label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen film türleri" readonly
@@ -825,7 +826,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
 
                                                     <!-- Yönetmen -->
                                                     <div class="form-group">
-                                                        <label>Yönetmen</label>
+                                                        <label>Yönetmen 
+                                                        </label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen yönetmen" readonly
@@ -998,14 +1000,14 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                         </div>
                                                     </div>
                                                     <!-- Toplam Hasılat -->
-                                                    <div class="form-group">
+                                                    <!-- <div class="form-group">
                                                         <label>Toplam Hasılat</label>
                                                         <input type="number" name="topHasilat" class="form-control">
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Toplam Seyirci</label>
                                                         <input type="number" name="topSeyirci" class="form-control">
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                                 <!-- Film Aciklamasi -->
                                                 <div class="col-12">
@@ -1021,7 +1023,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                         <span class="mup-main-msg">Kapak Resmi Yüklemek için
                                                             Tıklayınız.</span>
                                                         <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
-                                                            Fotoğrafı Yükleyiniz.</span>
+                                                            Fotoğrafı Yükleyiniz.</span><span style="color: red;">*</span>
+
 
                                                     </div>
                                                 </div>
@@ -1032,7 +1035,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                         <span class="mup-main-msg">Film Galerisine Fotoğraf Eklemek için
                                                             Tıklayınız.</span>
                                                         <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
-                                                            Yükleyiniz.</span>
+                                                            Yükleyiniz.</span><span style="color: red;">*</span>
+
 
                                                     </div>
                                                 </div>
@@ -1044,7 +1048,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                         <div class="modal-footer">
                                             <input type="button" id="addoyuncugeri" class="btn btn-default"
                                                 data-dismiss="modal" value="Geri">
-                                            <input type="submit" class="btn btn-info" value="Kaydet">
+                                            <input type="submit" class="btn btn-info" id="submitBtnfilmform" value="Kaydet">
                                         </div>
                                     </form>
                                 </div>
@@ -1690,9 +1694,13 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                     <div class="table-title">
                         <div class="row">
                             <div class="col-sm-6">
-                                <H2 class="custombg1h2">Box Office Değerleri</H2>
+                                <H2 class="custombg1h2">Film Verileri</H2>
                             </div>
                             <div class="col-sm-6">
+                            <a href="#uploadModal2" class="btn btn-success d-flex align-items-center mr-2"
+                                    data-toggle="modal">
+                                    <i class="material-icons">&#xE147;</i> <span>Geçmiş veri ekle</span>
+                                </a>
                                 <a href="#uploadModal" class="btn btn-success d-flex align-items-center mr-2"
                                     data-toggle="modal">
                                     <i class="material-icons">&#xE147;</i> <span>Excel Dosyası Yükle</span>
@@ -1741,7 +1749,12 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                     <td class="align-left">
                                         <?= htmlspecialchars(number_format($veri['toplamhasilat'], 2, ',', '.')) . '₺' ?>
                                     </td>
-
+                                    <td class="align-left">  <a href="#deleteEmployeeModal4" class="btn-delete p-03 m-0"
+                                                            onclick="getId('<?php echo $veri['id']; ?>');"
+                                                            data-toggle="modal">
+                                                            <i class="material-icons" data-toggle="tooltip"
+                                                                title="Delete">&#xE872;</i>
+                                                        </a></td>
                                 </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -1756,7 +1769,29 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                     </div>
                 </div>
 
-
+   <!-- Delete Modal HTML -->
+   <div id="deleteEmployeeModal4" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form>
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Sil</h4>
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-hidden="true">&times;</button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>Bu kayıtları silmek istediğinizden emin misiniz?</p>
+                                            <p class="text-warning"><small>Bu işlem geri alınamaz.</small></p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="button" id="deleteverigeri" class="btn btn-default"
+                                                data-dismiss="modal" value="Geri">
+                                            <input type="submit" id="veriSil" class="btn btn-danger" value="Sil">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
 
 
                 <div class="table-wrapper mt-0">
@@ -1840,6 +1875,41 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                     <h2>Film Detayları</h2>
                 </div>
 
+                <div id="uploadModal2" class="modal fade">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                        <form id="uploadFormveri" method="post" enctype="multipart/form-data">
+    <input type="hidden" value="<?php echo $filmler2['id'] ?>" name="filmid">
+    <input type="hidden" value="<?php echo $filmler2['dagitim_id'] ?>" name="dagitimid">
+
+    <div class="modal-header">
+        <h4 class="modal-title">Film Verileri Ekle</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    </div>
+
+    <div class="modal-body">
+        <div class="form-group">
+            <label>Toplam Hasılat</label>
+            <input type="number" name="topHasilat32" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Toplam Seyirci</label>
+            <input type="number" name="topSeyirci32" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label>Hafta Tarihi</label>
+            <input type="date" name="haftaTarihi" class="form-control" required>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <input type="button" class="btn btn-default" data-dismiss="modal" value="Geri">
+        <input type="button" class="btn btn-info" id="submitForm32" value="Kaydet">
+    </div>
+</form>
+
+                        </div>
+                    </div>
+                </div>
                 <div id="uploadModal" class="modal fade">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
@@ -2265,14 +2335,14 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                 </div>
                             </div>
                             <!-- Toplam Hasılat -->
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label>Toplam Hasılat</label>
                                 <input type="number" name="topHasilatedit"   value="<?php echo $filmler2['topHasilat']; ?>" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label>Toplam Seyirci</label>
                                 <input type="number" name="topSeyirciedit"   value="<?php echo $filmler2['topKisi']; ?>" class="form-control">
-                            </div>
+                            </div> -->
 
                         </div>
                         <!-- Film Aciklamasi -->
@@ -2458,12 +2528,12 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                 <div class="col-md-6">
                                                     <!-- İlk sütun -->
                                                     <div class="form-group">
-                                                        <label>Dizi Adı</label>
+                                                        <label>Dizi Adı <span style="color: red;">*</span></label>
                                                         <input type="text" name="filmadi" class="form-control">
                                                     </div>
                                                     <!-- Vizyon Tarihi -->
                                                     <div class="form-group">
-                                                        <label>Vizyon Tarihi</label>
+                                                        <label>Başlangıç Tarihi <span style="color: red;">*</span></label>
                                                         <input type="date" name="vizyonTarihi" class="form-control">
                                                     </div>
                                                     <div class="form-group">
@@ -2520,7 +2590,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
 
                                                     <!-- ülke -->
                                                     <div class="form-group">
-                                                        <label>Ülke</label>
+                                                        <label>Ülke <span style="color: red;">*</span></label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen ülkeler" readonly
@@ -2542,7 +2612,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                     </div>
                                                     <!-- Film Türü -->
                                                     <div class="form-group">
-                                                        <label>Dizi Türü</label>
+                                                        <label>Dizi Türü <span style="color: red;">*</span></label>
                                                         <div class="selected-tags">
                                                             <input type="text" class="tagInput form-control"
                                                                 placeholder="Seçilen film türleri" readonly
@@ -2762,7 +2832,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                         <span class="mup-main-msg">Kapak Resmi Yüklemek için
                                                             Tıklayınız.</span>
                                                         <span class="mup-msg" id="max-upload-number">Sadece 1 Kapak
-                                                            Fotoğrafı Yükleyiniz.</span>
+                                                            Fotoğrafı Yükleyiniz. <span style="color: red;">*</span></span>
 
                                                     </div>
                                                 </div>
@@ -2773,7 +2843,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
                                                         <span class="mup-main-msg">Dizi Galerisine Fotoğraf Eklemek için
                                                             Tıklayınız.</span>
                                                         <span class="mup-msg" id="max-upload-number">En Az 3 Fotoğraf
-                                                            Yükleyiniz.</span>
+                                                            Yükleyiniz. <span style="color: red;">*</span></span>
 
                                                     </div>
                                                 </div>
@@ -3442,127 +3512,195 @@ function formatDateTime($dateTimeString) {
     <script src="js/controller.js"></script>
 
     <script>
-    let kapakTotalFiles = 0;
-    let galeriTotalFiles = 0;
+         // Dosya yükleme limitleri
+  let kapakTotalFiles = 0;
+  let galeriTotalFiles = 0;
+$(document).ready(function () {
+  $('#filmForm').on('submit', function (e) {
+    e.preventDefault(); // Formun varsayılan submit işlemini durdurur.
 
-
-    function validateForm(event) {
-        // Form öğelerini al
-        const filmadi = document.querySelector('input[name="filmadi"]');
-        const vizyonTarihi = document.querySelector('input[name="vizyonTarihi"]');
-        const dagitimListesi = document.querySelectorAll('input[name="dagitimListesi[]"]:checked');
-        const studyoListesi = document.querySelectorAll('input[name="studyoListesi[]"]:checked');
-        const ulkeListesi = document.querySelectorAll('input[name="ulkeListesi[]"]:checked');
-        const filmturuListesi = document.querySelectorAll('input[name="filmturuListesi[]"]:checked');
-
-        // Yeni alanlar için doğrulamalar
-        const yonetmenListesi = document.querySelectorAll('input[name="yonetmenListesi[]"]:checked');
-        const senaryoListesi = document.querySelectorAll('input[name="senaryoListesi[]"]:checked');
-        const gyonetmeniListesi = document.querySelectorAll('input[name="gyonetmeniListesi[]"]:checked');
-        const kurguListesi = document.querySelectorAll('input[name="kurguListesi[]"]:checked');
-        const muzikListesi = document.querySelectorAll('input[name="müzikListesi[]"]:checked');
-        const oyuncuListesi = document.querySelectorAll('input[name="oyuncuListesi[]"]:checked');
-        const kapakfoto = document.querySelectorAll('input[name="kapakfotograf[]"]');
-        const galeri = document.querySelectorAll('input[name="galerifotograf[]"]');
-
-
-
-        // Boş alanları kontrol et
-        if (!filmadi.value.trim()) {
-            alert('Film adı boş olamaz!');
-            filmadi.focus();
-            event.preventDefault(); // Form gönderimini durdur
-            return false;
-        }
-
-        if (!vizyonTarihi.value) {
-            alert('Vizyon tarihi boş olamaz!');
-            vizyonTarihi.focus();
-            event.preventDefault();
-            return false;
-        }
-
-        if (dagitimListesi.length === 0) {
-            alert('En az bir dağıtım şirketi seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (studyoListesi.length === 0) {
-            alert('En az bir stüdyo seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (ulkeListesi.length === 0) {
-            alert('En az bir ülke seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (filmturuListesi.length === 0) {
-            alert('En az bir film türü seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        // Yeni alanlar için kontroller
-        if (yonetmenListesi.length === 0) {
-            alert('En az bir yönetmen seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (senaryoListesi.length === 0) {
-            alert('En az bir senarist seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (gyonetmeniListesi.length === 0) {
-            alert('En az bir görüntü yönetmeni seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (kurguListesi.length === 0) {
-            alert('En az bir kurgucu seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (muzikListesi.length === 0) {
-            alert('En az bir müzik bestecisi seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (oyuncuListesi.length === 0) {
-            alert('En az bir oyuncu seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-        if (kapakTotalFiles === 0) { // length değil, doğrudan sayıyı kontrol edin
-            alert('En az bir kapak fotoğrafı seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-        if (galeriTotalFiles < 3) { // 3'ten az olduğunda uyarı verilir
-            alert('En az 3 adet film galeri fotoğrafı seçilmelidir!');
-            event.preventDefault();
-            return false;
-        }
-
-
-        // Eğer tüm doğrulamalar geçerse, formun gönderilmesine izin ver
-        return true;
+    // Doğrulama işlemini yapalım
+    if (!validateForm(e)) {
+      return; // Eğer doğrulama başarısızsa, işlemi durdur
     }
 
-    // Formun submit olayına validateForm fonksiyonunu bağla
-    document.getElementById('filmForm').addEventListener('submit', validateForm);
+    // Form verilerini toplama
+    var formData = new FormData(this);
+    
+    // Multi-select alanlarındaki seçilen değerleri toplama
+    $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
+      formData.append($(this).attr('id'), $(this).val());
+    });
+    
+    formData.append('statu', 1); // Ekstra alan eklenebilir
+
+    // AJAX ile formu gönderme
+    $.ajax({
+      url: "controller/filmAdd.php", // PHP dosyasının yolu
+      type: "POST",
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        alert(response); // Sunucudan gelen cevabı göster
+        if (response.trim() === "" || response.trim() === null) {
+          localStorage.setItem("uri", 'content3');
+          location.reload(); // Sayfayı yenile
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert("Bir hata oluştu: " + textStatus + " " + errorThrown);
+      }
+    });
+  });
+
+ 
+
+  function validateForm(event) {
+    // Form öğelerini al
+    const filmadi = document.querySelector('input[name="filmadi"]');
+    const vizyonTarihi = document.querySelector('input[name="vizyonTarihi"]');
+    const dagitimListesi = document.querySelectorAll('input[name="dagitimListesi[]"]:checked');
+    const studyoListesi = document.querySelectorAll('input[name="studyoListesi[]"]:checked');
+    const ulkeListesi = document.querySelectorAll('input[name="ulkeListesi[]"]:checked');
+    const filmturuListesi = document.querySelectorAll('input[name="filmturuListesi[]"]:checked');
+
+    // Yeni alanlar için doğrulamalar
+    const yonetmenListesi = document.querySelectorAll('input[name="yonetmenListesi[]"]:checked');
+    const senaryoListesi = document.querySelectorAll('input[name="senaryoListesi[]"]:checked');
+    const gyonetmeniListesi = document.querySelectorAll('input[name="gyonetmeniListesi[]"]:checked');
+    const kurguListesi = document.querySelectorAll('input[name="kurguListesi[]"]:checked');
+    const muzikListesi = document.querySelectorAll('input[name="müzikListesi[]"]:checked');
+    const oyuncuListesi = document.querySelectorAll('input[name="oyuncuListesi[]"]:checked');
+    const kapakfoto = document.querySelectorAll('input[name="kapakfotograf[]"]');
+    const galeri = document.querySelectorAll('input[name="galerifotograf[]"]');
+
+    // Boş alanları kontrol et
+    if (!filmadi.value.trim()) {
+      alert('Film adı boş olamaz!');
+      filmadi.focus();
+      return false;  // Doğrulama başarısızsa false döndür
+    }
+
+    if (!vizyonTarihi.value) {
+      alert('Vizyon tarihi boş olamaz!');
+      vizyonTarihi.focus();
+      return false;
+    }
+
+    if (dagitimListesi.length === 0) {
+      alert('En az bir dağıtım şirketi seçilmelidir!');
+      return false;
+    }
+
+    if (studyoListesi.length === 0) {
+      alert('En az bir stüdyo seçilmelidir!');
+      return false;
+    }
+
+    if (ulkeListesi.length === 0) {
+      alert('En az bir ülke seçilmelidir!');
+      return false;
+    }
+
+    if (filmturuListesi.length === 0) {
+      alert('En az bir film türü seçilmelidir!');
+      return false;
+    }
+
+    if (kapakTotalFiles === 0) {
+      alert('En az bir kapak fotoğrafı seçilmelidir!');
+      return false;
+    }
+
+    if (galeriTotalFiles < 3) {
+      alert('En az 3 adet film galeri fotoğrafı seçilmelidir!');
+      return false;
+    }
+
+    // Eğer tüm doğrulamalar geçerse, true döndür
+    return true;
+  }
+});
+// DİZİ BİTİŞ
     </script>
 
+<script>
+$(document).ready(function () {
+  $('#diziForm').on('submit', function (e) {
+    e.preventDefault(); // Formun varsayılan submit işlemini durdurur.
+
+    var formData = new FormData(this);
+
+    // FormData üzerinden dizi adı, başlangıç tarihi, ülke ve film türlerini kontrol et
+    var filmadi = formData.get('filmadi'); // filmadi
+    var vizyonTarihi = formData.get('vizyonTarihi'); // vizyonTarihi
+    var ulkeListesi = formData.getAll('ulkeListesi[]'); // Seçilen ülkeler
+    var filmturuListesi = formData.getAll('filmturuListesi[]'); // Seçilen film türleri
+
+    // Kontrol ve uyarı mesajları
+    if (!filmadi.trim()) {
+      alert('Dizi adı boş olamaz!');
+      $('input[name="filmadi"]').focus(); // Dizi adı alanına odaklan
+      return; // Hata durumunda işlemi durdur
+    }
+
+    if (!vizyonTarihi) {
+      alert('Başlangıç tarihi boş olamaz!');
+      $('input[name="vizyonTarihi"]').focus(); // Başlangıç tarihi alanına odaklan
+      return; // Hata durumunda işlemi durdur
+    }
+
+    if (ulkeListesi.length === 0) {
+      alert('En az bir ülke seçilmelidir!');
+      return; // Hata durumunda işlemi durdur
+    }
+
+    if (filmturuListesi.length === 0) {
+      alert('En az bir dizi türü seçilmelidir!');
+      return; // Hata durumunda işlemi durdur
+    }
+    if (kapakTotalFiles === 0) {
+      alert('En az bir kapak fotoğrafı seçilmelidir!');
+      return;
+    }
+
+    if (galeriTotalFiles < 3) {
+      alert('En az 3 adet film galeri fotoğrafı seçilmelidir!');
+      return;
+    }
+    // Ekstra verileri (checkbox vb.) manuel eklemek isterseniz:
+    $('.multiselect .checkboxes input[type="checkbox"]:checked').each(function () {
+      formData.append($(this).attr('name'), $(this).val());
+    });
+
+    formData.append('statu', 2); // Ekstra veri ekleme
+
+    // AJAX isteği
+    $.ajax({
+      url: "controller/filmAdd.php",
+      type: "POST",
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        alert(response);
+        if (response.trim() === "") {
+          localStorage.setItem("uri", 'content4');
+          location.reload();
+        }
+      },
+      error: function (jqXHR, textStatus, errorThrown) {
+        alert("Bir hata oluştu: " + textStatus + " " + errorThrown);
+      }
+    });
+  });
+});
+
+
+</script>
+
+    
     <script src="js/jquery.min.js"></script>
     <script src="js/popper.js"></script>
     <script src="js/bootstrap.min.js"></script>

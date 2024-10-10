@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dogumTarihi = $_POST['dogumTarihi'];
     $olumTarihi = $_POST['olumTarihi'] ? $_POST['olumTarihi'] : null;
     $kategoriListesi = $_POST['kategori'];
-
+    $seourl=seoUrl($adSoyad);
     // Resim yükleme işlemi
     if (isset($_FILES['gorsel'])) {
         $hedefKlasor = '../../foto/';
@@ -54,13 +54,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
                 // Dosyayı belirtilen klasöre yükleme
                 if (move_uploaded_file($_FILES['gorsel']['tmp_name'], $hedefDosya)) {
-                    $sql = "INSERT INTO oyuncular (adsoyad, dogum, olum, resimyol) VALUES (:adSoyad, :dogumTarihi, :olumTarihi, :resimYolu)";
+                    $sql = "INSERT INTO oyuncular (adsoyad, dogum, olum, resimyol,seo_url) VALUES (:adSoyad, :dogumTarihi, :olumTarihi, :resimYolu, :seo_url)";
                     $stmt = $con->prepare($sql);
                     $stmt->execute([
                         ':adSoyad' => $adSoyad,
                         ':dogumTarihi' => $dogumTarihi,
                         ':olumTarihi' => $olumTarihi,
-                        ':resimYolu' => $yeniDosyaAdi
+                        ':resimYolu' => $yeniDosyaAdi, 
+                        ':seo_url' => $seourl
                     ]);
 
                     $kayitId = $con->lastInsertId();
@@ -83,5 +84,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "Resim yüklenemedi.";
     }
+}
+
+
+
+function seoUrl($haberAdi) {
+    // Türkçe karakterleri İngilizce karakterlere çevir
+    $turkce = array('Ç', 'Ş', 'Ğ', 'Ü', 'İ', 'Ö', 'ç', 'ş', 'ğ', 'ü', 'ı', 'ö');
+    $ingilizce = array('C', 'S', 'G', 'U', 'I', 'O', 'c', 's', 'g', 'u', 'i', 'o');
+    $seoAdi = str_replace($turkce, $ingilizce, $haberAdi);
+
+    // Küçük harfe dönüştür
+    $seoAdi = strtolower($seoAdi);
+
+    // Harf ve sayılar dışındaki karakterleri kaldır
+    $seoAdi = preg_replace('/[^a-z0-9\s-]/', '', $seoAdi);
+
+    // Boşlukları ve birden fazla boşluğu tek tire ile değiştir
+    $seoAdi = preg_replace('/\s+/', '-', $seoAdi);
+
+    // Baş ve sondaki tireleri temizle
+    $seoAdi = trim($seoAdi, '-');
+
+    return $seoAdi;
 }
 ?>

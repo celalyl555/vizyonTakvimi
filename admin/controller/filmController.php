@@ -90,23 +90,55 @@ class OyuncuController {
 
 
     public function dagitimEkle($dagitim) {
+        // Dağıtım değerinin geçerli olduğunu kontrol et
+        if (empty($dagitim)) {
+            echo "Dağıtım adı boş olamaz!";
+            return;
+        }
+    
+        $seourl = $this->generateSeoUrl($dagitim);
+    
         try {
-            $stmt = $this->dbConnection->prepare("INSERT INTO sinemadagitim (dagitimad) VALUES (:dagitim)");
-
+            $stmt = $this->dbConnection->prepare("INSERT INTO sinemadagitim (dagitimad, seo_url) VALUES (:dagitim, :seourl)");
+    
             // Veriyi bağla ve sorguyu çalıştır
             $stmt->bindParam(':dagitim', $dagitim, PDO::PARAM_STR);
-
+            $stmt->bindParam(':seourl', $seourl, PDO::PARAM_STR);
+    
             if ($stmt->execute()) {
                 echo "Kategori başarıyla eklendi: " . htmlspecialchars($dagitim);
             } else {
                 echo "Kategori eklenirken hata oluştu.";
             }
         } catch (PDOException $e) {
-            echo "Kategori eklenirken hata oluştu: " . $e->getMessage();
+            // Hata ayıklama için hata mesajını göster
+            echo "Kategori eklenirken hata oluştu: " . htmlspecialchars($e->getMessage());
         }
     }
-
-
+    
+    function generateSeoUrl($dagitimAdi) {
+        // Türkçe karakterleri İngilizce karakterlere çevir
+        $turkce = array('Ç', 'Ş', 'Ğ', 'Ü', 'İ', 'Ö', 'ç', 'ş', 'ğ', 'ü', 'ı', 'ö');
+        $ingilizce = array('C', 'S', 'G', 'U', 'I', 'O', 'c', 's', 'g', 'u', 'i', 'o');
+        
+        // Türkçe karakterleri değiştir
+        $seoAdi = str_replace($turkce, $ingilizce, $dagitimAdi);
+    
+        // Küçük harfe dönüştür
+        $seoAdi = strtolower($seoAdi);
+    
+        // Harf ve sayılar dışındaki karakterleri kaldır
+        $seoAdi = preg_replace('/[^a-z0-9\s-]/', '', $seoAdi);
+    
+        // Boşlukları ve birden fazla boşluğu tek tire ile değiştir
+        $seoAdi = preg_replace('/\s+/', '-', $seoAdi);
+    
+        // Baş ve sondaki tireleri temizle
+        $seoAdi = trim($seoAdi, '-');
+    
+        return $seoAdi;
+    }
+    
    
     public function dagitimSil($dagitimid) {
         try {

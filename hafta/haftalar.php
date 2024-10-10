@@ -9,7 +9,7 @@ list($hafta, $yil) = explode('-', $tarih);
 
 // Haftanın başlangıcını ve bitişini hesapla
 $haftaBaslangic = new DateTime();
-$haftaBaslangic->setISODate($yil, $hafta + 1, 5); // ISO hafta standardına göre başlar
+$haftaBaslangic->setISODate($yil, $hafta , 5); // ISO hafta standardına göre başlar
 $haftaBaslangic->modify('-1 days'); // Haftanın son günü
 $haftaBitis = clone $haftaBaslangic;
 $haftaBitis->modify('-6 days'); // Haftanın ilk günü

@@ -52,14 +52,39 @@ class OyuncuController {
 
     public function oyuncuSil($oyuncuid) {
         try {
+            // Önce oyuncuya ait resim yolunu al
+            $stmt = $this->dbConnection->prepare("SELECT resimyol FROM oyuncular WHERE idoyuncu = :oyuncuid");
+            $stmt->bindParam(':oyuncuid', $oyuncuid, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+            if ($result) {
+                $resimYolu = '../../foto/' . $result['resimyol'];
+    
+                // Resim dosyası mevcutsa sil
+                if (file_exists($resimYolu)) {
+                    if (unlink($resimYolu)) {
+                        echo "Oyuncunun resmi başarıyla silindi.";
+                    } else {
+                        echo "Oyuncunun resmi silinirken hata oluştu.";
+                    }
+                } else {
+                    echo "Oyuncunun resmi bulunamadı.";
+                }
+            } else {
+                echo "Oyuncu bulunamadı.";
+                return; // Eğer oyuncu bulunamazsa, silme işlemini durdur
+            }
+    
+            // Oyuncu silme işlemi
             $stmt = $this->dbConnection->prepare("DELETE FROM oyuncular WHERE idoyuncu = :oyuncuid");
             $stmt->bindParam(':oyuncuid', $oyuncuid, PDO::PARAM_INT);
-
+    
             if ($stmt->execute()) {
                 if ($stmt->rowCount() > 0) {
                     echo "Oyuncu başarıyla silindi.";
                 } else {
-                    echo "Silinecek Oyuncu bulunamadı.";
+                    echo "Silinecek oyuncu bulunamadı.";
                 }
             } else {
                 echo "Oyuncu silinirken hata oluştu.";
@@ -68,6 +93,7 @@ class OyuncuController {
             echo "Oyuncu silinirken hata oluştu: " . $e->getMessage();
         }
     }
+    
 
 
 

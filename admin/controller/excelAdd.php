@@ -96,11 +96,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             echo 'Veriler başarıyla kaydedildi.<br>';
 
-            // En büyük toplam hasılat ve toplam kişi değerlerini filmler tablosuna güncelle
-            if ($maxToplamHasilat > 0 || $maxToplamKisi > 0) {
-                $updateStmt = $con->prepare("UPDATE filmler SET topHasilat = ?, topKisi = ? WHERE id = ?");
-                $updateStmt->execute([$maxToplamHasilat, $maxToplamKisi, $filmId]);
-            }
+            $sql = "SELECT 
+            MAX(toplamkisi) AS max_toplamkisi,
+            MAX(toplamhasilat) AS max_toplamhasilat
+        FROM 
+            filmveriler
+        WHERE 
+            film_id = :filmid";
+
+           $stmt = $con->prepare($sql);
+           $stmt->bindParam(':filmid', $filmId);
+           $stmt->execute(); // Bu satır eksikti
+           $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+           // Fetch sonucunu kontrol et
+       
+           $max_toplamkisi = $result['max_toplamkisi'];
+           $max_toplamhasilat = $result['max_toplamhasilat'];
+
+           $update_sql = "UPDATE filmler 
+                          SET topKisi = :max_toplamkisi, topHasilat = :max_toplamhasilat
+                          WHERE id = :filmid";
+
+           $update_stmt = $con->prepare($update_sql);
+           $update_stmt->bindParam(':max_toplamkisi', $max_toplamkisi);
+           $update_stmt->bindParam(':max_toplamhasilat', $max_toplamhasilat);
+           $update_stmt->bindParam(':filmid', $filmId);
+           $update_stmt->execute();
 
         } catch (Exception $e) {
             // Hata durumunda işlemi geri al (Rollback)
