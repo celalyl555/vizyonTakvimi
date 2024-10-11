@@ -6,7 +6,7 @@ include('../SqlQueryHaber.php');
 
 
 try {
-    $sql = "SELECT f.*,
+    $sql = "SELECT f.*, s.seo_url as dagitimseo,
     GROUP_CONCAT(DISTINCT ftur.filmturu SEPARATOR ', ') AS filmturleri,
     GROUP_CONCAT(DISTINCT s.dagitimad SEPARATOR ', ') AS dagitimlar,
     GROUP_CONCAT(DISTINCT st.studyoad SEPARATOR ', ') AS stüdyolar
@@ -49,8 +49,6 @@ try {
 
     $ilkBesFilmKisi = array_slice($sonuclar, 0, 4);
    
- 
-
 
     $filtrelenmisFilmler = array_filter($sonuclar, function ($film) {
         return $film['topKisi'] > 1000000; // 1 milyondan fazla olan filmleri seç
@@ -118,7 +116,7 @@ try {
                                         <div class="gap-10">
                                             <a
                                                 href="filmler/film-detay/<?php echo $kisiler['seo_url']; ?>"><?php echo $kisiler['film_adi']; ?></a>
-                                            <a href="dagitimci/dagitimci-detay/<?php echo $kisiler['seo_url']; ?>" class="titledagitim"><?php echo $kisiler['dagitimlar']; ?></a>
+                                            <a href="dagitimci/dagitimci-detay/<?php echo $kisiler['dagitimseo']; ?>" class="titledagitim"><?php echo $kisiler['dagitimlar']; ?></a>
                                             <p><i class="fa-regular fa-clock"></i>
                                                 <?php echo formatDate($kisiler['vizyon_tarihi']); ?></p>
                                         </div>
@@ -149,7 +147,7 @@ try {
                                         <div class="gap-10">
                                             <a
                                                 href="filmler/film-detay/<?php echo $hasiliat['seo_url']; ?>"><?php echo $hasiliat['film_adi']; ?></a>
-                                            <a href="" class="titledagitim"><?php echo $hasiliat['dagitimlar']; ?></a>
+                                            <a href="dagitimci/dagitimci-detay/<?php echo $hasiliat['dagitimseo']; ?>" class="titledagitim"><?php echo $hasiliat['dagitimlar']; ?></a>
                                             <p><i class="fa-regular fa-clock"></i>
                                                 <?php echo formatDate($hasiliat['vizyon_tarihi']); ?></p>
                                         </div>
@@ -180,7 +178,7 @@ try {
                                         <div class="gap-10">
                                             <a
                                                 href="filmler/film-detay/<?php echo $filmkisi['seo_url']; ?>"><?php echo $filmkisi['film_adi']; ?></a>
-                                            <a href="" class="titledagitim"><?php echo $filmkisi['dagitimlar']; ?></a>
+                                            <a href="dagitimci/dagitimci-detay/<?php echo $filmkisi['dagitimseo']; ?>" class="titledagitim"><?php echo $filmkisi['dagitimlar']; ?></a>
                                             <p><i class="fa-regular fa-clock"></i>
                                                 <?php echo formatDate($filmkisi['vizyon_tarihi']); ?></p>
                                         </div>

@@ -70,7 +70,7 @@ include('../header.php');
                             <div class="nameBox">
                                 <img class="tableImg" src="kapakfoto/<?php echo $filmListe['kapak_resmi']; ?>" alt="">
                                 <div>
-                                    <a href="filmler/film-detay/<?php echo $filmListe['filmseo']; ?>" title="<?php echo $filmListe['film_adi']; ?>">
+                                    <a href="filmler/film-detay/<?php echo $filmListe['seo_url']; ?>">
                                         <?php echo $filmListe['film_adi']; ?>
                                     </a><br>
                                     <small><?php echo formatDate($filmListe['vizyon_tarihi']); ?></small>
