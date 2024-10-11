@@ -237,7 +237,16 @@ $weeksData = generateMonthsWeeks(isset($_GET['year']) ? $_GET['year'] : null);
                                         </thead>
                                         <tbody>
                                             <?php foreach ($weeks as $week): 
-                                                $veri = $haftaVerileri[$week['week_number']];
+                                               $weekNumber = $week['week_number'];
+
+                                               if (isset($haftaVerileri[$weekNumber])) {
+                                                   $veri = $haftaVerileri[$weekNumber];
+                                               } else {
+                                                   $veri = null; // Or set a default value as needed
+                                                   // You can also log this scenario if needed
+                                                   // error_log("Week number $weekNumber does not exist in haftaVerileri.");
+                                               }
+                                               
                          ?>
                                                 <tr>
                                                 <td>

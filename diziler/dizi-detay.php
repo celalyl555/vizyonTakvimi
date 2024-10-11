@@ -306,61 +306,7 @@ for ($i = 1; $i <= 3; $i++) {
 
             <div class="newsRight bgnone">
 
-                <div class="movieInfo">
-                    <h3><i class="fa-solid fa-box"></i> Gişe Özeti</h3>
-                    <div class="tab-content w-100">
-                        <ul class="list">
-                            <li>
-                                <div>
-                                    <div class="infInside">
-                                        <p class="titleMovie">SEYİRCİ</p>
-                                        <div class="rowIns">
-                                            <div>
-                                                <p>İlk Hafta Sonu</p>
-                                                <div class="rowIns2">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <p>32.457</p>
-                                                </div>
-                                            </div>
-                                            <div class="endTxt">
-                                                <p>Toplam</p>
-                                                <div class="rowIns2">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <p>32.457</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-
-                            <li>
-                                <div>
-                                    <div class="infInside mt-1">
-                                        <p class="titleMovie">HASILAT</p>
-                                        <div class="rowIns">
-                                            <div>
-                                                <p>İlk Hafta Sonu</p>
-                                                <div class="rowIns2">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <p>25.839</p>
-                                                </div>
-                                            </div>
-                                            <div class="endTxt">
-                                                <p>Toplam</p>
-                                                <div class="rowIns2">
-                                                    <i class="fa-regular fa-user"></i>
-                                                    <p>1.339.216</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
+             
                 <h2><i class="fa-solid fa-newspaper"></i> Güncel Haberler</h2>
                 <?php
                                 foreach ($haberler as $haber) {

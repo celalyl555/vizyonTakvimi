@@ -201,7 +201,7 @@ if (!empty($dogumTarihi) && $dogumTarihi != '0000-00-00') {
                                             <div class="nameBox">
                                                 <img class="tableImg" src="kapakfoto/' . htmlspecialchars($film['kapak_resmi']) . '" alt="">
                                                 <div>
-                                                    <a href="" title="' . htmlspecialchars($film['film_adi']) . '">' . htmlspecialchars($film['film_adi']) . '</a><br>
+                                                    <a href="filmler/film-detay/'.htmlspecialchars($film['seo_url']).'" title="' . htmlspecialchars($film['film_adi']) . '">' . htmlspecialchars($film['film_adi']) . '</a><br>
                                                     <small>' .formatDate($film['vizyon_tarihi']) . '</small>
                                                 </div>
                                             </div>

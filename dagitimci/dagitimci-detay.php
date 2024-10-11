@@ -63,7 +63,8 @@ include('../header.php');
                         </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($filmHaftaListesi as $filmListe): ?>
+                    <?php
+                    foreach ($filmHaftaListesi as $filmListe): ?>
                         <tr>
                             <td>
                                 <div class="nameBox">

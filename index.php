@@ -1,8 +1,5 @@
-
-<?php 
-include('header.php');
+<?php include('header.php');
 include('admin/conn.php');
-include('generate_vapid.php');
 include('SqlQueryFilm.php');
 
 $hafta = date('W', strtotime('last Friday'));
@@ -100,9 +97,7 @@ foreach($filmler as $film){
     $topFilm++;
 }
 
-// Haftasonu seyirci ve hasılat sonuçlarını ekrana yazdır
-echo "Haftasonu Toplam Seyirci: " . $haftasonuTopKisi . "<br>";
-echo "Haftasonu Toplam Hasılat: " . $haftasonuTopHasilat . "<br>";
+
 
 
 // Ay isimlerini İngilizceden Türkçeye çevirme
@@ -172,7 +167,6 @@ $stmt->execute(['visit_date' => $currentDate]);
 $visit = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Günlük kullanıcı sayısını yazdır
-echo "Bugün siteyi ziyaret eden kullanıcı sayısı: " . $visit['user_count'];
 
 
 

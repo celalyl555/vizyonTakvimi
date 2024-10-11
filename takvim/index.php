@@ -4,25 +4,27 @@ include('../header.php');
 include('../SqlQueryFilm.php');
 
 try {
-    $sql = "SELECT f.*,
+    $sql = "SELECT 
+    f.*,
     GROUP_CONCAT(DISTINCT ftur.filmturu SEPARATOR ', ') AS filmturleri,
-    GROUP_CONCAT(DISTINCT s.dagitimad SEPARATOR ', ') AS dagitimlar
-    FROM 
-        filmler f 
-   
-    LEFT JOIN 
-        film_filmturu ft ON f.id = ft.film_id
-    LEFT JOIN 
-        filmturleri ftur ON ft.filmturu_id = ftur.idfilm
-    LEFT JOIN 
-        film_dagitim d ON f.id = d.film_id
-    LEFT JOIN 
-        sinemadagitim s ON d.dagitim_id = s.iddagitim
-    WHERE 
-        f.statu = 1
-    GROUP BY 
-        f.id;
+    GROUP_CONCAT(DISTINCT s.dagitimad SEPARATOR ', ') AS dagitimlar,
+    GROUP_CONCAT(DISTINCT s.seo_url SEPARATOR ', ') AS dagitim_url
+FROM 
+    filmler f 
+LEFT JOIN 
+    film_filmturu ft ON f.id = ft.film_id
+LEFT JOIN 
+    filmturleri ftur ON ft.filmturu_id = ftur.idfilm
+LEFT JOIN 
+    film_dagitim d ON f.id = d.film_id
+LEFT JOIN 
+    sinemadagitim s ON d.dagitim_id = s.iddagitim
+WHERE 
+    f.statu = 1
+GROUP BY 
+    f.id;
 ";
+
 
 
     // Sorguyu çalıştıralım
@@ -355,7 +357,7 @@ function calculateFridays(year, month) {
                         </div>
                         <div>
                             <p><strong>Dağıtımcı</strong></p>
-                            <a href="" class="title">${film.dagitimlar}</a>
+                            <a href="dagitimci/dagitimci-detay/${film.dagitim_url}" class="title">${film.dagitimlar}</a>
                         </div>
                     </div>
                 </div>
