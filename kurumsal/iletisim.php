@@ -39,41 +39,48 @@
     </section>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('.submitForm').on('click', function(event) {
-                event.preventDefault(); // Formun normal gönderimini engelle
+       $(document).ready(function() {
+    $('.submitForm').on('click', function(event) {
+        event.preventDefault(); // Formun normal gönderimini engelle
 
-                // Formdan verileri al
-                var name = $('#name').val();
-                var firma = $('#firm').val();
-                var mail = $('#mail').val();
-                var phone = $('#phone').val(); // Telefon numarasını da al
-                var detay = $('#detay').val();
-                var not = $('#not').val();
-                
-                    $.ajax({
-                    url: 'kurumsal/MailManager/ReklamSubmit.php',
-                    method: 'POST',
-                    data: {
-                        name: name,
-                        firma: firma,
-                        mail: mail,
-                        phone: phone,
-                        detay: detay,
-                        not: not
-                    },
-                    success: function(response) {
-                        if (response = 1) {
-                            alert("Talebiniz alınmıştır.")
-                            location.reload();
-                        } else {
-                            alert(response);
-                        }
+        // Formdan verileri al
+        var name = $('#name').val();
+        var firma = $('#firm').val();
+        var mail = $('#mail').val();
+        var phone = $('#phone').val(); // Telefon numarasını da al
+        var detay = $('#detay').val();
+        var not = $('#not').val();
 
-                    }
-                });
-            });
+        // Boş alanları kontrol et
+        if (name === "" || firma === "" || mail === "" || phone === "" || detay === "" || not === "") {
+            alert("Lütfen tüm alanları doldurunuz.");
+            return; // Alanlar boşsa formu gönderme
+        }
+
+        // Alanlar doluysa AJAX ile formu gönder
+        $.ajax({
+            url: 'kurumsal/MailManager/Iletisim.php',
+            method: 'POST',
+            data: {
+                name: name,
+                firma: firma,
+                mail: mail,
+                phone: phone,
+                detay: detay,
+                not: not
+            },
+            success: function(response) {
+                if (response == 1) { // "==" ile eşitlik kontrolü yap
+                    alert("İletişim talebiniz alınmıştır.");
+                    location.reload();
+                } else {
+                    alert(response);
+                }
+            }
         });
+    });
+});
+
     </script>
     <!-- Table Area End -->
 

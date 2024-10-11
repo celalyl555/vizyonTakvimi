@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '9d061a3db636d7c6ffd41d376f11d13096133a5c',
+        'reference' => '0f9965768fa565040a8924f03a3dc73dc0162037',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '9d061a3db636d7c6ffd41d376f11d13096133a5c',
+            'reference' => '0f9965768fa565040a8924f03a3dc73dc0162037',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -120,6 +120,15 @@
             'provided' => array(
                 0 => '*',
             ),
+        ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v6.9.2',
+            'version' => '6.9.2.0',
+            'reference' => 'a7b17b42fa4887c92146243f3d2f4ccb962af17c',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'phpoffice/phpspreadsheet' => array(
             'pretty_version' => '3.3.0',

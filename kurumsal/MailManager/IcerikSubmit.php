@@ -21,17 +21,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com'; // SMTP sunucu adresi
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'fatihkayaci5334@gmail.com'; // SMTP kullanıcı adı
-        $mail->Password   = 'btmw zlhx uthu avrz'; // SMTP şifresi
+        $mail->Username   = 'cyftech2024@gmail.com'; // SMTP kullanıcı adı
+        $mail->Password   = 'udpm uxck oyvj zwyx'; // SMTP şifresi
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
+        $mail->CharSet = 'UTF-8';  // Karakter setini UTF-8 yap
 
         // Gönderici bilgisi
         $mail->setFrom($mail_address, 'içerik Başvuru');
         $mail->addReplyTo($mail_address, $name);
         
       // Alıcı bilgisi
-        $mail->addAddress("fatihkayaci5334@gmail.com"); // Formdan gelen e-posta adresi
+        $mail->addAddress("cyftech2024@gmail.com"); // Formdan gelen e-posta adresi
 
         // Mail içeriği
         $mail->isHTML(true);
@@ -42,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <p><b>Firma:</b> $firm</p>
             <p><b>E-posta:</b> $mail_address</p>
             <p><b>Telefon:</b> $phone</p>
-            <p><b>Telefon:</b> $alan</p>
+            <p><b>Kullanılacak Alan:</b> $alan</p>
             <p><b>Reklam Detayı:</b> $detay</p>
             <p><b>Not:</b> $not</p>
         ";

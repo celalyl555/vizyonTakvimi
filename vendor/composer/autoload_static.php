@@ -47,6 +47,7 @@ class ComposerStaticInitfae51bc3c08c755c7cc87eddee7640e9
             'Psr\\Cache\\' => 10,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
             'ParagonIE\\ConstantTime\\' => 23,
+            'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
         array (
@@ -155,6 +156,10 @@ class ComposerStaticInitfae51bc3c08c755c7cc87eddee7640e9
         'ParagonIE\\ConstantTime\\' => 
         array (
             0 => __DIR__ . '/..' . '/paragonie/constant_time_encoding/src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'Minishlink\\WebPush\\' => 
         array (

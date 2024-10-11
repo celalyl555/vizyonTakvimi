@@ -38,6 +38,18 @@
                 </div>
             </div>
 
+            <script>
+    document.getElementById("searchButton").addEventListener("click", function() {
+        // Arama kutusundaki değeri al
+        var searchValue = document.getElementById("searchInput").value;
+        
+        // Eğer arama kutusu boş değilse
+        if(searchValue) {
+            // Yeni URL'ye yönlendir
+            window.location.href = 'searchArea?value=' + encodeURIComponent(searchValue);
+        }
+    });
+</script>
             <button class="mobile-btn"><i id="menu-icon" class="fa-solid fa-bars"></i></button>
 
             <div id="navbar-mobile" class="navbar-mobile">
@@ -51,12 +63,7 @@
                 <a href="tum-zamanlar" class="bgclr"><i class="fa-solid fa-timeline"></i> Tüm Zamanlar</a>
                 <a href="hafta" class="bgclr"><i class="fa-solid fa-calendar-week"></i> Hafta</a></li>
                 <a href="yil" class="bgclr"><i class="fa-regular fa-calendar"></i> Yıllık</a></li>
-                <div class="headerInfo1">
-                    <div class="search-container">
-                        <input type="text" placeholder="Ara..." id="searchInput" class="search-input">
-                        <button id="searchButton" class="search-button"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
-                    </div>
-                </div>
+               
             </div>
         </div>
 

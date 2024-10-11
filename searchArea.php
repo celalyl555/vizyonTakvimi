@@ -1,289 +1,239 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <!-- myStyle Area -->
-    <link rel="stylesheet" href="../assets/css/header.css">
-    <link rel="stylesheet" href="../assets/css/mainStyle.css">
-    <link rel="stylesheet" href="../assets/css/hafta.css">
-    <link rel="stylesheet" href="../assets/css/footer.css">
-
-    <!-- Library Area -->
-    <script src="https://kit.fontawesome.com/be694eddd8.js" crossorigin="anonymous"></script>
-</head>
-<body>
-
-    <!-- Header Area Start -->
+<?php 
+include('header.php');  
+include('admin/conn.php');
+include('SqlQueryFilm.php');
+if (isset($_GET['value'])) {
+    // URL'deki value parametresini al ve %20 karakterlerini boşluk olarak decode et
+    $searchValue = urldecode($_GET['value']);
+    echo $searchValue;
     
-    <header>
-
-        <div class="top-header">
-            <a class="logoImg" href="/">
-                <img src="../assets/img/logo/logo.png" alt="Logo">
-            </a>
-            <div class="headerInfo">
-                <div class="search-container">
-                    <input type="text" placeholder="Ara..." id="searchInput" class="search-input">
-                    <button id="searchButton" class="search-button"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
-                </div>
-            </div>
-
-            <button class="mobile-btn"><i id="menu-icon" class="fa-solid fa-bars"></i></button>
-
-            <div id="navbar-mobile" class="navbar-mobile">
-                <a href="#"><i class="fa-solid fa-film"></i> Filmler</a>
-                <a href="#"><i class="fa-solid fa-newspaper"></i> Haberler</a>
-                <a href="#"><i class="fa-regular fa-calendar"></i> Takvim</a>
-                <a href="#"><i class="fa-solid fa-calendar-days"></i> Vizyon Takvimi Tablosu</a>
-                <p><i class="fa-solid fa-box-archive"></i> Gişe</p>
-                <a href="#" class="bgclr"><i class="fa-regular fa-paper-plane"></i> Dağıtımcılar</a>
-                <a href="#" class="bgclr"><i class="fa-solid fa-timeline"></i> Tüm Zamanlar</a>
-                <a href="#" class="bgclr"><i class="fa-solid fa-calendar-week"></i> Hafta</a></li>
-                <a href="#" class="bgclr"><i class="fa-regular fa-calendar"></i> Yıllık</a></li>
-                <div class="headerInfo1">
-                    <div class="search-container">
-                        <input type="text" placeholder="Ara..." id="searchInput" class="search-input">
-                        <button id="searchButton" class="search-button"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <nav class="bottom-header">
-            <ul class="bottomUl">
-                <li>
-                    <a class="navA" href="/"><i class="fa-solid fa-film"></i> Filmler</a>
-                </li>
-                <li>
-                    <a class="navA" href="/"><i class="fa-solid fa-newspaper"></i> Haberler</a>
-                </li>
-                <li>
-                    <a class="navA" href="/"><i class="fa-regular fa-calendar"></i> Takvim</a>
-                </li>
-                <li>
-                    <a class="navA" href="/"><i class="fa-solid fa-calendar-days"></i> Vizyon Takvimi Tablosu</a>
-                </li>
-                <li>
-                    <button class="navA" id="mainButton"><i class="fa-solid fa-box-archive"></i> Gişe <i class="fa-solid fa-caret-down"></i></button>
-                    <!-- Submenu -->
-                    <ul class="submenu" id="submenu">
-                        <li><a class="navA clr1" href="/"><i class="fa-regular fa-paper-plane"></i> Dağıtımcılar</a></li>
-                        <li><a class="navA clr1" href="/"><i class="fa-solid fa-timeline"></i> Tüm Zamanlar</a></li>
-                        <li><a class="navA clr1" href="/"><i class="fa-solid fa-calendar-week"></i> Hafta</a></li>
-                        <li><a class="navA clr1" href="/"><i class="fa-regular fa-calendar"></i> Yıllık</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-
-    </header>
-
-    <!-- Header Area End -->
-
-    <!-- ============================================================================== -->
+    // Arama kelimesini küçük harfe çevir
+    $searchValueLower = strtolower($searchValue);
     
-    <!-- Table Area Start -->
+    try {
+        // Filmler tablosundan arama
+        $filmSorgu = $con->prepare("SELECT * FROM filmler WHERE LOWER(film_adi) LIKE LOWER(:searchValue)");
+        $filmSorgu->bindValue(':searchValue', '%' . $searchValueLower . '%'); // % ile birlikte bağla
+        $filmSorgu->execute();
+        $filmler = $filmSorgu->fetchAll(PDO::FETCH_ASSOC); // Filmler sonuçlarını diziye ata
+    
+        // Haberler tablosundan arama
+        $haberSorgu = $con->prepare("SELECT * FROM haberler WHERE LOWER(baslik) LIKE LOWER(:searchValue)");
+        $haberSorgu->bindValue(':searchValue', '%' . $searchValueLower . '%'); // % ile birlikte bağla
+        $haberSorgu->execute();
+        $haberler = $haberSorgu->fetchAll(PDO::FETCH_ASSOC); // Haberler sonuçlarını diziye ata
+    
+        // Oyuncular tablosundan arama
+        $oyuncuSorgu = $con->prepare("SELECT * FROM oyuncular WHERE LOWER(adsoyad) LIKE LOWER(:searchValue)");
+        $oyuncuSorgu->bindValue(':searchValue', '%' . $searchValueLower . '%'); // % ile birlikte bağla
+        $oyuncuSorgu->execute();
+        $oyuncular = $oyuncuSorgu->fetchAll(PDO::FETCH_ASSOC); // Oyuncular sonuçlarını diziye ata
+    
+        $statu1Count = 0; // Statusu 1 olan film sayısını tutacak sayaç
+        $statu2Count = 0;
+if (!empty($filmler)) {
+    foreach ($filmler as $film) {
+        // Eğer statu 1 ise sayacı artır
+        if ( $film['statu'] == 1) {
+            $statu1Count++;
+        }else{
+            $statu2Count++;
+        }
+    }
+}
+    
+    } catch (PDOException $e) {
+        echo "Veritabanı bağlantı hatası: " . $e->getMessage();
+    }
+}
+?>
 
-    <section class="haftaSection">
 
-        <div class="haftaMain">
-            
-            <h2><i class="fa-solid fa-magnifying-glass"></i> "Aranan Kelime" İçin Arama Sonuçları</h2>
 
-        </div>
 
-    </section>
+<!-- ============================================================================== -->
 
-    <!-- Table Area End -->
+<!-- Table Area Start -->
 
-    <!-- ============================================================================== -->
+<section class="haftaSection">
 
-    <!-- News Area End -->
+    <div class="haftaMain">
 
-    <section class="pt-0">
+        <h2><i class="fa-solid fa-magnifying-glass"></i> "<?php echo $searchValue; ?>" İçin Arama Sonuçları</h2>
 
-        <div class="news pt-0">
+    </div>
 
-            <div class="newsInside">
+</section>
 
-                <div class="newsLeft">
+<!-- Table Area End -->
 
-                    <a href="../haberler/haber-detay.html" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="../assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="../haberler/haber-detay.html" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="../assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="../haberler/haber-detay.html" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="../assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    <a href="../haberler/haber-detay.html" class="newsBox">
-                        <div class="newsBoxImg">
-                            <img src="../assets/img/mainImg/01.jpg" alt="">
-                        </div>
-                        <div>
-                            <p><i class="fa-solid fa-hourglass-half"></i> 04 Ağustos 2024</p>
-                            <h3>Dedemin Gözyaşları filminin fragmanı yayınlandı</h3>
-                        </div>
-                    </a>
-                    
-                    <div class="pageBtn">
-                        <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
-                        <button class="pageBtns activePage">1</button>
-                        <button class="pageBtns activePage">2</button>
-                        <button class="pageBtns activePage">3</button>
-                        <button class="pageBtns activePage"><i class="fa-solid fa-angles-right"></i></button>
+<!-- ============================================================================== -->
+
+<!-- News Area End -->
+
+<section class="pt-0">
+
+    <div class="news pt-0">
+
+        <div class="newsInside">
+
+            <div class="newsLeft">
+                <!-- Film -->
+                <?php
+               
+                if (!empty($filmler) &&  $statu1Count >0 ) { ?>
+
+                    <h3>Filmler</h3>
+                <?php foreach ($filmler as $film) { 
+                    if($film['statu']==1){ 
+                    ?>
+                <a href="filmler/film-detay/<?php echo $film['seo_url']; ?>" class="newsBox">
+                    <div class="newsBoxImg">
+                        <img src="kapakfoto/<?php echo $film['kapak_resmi']; ?>" alt="">
                     </div>
-                    
-                </div>
+                    <div>
+                        <p><i class="fa-solid fa-hourglass-half"></i><?php echo formatDate($film['vizyon_tarihi']); ?></p>
+                        <h3><?php echo $film['film_adi']; ?> </h3>
+                    </div>
+                </a>
+                <?php
+             }
+            } ?>
+                <?php } ?> 
 
-                <div class="newsRight bgnone">
-                    <h2><i class="fa-solid fa-newspaper"></i> Vizyona Girecekler</h2>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="../assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Venom 3</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="../assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Pardon</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="../assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Arog</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="../assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Yahşi Batı</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                    <a href="" class="newsBoxHafta">
-                        <div class="haftaImg">
-                            <img src="../assets/img/news/02.jpg" alt="">
-                        </div>
-                        <p>Blade Runner</p>
-                        <p class="date"><i class="fa-regular fa-clock"></i> 06 eylül 2024</p>
-                    </a>
-                </div>
-            
+
+                <!-- Dizi -->
+                <?php if (!empty($filmler)  &&  $statu2Count >0  ) { ?>
+                    <h3>Diziler</h3>
+                <?php foreach ($filmler as $film) { 
+                    if($film['statu']==2){ 
+                    ?>
+                <a href="filmler/film-detay/<?php echo $film['seo_url']; ?>" class="newsBox">
+                    <div class="newsBoxImg">
+                        <img src="kapakfoto/<?php echo $film['kapak_resmi']; ?>" alt="">
+                    </div>
+                    <div>
+                        <p><i class="fa-solid fa-hourglass-half"></i><?php echo formatDate($film['vizyon_tarihi']); ?></p>
+                        <h3><?php echo $film['film_adi']; ?> </h3>
+                    </div>
+                </a>
+                <?php
+             }
+            } ?>
+                <?php } ?>
+
+
+                    <!-- Haber -->
+
+                <?php if (!empty($haberler)) { ?>
+                    <h3>Haberler</h3>
+                <?php foreach ($haberler as $haber) { ?>
+                <a href="haberler/haber-detay/<?php echo $haber['seo_url']; ?>" class="newsBox">
+                    <div class="newsBoxImg">
+                        <img src="haberfoto/<?php echo $haber['haberfoto']; ?>" alt="">
+                    </div>
+                    <div>
+                        <p><i class="fa-solid fa-hourglass-half"></i><?php echo formatDateTime($haber['tarih']); ?></p>
+                        <h3><?php echo $haber['baslik']; ?> </h3>
+                    </div>
+                </a>
+                <?php } ?>
+                <?php } ?>
+
+
+                <?php if (!empty($oyuncular)) { ?>
+                    <h3>Oyuncular</h3>
+                <?php foreach ($oyuncular as $oyuncu) { ?>
+                <a href="kisiler/kisi-detay/<?php echo $oyuncu['seo_url']; ?>" class="newsBox">
+                    <div class="newsBoxImg">
+                        <img src="foto/<?php echo $oyuncu['resimyol']; ?>" alt="">
+                    </div>
+                    <div>
+                        <p><i class="fa-solid fa-hourglass-half"></i><?php echo formatDate($oyuncu['dogum']); ?></p>
+                        <h3><?php echo $oyuncu['adsoyad']; ?> </h3>
+                    </div>
+                </a>
+                <?php } ?>
+                <?php } ?>
+                
+
+                <!-- <div class="pageBtn">
+                    <button class="pageBtns deactivePage"><i class="fa-solid fa-angles-left"></i></button>
+                    <button class="pageBtns activePage">1</button>
+                    <button class="pageBtns activePage">2</button>
+                    <button class="pageBtns activePage">3</button>
+                    <button class="pageBtns activePage"><i class="fa-solid fa-angles-right"></i></button>
+                </div> -->
+
+            </div>
+
+           
+            <div class="newsRight bgnone">
+                <h2><i class="fa-solid fa-newspaper"></i> Vizyona Girecekler</h2>
+                <?php
+                    foreach($filmlerGenelYakin as $yakinFilmler):?>
+                <a href="filmler/film-detay/<?php echo $yakinFilmler['seo_url']; ?>" class="newsBoxHafta">
+                    <div class="haftaImg">
+                        <img src="kapakfoto/<?php echo $yakinFilmler['kapak_resmi'];?>" alt="">
+                    </div>
+                    <p><?php echo $yakinFilmler['film_adi'];?></p>
+                    <p class="date"><i
+                            class="fa-regular fa-clock"></i> <?php echo formatDate($yakinFilmler['vizyon_tarihi']);?></p>
+                </a>
+                <?php endforeach;?>
             </div>
 
         </div>
-    </section>
 
-    <!-- News Area End -->
+    </div>
+</section>
 
-    <!-- Footer Area Start -->
+<!-- News Area End -->
 
-    <footer>
+<?php
+function formatDate($dateString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
 
-        <div class="footer">
+    // Tarih parçalarını ayır
+    $dateParts = explode("-", $dateString);
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
 
-            <ul class="linkUl">
-                <li>
-                    <a href="#">Reklam Verin</a>
-                </li>
-                <li>
-                    <a href="#">İçerik İzni</a>
-                </li>
-                <li>
-                    <a href="#">Hakkımızda</a>
-                </li>
-                <li>
-                    <a href="#">İletişim</a>
-                </li>
-            </ul>
+    // Formatlanmış tarihi döndür
+    return $day . ' ' . $months[$month] . ' ' . $year;
+}
 
-            <div class="socialArea">
-                <div class="socialBox">
-                    <h3><i class="fa-solid fa-link"></i> Sosyal Medya</h3>
-                    <ul>
-                        <li>
-                            <a href="#"><i class="fa-brands fa-square-instagram"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-brands fa-square-youtube"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-brands fa-square-facebook"></i></a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa-brands fa-square-x-twitter"></i></a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="socialBox">
-                    <div class="appArea">
-                        <h3><i class="fa-solid fa-mobile-screen-button"></i> Mobil Uygulama</h3>
-                        <a href="" class="appBoxImg">
-                            <img src="../assets/img/news/01.jpg" alt="">
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <a href="" class="logoImg">
-                <img src="../assets/img/logo/beyaz.png" alt="">
-            </a>
+function formatDateTime($dateTimeString) {
+    // Ay isimlerini tanımla
+    $months = [
+        "Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran",
+        "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"
+    ];
 
-            <p>© Created by <a href="https://www.cyftech.com.tr" target="_blank">CYFtech</a></p>
+    // Tarih ve saati ayır
+    $dateTimeParts = explode(" ", $dateTimeString);
+    $dateParts = explode("-", $dateTimeParts[0]);
+    $timeParts = explode(":", $dateTimeParts[1]);
 
-        </div>
+    $year = $dateParts[0];
+    $month = (int)$dateParts[1] - 1; // Aylar 0-11 arasında indekslenir
+    $day = (int)$dateParts[2];
 
-    </footer>
+    $hour = (int)$timeParts[0];
+    $minute = (int)$timeParts[1];
 
-    <!-- Footer Area End -->
-
-    <!-- ============================================================================== -->
-    <!-- ============================================================================== -->
-    <!-- ============================================================================== -->
+    // Formatlanmış tarihi ve saati döndür
+    return $day . ' ' . $months[$month] . ' ' . $year . ' ' . sprintf('%02d', $hour) . ':' . sprintf('%02d', $minute);
+}
 
 
-    <!-- myScript Area Start -->
-
-    <!-- Header Mobile Button Area -->
-    <script src="../assets/js/headerMobile.js"></script>
-    <!-- seyirci hasilat area -->
-    <script src="../assets/js/seyirciHasilat.js"></script>
-    <!-- vizyon area -->
-    <script src="../assets/js/vizyon.js"></script>
-    <!-- slider Area -->
-    <script src="../assets/js/slider.js"></script>
-    <!-- Table Area -->
-    <script src="../assets/js/table.js"></script>
-
-    <!-- ============================================================================== -->
+include('footer.php');?>
 
 </body>
+
 </html>
