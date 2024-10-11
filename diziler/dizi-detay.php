@@ -274,7 +274,6 @@ for ($i = 1; $i <= 3; $i++) {
                     <?php endif; ?>
 
                    
-                 <?php include('../salon.php');  ?>
                 
 
 
