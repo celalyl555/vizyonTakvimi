@@ -64,35 +64,37 @@ include('../header.php');
                     </thead>
                     <tbody>
                     <?php
-                    foreach ($filmHaftaListesi as $filmListe): ?>
-                        <tr>
-                            <td>
-                                <div class="nameBox">
-                                    <img class="tableImg" src="kapakfoto/<?php echo $filmListe['kapak_resmi']; ?>" alt="">
-                                    <div>
-                                        <a href="filmler/film-detay/<?php echo $filmListe['filmseo']; ?>" title="<?php echo $filmListe['film_adi']; ?>">
-                                            <?php echo $filmListe['film_adi']; ?>
-                                        </a><br>
-                                        <small><?php echo formatDate($filmListe['vizyon_tarihi']); ?></small>
-                                    </div>
+                  foreach ($filmHaftaListesi as $filmListe): ?>
+                    <tr>
+                        <td>
+                            <div class="nameBox">
+                                <img class="tableImg" src="kapakfoto/<?php echo $filmListe['kapak_resmi']; ?>" alt="">
+                                <div>
+                                    <a href="filmler/film-detay/<?php echo $filmListe['filmseo']; ?>" title="<?php echo $filmListe['film_adi']; ?>">
+                                        <?php echo $filmListe['film_adi']; ?>
+                                    </a><br>
+                                    <small><?php echo formatDate($filmListe['vizyon_tarihi']); ?></small>
                                 </div>
-                            </td>
-                            <td><?php echo $filmListe['studyoad']; ?></td>
-                            
-                            <!-- Haftaları buraya yazıyoruz (kac_hafta_cuma) -->
-                            <td><?php echo isset($filmListe['kac_hafta_cuma']) ? $filmListe['kac_hafta_cuma'] : '-'; ?></td>
-                            
-                            <!-- En büyük sinema sayısı buraya yazılıyor -->
-                            <td><?php echo isset($anahtarKilitDizi[$filmListe['film_id']]) ? $anahtarKilitDizi[$filmListe['film_id']] : '-'; ?></td>
-
-                            <!-- Toplam hasilat buraya yazılıyor -->
-                            <td>₺<?php echo isset($filmListe['toplam_hasilat']) ? number_format($filmListe['toplam_hasilat'], 2, ',', '.') : '-'; ?></td>
-                            
-                            <!-- Toplam kişi sayısı buraya yazılıyor -->
-                            <td><?php echo isset($filmListe['toplam_kisi']) ? number_format($filmListe['toplam_kisi'], 0, ',', '.') : '-'; ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-
+                            </div>
+                        </td>
+                
+                        <!-- Stüdyo adı buraya yazılıyor (boşsa -) -->
+                        <td><?php echo !empty($filmListe['stüdyoAdlar']) ? $filmListe['stüdyoAdlar'] : '-'; ?></td>
+                        
+                        <!-- Haftaları buraya yazıyoruz (boşsa -) -->
+                        <td><?php echo !empty($filmListe['hafta']) ? $filmListe['hafta'] : '-'; ?></td>
+                
+                        <!-- En büyük sinema sayısı buraya yazılıyor (boşsa -) -->
+                        <td><?php echo !empty($filmListe['lokasyon']) ? $filmListe['lokasyon'] : '-'; ?></td>
+                
+                        <!-- Toplam hasilat buraya yazılıyor (boşsa -) -->
+                        <td><?php echo !empty($filmListe['toplamHasilat']) ? "₺ ".number_format($filmListe['toplamHasilat'], 2, ',', '.') : '-'; ?></td>
+                
+                        <!-- Toplam kişi sayısı buraya yazılıyor (boşsa -) -->
+                        <td><?php echo !empty($filmListe['toplamSeyirci']) ? number_format($filmListe['toplamSeyirci'], 0, ',', '.') : '-'; ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                
                     </tbody>
                 </table>
             </div>
