@@ -357,7 +357,7 @@ function calculateFridays(year, month) {
                         </div>
                         <div>
                             <p><strong>Dağıtımcı</strong></p>
-                            <a href="dagitimci/dagitimci-detay/${film.dagitim_url}" class="title">${film.dagitimlar}</a>
+                            <a href="dagitimci/dagitimci-detay/${film.dagitim_url}?year=${filmYear}" class="title">${film.dagitimlar}</a>
                         </div>
                     </div>
                 </div>
