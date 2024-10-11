@@ -24,6 +24,15 @@ $studyoListesi = fetchAll($con, 'SELECT * FROM stüdyo ORDER BY id DESC');
 $dagitimListesi = fetchAll($con, 'SELECT * FROM sinemadagitim ORDER BY iddagitim DESC');
 $haberler = fetchAll($con, 'SELECT * FROM haberler ORDER BY idhaber DESC');
 
+$stmt = $con->query("SELECT SUM(user_count) AS total_user_count 
+FROM user_visits 
+WHERE MONTH(visit_date) = MONTH(CURRENT_DATE()) 
+  AND YEAR(visit_date) = YEAR(CURRENT_DATE())");
+
+$total_user_count = $stmt->fetchColumn() ?: 0;
+
+
+
 // Belirtilen haber id'sine göre verileri almak için
 if (isset($_GET['haberid'])) {
     $idd = $_GET['haberid'];
@@ -256,7 +265,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
         <div class="chart-container">
           <div class="chart-info-wrapper">
             <h2>Toplam Film Sayısı</h2>
-            <span>154</span>
+            <span><?php echo count($filmler);?></span>
           </div>
           <div class="chart-svg">
             <i class="fa-solid fa-film"></i>
@@ -266,8 +275,8 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
       <div class="chart-container-wrapper">
         <div class="chart-container">
           <div class="chart-info-wrapper">
-            <h2>Toplam Dizi Sayısı</h2>
-            <span>54</span>
+            <h2>Toplam Dizi Sayısı</h2>  
+            <span><?php echo count($diziler);?></span>
           </div>
           <div class="chart-svg">
             <i class="fa-solid fa-couch"></i>
@@ -278,7 +287,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
         <div class="chart-container">
           <div class="chart-info-wrapper">
             <h2>Toplam Haber Sayısı</h2>
-            <span>25</span>
+            <span><?php echo count($haberler);?></span>
           </div>
            <div class="chart-svg">
             <i class="fa-solid fa-newspaper"></i>
@@ -290,7 +299,7 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
       <div class="chart-container-wrapper big">
         <div class="chart-container">
           <div class="chart-container-header">
-            <h2>Filmlerin Toplam Hasılatı</h2>
+            <h2>Ziyaretçi Sayısı</h2>
             <span>1 yıl</span>
           </div>
           <!-- Chart.js içerisinde tablo verileri tabloyu oradan düzenle -->
@@ -303,78 +312,49 @@ $Oyuncu = $kategoriOyuncular['Aktör'] ?? [];
         </div>
       </div>
       <div class="chart-container-wrapper small">
-        <div class="chart-container applicants">
-          <div class="chart-container-header">
-            <h2>Vizyona Girecekler</h2>
-            <span>2 Hafta</span>
-          </div>
-          <!-- foreach Bura başla -->
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+        <div class="chart-container-wrapper resizeCont">
+          <div class="chart-container">
+            <div class="chart-info-wrapper">
+              <h2>Toplam Oyuncu Sayısı</h2>
+              <span><?php echo count($veriler);?></span>  
+            </div>
+            <div class="chart-svg">
+                <i class="fa-solid fa-user-tie"></i>
             </div>
           </div>
-          <!-- foreach Burda bitir -->
-        <!-- aşadakiler gereksiz -->
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+        </div>
+        <div class="chart-container-wrapper resizeCont">
+          <div class="chart-container">
+            <div class="chart-info-wrapper">
+              <h2>Toplam Dağıtımcı Sayısı</h2>
+              <span><?php echo count($dagitimListesi);?></span>
+            </div>
+            <div class="chart-svg">
+                <i class="fa-solid fa-share-nodes"></i>
             </div>
           </div>
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+        </div>
+        <div class="chart-container-wrapper resizeCont">
+          <div class="chart-container">
+            <div class="chart-info-wrapper">
+              <h2>Toplam Stüdyo Sayısı</h2>
+              <span><?php echo count($studyoListesi);?></span>
+            </div>
+            <div class="chart-svg">
+                <i class="fa-solid fa-microphone"></i>
             </div>
           </div>
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
+        </div>
+        <div class="chart-container-wrapper resizeCont">
+          <div class="chart-container">
+            <div class="chart-info-wrapper">
+              <h2>Toplam Ziyaretci Sayısı</h2>
+              <span><?php echo $total_user_count;?></span>
+            </div>
+            <div class="chart-svg">
+                <i class="fa-solid fa-users"></i>
             </div>
           </div>
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
-            </div>
-          </div>
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
-            </div>
-          </div>
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
-            </div>
-          </div>
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
-            </div>
-          </div>
-          <div class="applicant-line">
-            <img src="images/bg_1.jpg" alt="profile">
-            <div class="applicant-info">
-              <span><strong>Filmin Adı</strong></span>
-              <p><i class="fa-regular fa-clock"></i> 23 Eylül 2024</p>
-            </div>
-          </div>
-          <!-- gereksizden buraya kadar sil -->
         </div>
       </div>
     </div>

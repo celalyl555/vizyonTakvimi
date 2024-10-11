@@ -27,12 +27,7 @@ $startDateFormatted = $haftaBitis->format('Y-m-d');
 $cumartesiFormatted = $cumartesi->format('Y-m-d');
 $pazarFormatted = $pazar->format('Y-m-d');
 
-echo $startDateFormatted."<br>";
-echo $endDateFormatted."<br>";
-echo $cumartesiFormatted."<br>";
-echo $pazarFormatted."<br>";
 
-// Veritabanından yıllık verileri çek
 $sql = "
     SELECT
         fv.film_id,
@@ -139,6 +134,50 @@ $yil = date('Y', strtotime($startDateFormatted)); // Yıl
 
 // Tarihi oluşturuyoruz
 $tar = $basday . " - " . $bitday . " " . $turkishMonth . " " . $yil;
+
+
+
+
+
+
+
+
+$currentDate = date('Y-m-d');
+
+// Kullanıcının çerezi kontrol et
+if (!isset($_COOKIE['user_visited'])) {
+    // Veritabanında bu tarihle bir kayıt var mı kontrol et
+    $stmt = $con->prepare("SELECT * FROM user_visits WHERE visit_date = :visit_date");
+    $stmt->execute(['visit_date' => $currentDate]);
+    $visit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($visit) {
+        // Eğer kayıt varsa kullanıcı sayısını artır
+        $newCount = $visit['user_count'] + 1;
+        $updateStmt = $con->prepare("UPDATE user_visits SET user_count = :user_count WHERE visit_date = :visit_date");
+        $updateStmt->execute(['user_count' => $newCount, 'visit_date' => $currentDate]);
+    } else {
+        // Eğer kayıt yoksa yeni bir kayıt oluştur
+        $insertStmt = $con->prepare("INSERT INTO user_visits (visit_date, user_count) VALUES (:visit_date, 1)");
+        $insertStmt->execute(['visit_date' => $currentDate]);
+    }
+
+    // Kullanıcının ziyaret ettiğini belirten bir çerez ayarla
+    setcookie('user_visited', '1', time() + (86400 * 1), "/"); // 1 gün boyunca geçerli
+}
+
+// Kullanıcı sayısını veritabanından al
+$stmt = $con->prepare("SELECT * FROM user_visits WHERE visit_date = :visit_date");
+$stmt->execute(['visit_date' => $currentDate]);
+$visit = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Günlük kullanıcı sayısını yazdır
+echo "Bugün siteyi ziyaret eden kullanıcı sayısı: " . $visit['user_count'];
+
+
+
+
+
 
 
 ?>

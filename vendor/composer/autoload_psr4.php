@@ -26,7 +26,6 @@ return array(
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
-    'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Minishlink\\WebPush\\' => array($vendorDir . '/minishlink/web-push/src'),
     'Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
     'Jose\\Component\\' => array($vendorDir . '/web-token/jwt-library'),
