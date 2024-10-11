@@ -13,7 +13,7 @@
             <p class="title mt-1">Web sitemizde reklamınız yayınlansın istiyorsanız, detaylarıyla beraber bize aşağıdaki form vasıtasıyla ulaşabilirsiniz. Size en kısa sürede dönüş yapılacaktır.</p>
 
             <div class="reklam-form">
-                <form action="">
+                <form>
                     <label for="name">ADINIZ SOYADINIZ:</label>
                     <input type="text" id="name" name="name" placeholder="Adınızı ve Soyadınızı Giriniz">
 
@@ -43,7 +43,44 @@
     <!-- Table Area End -->
 
     <!-- ============================================================================== -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.submitForm').on('click', function(event) {
+                event.preventDefault(); // Formun normal gönderimini engelle
 
+                // Formdan verileri al
+                var name = $('#name').val();
+                var firma = $('#firm').val();
+                var mail = $('#mail').val();
+                var phone = $('#phone').val(); // Telefon numarasını da al
+                var detay = $('#detay').val();
+                var not = $('#not').val();
+                
+                    $.ajax({
+                    url: 'kurumsal/MailManager/ReklamSubmit.php',
+                    method: 'POST',
+                    data: {
+                        name: name,
+                        firma: firma,
+                        mail: mail,
+                        phone: phone,
+                        detay: detay,
+                        not: not
+                    },
+                    success: function(response) {
+                        if (response = 1) {
+                            alert("Talebiniz alınmıştır.")
+                            location.reload();
+                        } else {
+                            alert(response);
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
     <?php include('../footer.php');?>
 </body>
 </html>

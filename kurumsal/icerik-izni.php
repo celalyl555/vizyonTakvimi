@@ -13,7 +13,7 @@
             <p class="title mt-1">Sitedeki içeriklerin izin alınmadan kullanılması kesinlikle yasaktır. İzin için lütfen aşağıdaki formu eksiksiz olarak doldurmanızı rica ederiz.</p>
 
             <div class="reklam-form">
-                <form action="">
+                <form>
                     <label for="name">ADINIZ SOYADINIZ:</label>
                     <input type="text" id="name" name="name" placeholder="Adınızı ve Soyadınızı Giriniz">
 
@@ -43,6 +43,46 @@
 
     </section>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.submitForm').on('click', function(event) {
+                event.preventDefault(); // Formun normal gönderimini engelle
+
+                // Formdan verileri al
+                var name = $('#name').val();
+                var firma = $('#firm').val();
+                var mail = $('#mail').val();
+                var phone = $('#phone').val(); // Telefon numarasını da al
+                var alan = $('#alan').val();
+                var detay = $('#detay').val();
+                var not = $('#not').val();
+                
+                    $.ajax({
+                    url: 'kurumsal/MailManager/ReklamSubmit.php',
+                    method: 'POST',
+                    data: {
+                        name: name,
+                        firma: firma,
+                        mail: mail,
+                        phone: phone,
+                        alan: alan,
+                        detay: detay,
+                        not: not
+                    },
+                    success: function(response) {
+                        if (response = 1) {
+                            alert("Talebiniz alınmıştır.")
+                            location.reload();
+                        } else {
+                            alert(response);
+                        }
+
+                    }
+                });
+            });
+        });
+    </script>
     <!-- Table Area End -->
 
     <!-- ============================================================================== -->
